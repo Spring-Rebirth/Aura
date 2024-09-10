@@ -15,7 +15,7 @@ export default function CustomForm({ title, handleChangeText }) {
 
                 <TextInput
                     className='w-full h-full px-4 text-white'
-                    placeholder='Enter your email'
+                    placeholder={`Enter your ${title.charAt(0).toLowerCase() + title.slice(1)}`}
                     placeholderTextColor='#7f7f7f'
                     style={{ outline: 'none' }}
                     secureTextEntry={title === 'Password' && !showPassword}
