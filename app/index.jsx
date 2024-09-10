@@ -45,7 +45,7 @@ export default function Welcome() {
                     <CustomButton
                         onPress={() => { router.push('/sign-in') }}
                         style={'w-full mt-6 py-3'}
-                        title={'Login To Continue'}
+                        title={'Login to continue'}
                         textStyle={'text-lg text-[#161622]'}
                     />
                 </View>
