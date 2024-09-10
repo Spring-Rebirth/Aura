@@ -13,6 +13,8 @@ export default function SignIn() {
         password: ''
     })
 
+    const [isSubmitting, setIsSubmitting] = React.useState(false);
+
     return (
         <>
             <SafeAreaView className='bg-primary'>
@@ -38,6 +40,7 @@ export default function SignIn() {
                                 title='Sign In'
                                 style='h-16 mt-6 py-3'
                                 textStyle={'text-lg text-[#161622]'}
+                                isLoading={isSubmitting}
                             />
                             <View className='items-center mt-6'>
                                 <Text className='text-gray-100'>

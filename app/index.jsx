@@ -5,8 +5,7 @@ import { images } from "../constants";
 import CustomButton from '../components/CustomButton';
 import { router } from 'expo-router';
 // cSpell:word pregular appwrite
-// from Appwrite documentation
-// import 'react-native-url-polyfill/auto'
+
 
 //cSpell:ignore Aora pregular
 export default function Welcome() {

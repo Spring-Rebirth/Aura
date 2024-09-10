@@ -17,12 +17,16 @@ export default function SignUp() {
         confirmPassword: ''
     })
 
+    const [isSubmitting, setIsSubmitting] = React.useState(false);
+
     async function submit() {
 
         if (form.username === '' || form.email === '' || form.password === '' || form.confirmPassword === '') {
             Alert.alert('Error', 'Please fill in all the fields!');
             return;
         }
+
+        setIsSubmitting(true);
 
         try {
             const result = await registerUser(form.email, form.password, form.username);
@@ -31,6 +35,8 @@ export default function SignUp() {
             router.replace('/home');
         } catch (error) {
             Alert.alert('Error', error.message);
+        } finally {
+            setIsSubmitting(false);
         }
 
     }
@@ -69,6 +75,7 @@ export default function SignUp() {
                                 style='h-16 mt-6 py-3'
                                 textStyle={'text-lg text-[#161622]'}
                                 onPress={submit}
+                                isLoading={isSubmitting}
                             />
                             <View className='items-center mt-6'>
                                 <Text className='text-gray-100'>

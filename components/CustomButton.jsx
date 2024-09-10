@@ -1,5 +1,6 @@
 import { TouchableOpacity, Text } from "react-native";
 
+// cSpell:word psemibold
 export default function CustomButton({ onPress, title, style, textStyle, isLoading }) {
     return (
         <TouchableOpacity

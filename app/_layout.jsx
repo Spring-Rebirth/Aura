@@ -1,3 +1,4 @@
+import 'react-native-url-polyfill/auto' // from App-write documentation
 import { useEffect } from 'react'
 import { Stack, SplashScreen } from "expo-router";
 import { useFonts } from 'expo-font';
