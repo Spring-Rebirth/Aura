@@ -1,11 +1,14 @@
-import { View, Image, Text, ScrollView } from 'react-native'
+import { View, Image, Text, ScrollView, Alert } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import images from '../../constants/images'
 import CustomForm from '../../components/CustomForm'
 import CustomButton from '../../components/CustomButton'
 import { StatusBar } from 'expo-status-bar'
-import { Link } from 'expo-router'
+import { Link, router } from 'expo-router'
+// cSpell:word appwrite
+import { signIn } from '../../lib/appwrite'
+
 
 export default function SignIn() {
     const [form, setForm] = React.useState({
@@ -14,6 +17,29 @@ export default function SignIn() {
     })
 
     const [isSubmitting, setIsSubmitting] = React.useState(false);
+
+    async function submit() {
+
+        if (form.email === '' || form.password === '') {
+            Alert.alert('Error', 'Please fill in all the fields!');
+            return;
+        }
+
+        setIsSubmitting(true);
+
+        try {
+            await signIn(form.email, form.password);
+            // TODO: add to global state
+
+            router.replace('/home');
+        } catch (error) {
+            Alert.alert('Error', error.message);
+        } finally {
+            setIsSubmitting(false);
+        }
+
+    }
+
 
     return (
         <>
@@ -40,6 +66,7 @@ export default function SignIn() {
                                 title='Sign In'
                                 style='h-16 mt-6 py-3'
                                 textStyle={'text-lg text-[#161622]'}
+                                onPress={submit}
                                 isLoading={isSubmitting}
                             />
                             <View className='items-center mt-6'>
