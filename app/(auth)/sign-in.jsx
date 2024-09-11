@@ -1,22 +1,29 @@
 import { View, Image, Text, ScrollView, Alert } from 'react-native'
-import React from 'react'
+import { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import images from '../../constants/images'
 import CustomForm from '../../components/CustomForm'
 import CustomButton from '../../components/CustomButton'
 import { StatusBar } from 'expo-status-bar'
-import { Link, router } from 'expo-router'
+import { Link, Redirect, router } from 'expo-router'
 // cSpell:word appwrite
-import { signIn } from '../../lib/appwrite'
+import { getCurrentUser, signIn } from '../../lib/appwrite'
+import { useGlobalContext } from '../../context/GlobalProvider'
 
 
 export default function SignIn() {
-    const [form, setForm] = React.useState({
+    const [form, setForm] = useState({
         email: '',
         password: ''
     })
 
-    const [isSubmitting, setIsSubmitting] = React.useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const { setUser, isLoggedIn, setIsLoggedIn, isLoading } = useGlobalContext();
+
+    if (isLoggedIn && !isLoading) {
+        account.deleteSession('current');
+    }
 
     async function submit() {
 
@@ -30,6 +37,9 @@ export default function SignIn() {
         try {
             await signIn(form.email, form.password);
             // TODO: add to global state
+            const result = await getCurrentUser();
+            setUser(result);
+            setIsLoggedIn(true);
 
             router.replace('/home');
         } catch (error) {

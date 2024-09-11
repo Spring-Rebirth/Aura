@@ -3,12 +3,18 @@ import { Image, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { images } from "../constants";
 import CustomButton from '../components/CustomButton';
-import { router } from 'expo-router';
+import { Redirect, router } from 'expo-router';
+import { useGlobalContext } from '../context/GlobalProvider';
 // cSpell:word pregular appwrite
-
-
 //cSpell:ignore Aora pregular
 export default function Welcome() {
+
+    const { isLoading, isLoggedIn } = useGlobalContext();
+    if (!isLoading && isLoggedIn) {
+        return <Redirect href='/home' />;
+    }
+
+
     return (
 
         <SafeAreaView className="bg-primary h-full">

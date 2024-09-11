@@ -1,5 +1,5 @@
 import { View, Image, Text, ScrollView, Alert } from 'react-native'
-import React from 'react'
+import { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import images from '../../constants/images'
 import CustomForm from '../../components/CustomForm'
@@ -8,16 +8,18 @@ import { StatusBar } from 'expo-status-bar'
 import { Link, router } from 'expo-router'
 // cSpell:word appwrite username psemibold
 import { registerUser } from '../../lib/appwrite'
+import { useGlobalContext } from '../../context/GlobalProvider'
 
 export default function SignUp() {
-    const [form, setForm] = React.useState({
+    const [form, setForm] = useState({
         username: '',
         email: '',
         password: '',
         confirmPassword: ''
     })
 
-    const [isSubmitting, setIsSubmitting] = React.useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const { setUser, setIsLoggedIn } = useGlobalContext();
 
     async function submit() {
 
@@ -29,9 +31,10 @@ export default function SignUp() {
         setIsSubmitting(true);
 
         try {
-            const result = await registerUser(form.email, form.password, form.username);
+            const newUser = await registerUser(form.email, form.password, form.username);
             // TODO: add to global state
-
+            setUser(newUser);
+            setIsLoggedIn(true);
             router.replace('/home');
         } catch (error) {
             Alert.alert('Error', error.message);
