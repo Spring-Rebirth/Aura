@@ -6,7 +6,7 @@ export default function Home() {
     return (
         <SafeAreaView className='bg-primary h-full'>
             <FlatList
-                data={[{ id: 1 }, { id: 2 }]}
+                data={[{ id: '1' }, { id: '2' }]}
                 // keyExtractor={}
                 renderItem={({ item }) => {
                     return (
