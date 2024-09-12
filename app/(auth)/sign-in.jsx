@@ -10,7 +10,6 @@ import { Link, Redirect, router } from 'expo-router'
 import { getCurrentUser, signIn } from '../../lib/appwrite'
 import { useGlobalContext } from '../../context/GlobalProvider'
 
-
 export default function SignIn() {
     const [form, setForm] = useState({
         email: '',
@@ -20,10 +19,6 @@ export default function SignIn() {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const { setUser, isLoggedIn, setIsLoggedIn, isLoading } = useGlobalContext();
-
-    if (isLoggedIn && !isLoading) {
-        account.deleteSession('current');
-    }
 
     async function submit() {
 
