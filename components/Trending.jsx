@@ -1,11 +1,11 @@
 import React from 'react'
 import { FlatList, Text, View } from 'react-native'
 
-export default function Trending() {
+export default function Trending({ }) {
     return (
         <FlatList
             horizontal
-            className='border-2 border-green-500 '
+            className=''
             data={[{ id: '1' }, { id: '2' }]}
             renderItem={({ item }) => (
                 <View >
