@@ -32,14 +32,14 @@ export default function VideoCard({ video: { title, thumbnail, video, creator: {
             {!playing
                 ? (
                     <TouchableOpacity 
-                        className='w-full h-60 mt-6 rounded-xl justify-center items-center relative'
+                        className='w-full h-60 mt-6 rounded-xl justify-center items-center relative overflow-hidden' // 添加 overflow-hidden
                         activeOpacity={0.7}
                         onPress={() => setPlaying(true)}
                     >
                         <Image
                             source={{ uri: thumbnail }}
                             className='w-full h-full rounded-xl'
-                            resizeMode='contain'
+                            resizeMode='cover' // 修改为 cover
                         />
                         <Image
                             source={icons.play}
@@ -47,6 +47,7 @@ export default function VideoCard({ video: { title, thumbnail, video, creator: {
                             resizeMode='contain'
                         />
                     </TouchableOpacity>
+
                 )
                 : null
             }
