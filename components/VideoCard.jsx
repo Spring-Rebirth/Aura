@@ -31,13 +31,14 @@ export default function VideoCard({ video: { title, thumbnail, video, creator: {
             {/* 视频视图 */}
             {!playing
                 ? (
-                    <TouchableOpacity className='w-full h-60 mt-6 rounded-xl justify-center items-center'
+                    <TouchableOpacity 
+                        className='w-full h-60 mt-6 rounded-xl justify-center items-center relative'
                         activeOpacity={0.7}
                         onPress={() => setPlaying(true)}
                     >
                         <Image
                             source={{ uri: thumbnail }}
-                            className='w-full h-full relative rounded-xl'
+                            className='w-full h-full rounded-xl'
                             resizeMode='contain'
                         />
                         <Image
