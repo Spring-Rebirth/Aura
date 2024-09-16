@@ -43,8 +43,8 @@ export default function VideoCard({ video: { title, thumbnail, video, creator: {
                         />
                         <Image
                             source={icons.play}
-                            className='w-12 h-12 absolute'
-                            resizeMode='contain'
+                            className='w-12 h-12 absolute inset-0 m-auto'
+                            resizeMode='cover'
                         />
                     </TouchableOpacity>
 
