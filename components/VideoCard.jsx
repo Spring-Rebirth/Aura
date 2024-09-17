@@ -1,6 +1,7 @@
 import { View, Text, Image, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { icons } from '../constants'
+import { ResizeMode, Video } from 'expo-av';
 
 export default function VideoCard({ video: { title, thumbnail, video, creator: { username, avatar } } }) {
     const [playing, setPlaying] = useState(false);
@@ -31,7 +32,7 @@ export default function VideoCard({ video: { title, thumbnail, video, creator: {
             {/* 视频视图 */}
             {!playing
                 ? (
-                    <TouchableOpacity 
+                    <TouchableOpacity
                         className='w-full h-60 mt-6 rounded-xl justify-center items-center relative overflow-hidden' // 添加 overflow-hidden
                         activeOpacity={0.7}
                         onPress={() => setPlaying(true)}
@@ -49,7 +50,22 @@ export default function VideoCard({ video: { title, thumbnail, video, creator: {
                     </TouchableOpacity>
 
                 )
-                : null
+                : (
+                    // latest changed code
+                    <Video
+                        source={{ uri: video }}
+                        className='w-full h-60 rounded-xl mt-6'
+                        resizeMode={ResizeMode.CONTAIN}
+                        useNativeControls
+                        shouldPlay
+                        onPlaybackStatusUpdate={(status) => {
+                            if (status.didJustFinish) {
+                                setPlaying(false);
+                            }
+                        }}
+                    />
+
+                )
             }
 
         </View>

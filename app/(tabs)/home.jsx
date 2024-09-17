@@ -8,7 +8,7 @@ import Trending from "../../components/Trending"
 import EmptyState from '../../components/EmptyState'
 import CustomButton from '../../components/CustomButton'
 import VideoCard from '../../components/VideoCard'
-import { getAllPosts, getLatestPosts } from '../../lib/appwrite'
+import useGetData from '../../hooks/useGetData'
 
 export default function Home() {
 	const [refreshing, setRefreshing] = useState(false);
@@ -16,32 +16,18 @@ export default function Home() {
 	const [data, setData] = useState([]);
 	const [latestData, setLatestData] = useState([]);
 
-	const fetchPosts = () => {
-		setLoading(true);
-		getAllPosts()
-			.then((res) => {
-				setData(res);
-			})
-			.catch((error) => {
-				Alert.alert('Failed to load data', error)
-			})
-			.finally(() => {
-				setLoading(false);
-			})
-	}
-
-
+	const { fetchPosts, fetchLatestPosts } = useGetData({ setData, setLoading, setLatestData });
 
 	const handleRefresh = () => {
 		setRefreshing(true);
 		fetchPosts();
-		// fetchLatestPosts();
+		fetchLatestPosts();
 		setRefreshing(false);
 	}
 
 	useEffect(() => {
 		fetchPosts();
-		// fetchLatestPosts();
+		fetchLatestPosts();
 	}, [])
 
 	return (
@@ -69,8 +55,9 @@ export default function Home() {
 							<SearchInput containerStyle={'mt-6'} />
 
 							<View className='mt-8'>
-								<Text className='text-white'>Trending Videos</Text>
-								<Trending />
+								<Text className='text-white mb-4'>Trending Videos</Text>
+								{/* 头部视频 */}
+								<Trending video={latestData} />
 							</View>
 
 						</View>
