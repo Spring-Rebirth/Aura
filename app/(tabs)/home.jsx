@@ -1,5 +1,5 @@
 //cSpell:words psemibold appwrite
-import { View, Text, FlatList, Image, RefreshControl, Alert } from 'react-native'
+import { View, Text, FlatList, Image, RefreshControl, ActivityIndicator } from 'react-native'
 import { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { images } from '../../constants'
@@ -32,8 +32,9 @@ export default function Home() {
 
 	return (
 		<SafeAreaView className='bg-primary h-full'>
+
 			<FlatList
-				data={data}
+				data={loading ? [] : data}
 				// item 是 data 数组中的每一项
 				keyExtractor={(item) => item.$id}
 
@@ -57,7 +58,7 @@ export default function Home() {
 							<View className='mt-8'>
 								<Text className='text-white mb-4'>Trending Videos</Text>
 								{/* 头部视频 */}
-								<Trending video={latestData} />
+								<Trending video={latestData} loading={loading} />
 							</View>
 
 						</View>
@@ -70,7 +71,12 @@ export default function Home() {
 					)
 				}}
 				ListEmptyComponent={() => {
-					return (
+					return loading ? (
+						<View className="flex-1 justify-center items-center bg-primary mt-64">
+							<ActivityIndicator size="large" color="#ffffff" />
+							<Text className='mt-[10] text-white text-xl'>Loading, please wait...</Text>
+						</View>
+					) : (
 						<View>
 							<EmptyState />
 							<CustomButton

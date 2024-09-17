@@ -1,5 +1,5 @@
 import React from 'react'
-import { FlatList, ImageBackground, Text, TouchableOpacity, View, Image } from 'react-native'
+import { FlatList, ImageBackground, Text, TouchableOpacity, View, Image, ActivityIndicator } from 'react-native'
 import * as Animatable from 'react-native-animatable'
 import { icons } from '../constants';
 import { Video, ResizeMode } from 'expo-av';
@@ -32,6 +32,7 @@ function TrendingItem({ activeItem, item }) {
             style={{ borderRadius: 16, overflow: 'hidden' }} // 使用样式直接设置圆角
             className='mr-2'
         >
+
             {!playing ? (
                 <TouchableOpacity onPress={() => setPlaying(true)}
                     className='relative justify-center items-center'
@@ -60,15 +61,14 @@ function TrendingItem({ activeItem, item }) {
                         }
                     }}
                 />
-
-
             )}
+
         </Animatable.View>
     )
 
 }
 
-export default function Trending({ video }) {
+export default function Trending({ video, loading }) {
     const [activeItem, setActiveItem] = React.useState(video[1]);
     // cSpell: words viewability
     const viewabilityConfig = { itemVisiblePercentThreshold: 70 }; // 配置可见性百分比
@@ -80,7 +80,12 @@ export default function Trending({ video }) {
         }
     }, [setActiveItem]); // 将 setActiveItem 作为依赖
 
-    return (
+    return loading ? (
+        <View className="flex-1 justify-center items-center bg-primary mt-12">
+            <ActivityIndicator size="large" color="#ffffff" />
+            <Text className='mt-[10] text-white text-xl'>Loading, please wait...</Text>
+        </View>
+    ) : (
         <FlatList
             horizontal
             className=''
