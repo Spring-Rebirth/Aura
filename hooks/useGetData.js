@@ -1,52 +1,31 @@
 import { Alert } from 'react-native';
-import { getAllPosts, getLatestPosts, searchPosts } from '../lib/appwrite'
+import { getAllPosts, getLatestPosts, searchPosts } from '../lib/appwrite';
 
 function useGetData({ setData, setLoading, setLatestData, setQueryData }) {
 
-    const fetchPosts = () => {
-        setLoading(true);
-        getAllPosts()
-            .then((res) => {
-                setData(res);
-            })
-            .catch((error) => {
-                Alert.alert('Failed to load data', error.message)
-            })
-            .finally(() => {
-                setLoading(false);
-            })
-    }
+    // 通用的数据获取函数
+    const fetchData = async (fetchFunction, setState, errorMessage) => {
+        try {
+            setLoading(true);
+            const res = await fetchFunction();
+            setState(res);
+        } catch (error) {
+            Alert.alert(`Failed to load ${errorMessage} data`, error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-    const fetchLatestPosts = () => {
-        setLoading(true);
-        getLatestPosts()
-            .then((res) => {
-                setLatestData(res);
-            })
-            .catch((error) => {
-                Alert.alert('Failed to load Latest data', error.message)
-            })
-            .finally(() => {
-                setLoading(false);
-            })
-    }
+    // 获取所有 posts
+    const fetchPosts = () => fetchData(getAllPosts, setData, 'posts');
 
-    const fetchQueryPosts = (queryText) => {
-        setLoading(true);
-        searchPosts(queryText)
-            .then((res) => {
-                setQueryData(res);
-            })
-            .catch((error) => {
-                Alert.alert('Failed to load Query data', error.message)
-            })
-            .finally(() => {
-                setLoading(false);
-            })
-    }
+    // 获取最新 posts
+    const fetchLatestPosts = () => fetchData(getLatestPosts, setLatestData, 'latest');
 
+    // 搜索 posts
+    const fetchQueryPosts = (queryText) => fetchData(() => searchPosts(queryText), setQueryData, 'query');
 
-    return { fetchPosts, fetchLatestPosts, fetchQueryPosts }
+    return { fetchPosts, fetchLatestPosts, fetchQueryPosts };
 }
 
 export default useGetData;
