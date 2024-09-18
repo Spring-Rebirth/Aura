@@ -19,9 +19,11 @@ function GlobalProvider({ children }) {
                 if (res) {
                     setIsLoggedIn(true);
                     setUser(res);
+                    console.log('User is logged in');
                 } else {
                     setIsLoading(false);
                     setUser(null);
+                    console.log('User is not logged in');
                 }
             })
             .catch((error) => {

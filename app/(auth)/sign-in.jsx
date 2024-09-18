@@ -18,7 +18,7 @@ export default function SignIn() {
 
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const { setUser, isLoggedIn, setIsLoggedIn, isLoading } = useGlobalContext();
+    const { user, setUser, isLoggedIn, setIsLoggedIn, isLoading } = useGlobalContext();
 
     async function submit() {
 
@@ -31,14 +31,18 @@ export default function SignIn() {
 
         try {
             await signIn(form.email, form.password);
-            // TODO: add to global state
+
+            // 测试user是否获取成功      
             const result = await getCurrentUser();
-            setUser(result);
+            if (result && user !== result) {
+                setUser(result);
+            }
             setIsLoggedIn(true);
+            // console.log('/sign-in  result:', result);
 
             router.replace('/home');
         } catch (error) {
-            Alert.alert('Error', error.message);
+            Alert.alert('Error in submit', error.message);
         } finally {
             setIsSubmitting(false);
         }

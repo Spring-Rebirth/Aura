@@ -9,13 +9,14 @@ import EmptyState from '../../components/EmptyState'
 import CustomButton from '../../components/CustomButton'
 import VideoCard from '../../components/VideoCard'
 import useGetData from '../../hooks/useGetData'
+import { useGlobalContext } from '../../context/GlobalProvider'
 
 export default function Home() {
 	const [refreshing, setRefreshing] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [data, setData] = useState([]);
 	const [latestData, setLatestData] = useState([]);
-
+	const { user } = useGlobalContext();
 	const { fetchPosts, fetchLatestPosts } = useGetData({ setData, setLoading, setLatestData });
 
 	const handleRefresh = () => {
@@ -24,6 +25,7 @@ export default function Home() {
 		fetchLatestPosts();
 		setRefreshing(false);
 	}
+
 
 	useEffect(() => {
 		fetchPosts();
@@ -45,7 +47,7 @@ export default function Home() {
 							<View className='flex-row justify-between items-center'>
 								<View >
 									<Text className='text-gray-100 text-lg'>Welcome Back</Text>
-									<Text className='text-white text-2xl font-psemibold '>Myst Seed</Text>
+									<Text className='text-white text-2xl font-psemibold '>{user?.username}</Text>
 								</View>
 								<Image
 									source={images.logoSmall}

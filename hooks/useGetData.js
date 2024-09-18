@@ -1,7 +1,7 @@
 import { Alert } from 'react-native';
-import { getAllPosts, getLatestPosts, searchPosts } from '../lib/appwrite';
+import { getAllPosts, getLatestPosts, searchPosts, getUserPosts } from '../lib/appwrite';
 
-function useGetData({ setData, setLoading, setLatestData, setQueryData }) {
+function useGetData({ setLoading, setData, setLatestData, setQueryData, setUserPostsData }) {
 
     // 通用的数据获取函数
     const fetchData = async (fetchFunction, setState, errorMessage) => {
@@ -25,7 +25,10 @@ function useGetData({ setData, setLoading, setLatestData, setQueryData }) {
     // 搜索 posts
     const fetchQueryPosts = (queryText) => fetchData(() => searchPosts(queryText), setQueryData, 'query');
 
-    return { fetchPosts, fetchLatestPosts, fetchQueryPosts };
+    // 获取用户的 posts
+    const fetchUserPosts = (userId) => fetchData(() => getUserPosts(userId), setUserPostsData, 'user posts');
+
+    return { fetchPosts, fetchLatestPosts, fetchQueryPosts, fetchUserPosts };
 }
 
 export default useGetData;
