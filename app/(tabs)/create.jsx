@@ -56,10 +56,10 @@ export default function Create() {
 
 
     return (
-        <SafeAreaView className='bg-primary h-full px-6 justify-center'>
-            <ScrollView>
+        <SafeAreaView className='bg-primary h-full px-6 '>
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                 {/* Upload Video */}
-                <Text className='text-white text-2xl font-psemibold '>Upload Video</Text>
+                <Text className='text-white text-2xl font-psemibold mt-10 '>Upload Video</Text>
                 <CustomForm
                     title={'Video title'}
                     handleChangeText={(text) => setForm({ ...form, title: text })}
@@ -81,7 +81,7 @@ export default function Create() {
                         </View>
                     </TouchableOpacity>
                 ) : (
-                    <View className='w-full h-44 bg-[#1e1e2d] rounded-2xl mt-2 justify-center items-center'>
+                    <View className='w-full h-60 bg-[#1e1e2d] rounded-2xl mt-2 justify-center items-center'>
                         <Video
                             // 参数格式待修改
                             source={{ uri: files.video.assets[0].uri }}
@@ -129,7 +129,7 @@ export default function Create() {
                 <CustomButton
                     onPress={() => { }}
                     title={'Submit & Publish'}
-                    style={'h-16 mt-8'}
+                    style={'h-16 my-8'}
                     textStyle={'text-black-100'}
                     isLoading={false}
                 />
