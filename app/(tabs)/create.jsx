@@ -127,8 +127,6 @@ export default function Create() {
                             className='w-full h-4/5 rounded-xl'
                             resizeMode={ResizeMode.CONTAIN}
                             useNativeControls
-                            shouldPlay
-
                         />
                     </View>
                 )}
