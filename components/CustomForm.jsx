@@ -2,7 +2,7 @@ import { View, Text, TextInput, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { icons } from '../constants'
 
-export default function CustomForm({ title, handleChangeText }) {
+export default function CustomForm({ title, handleChangeText, value = 'default' }) {
     const [showPassword, setShowPassword] = React.useState(false)
     return (
         <View className={`mt-7 space-y-2`}>
@@ -19,7 +19,7 @@ export default function CustomForm({ title, handleChangeText }) {
                     placeholderTextColor='#7f7f7f'
                     style={{ outline: 'none' }}
                     secureTextEntry={title === 'Password' && !showPassword}
-
+                    value={value}
                     // Callback that is called when the text input's text changes. 
                     // Changed text is passed as a single string argument to the callback handler.
                     onChangeText={handleChangeText}

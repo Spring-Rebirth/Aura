@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { View, Text, Image, TouchableOpacity, ScrollView } from 'react-native'
+import { View, Text, Image, TouchableOpacity, ScrollView, Alert, ActivityIndicator } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import CustomForm from '../../components/CustomForm'
 import CustomButton from '../../components/CustomButton'
@@ -30,6 +30,8 @@ export default function Create() {
     const [imageFile, setImageFile] = useState(null);
     const [videoFile, setVideoFile] = useState(null);
 
+    const [uploading, setUploading] = useState(false);
+
 
     // 处理图片选择
     const handlePickImage = async () => {
@@ -56,21 +58,38 @@ export default function Create() {
     };
 
     const handleUpload = async () => {
+        setUploading(true);
         console.log('imageFile:', imageFile, 'videoFile', videoFile);
-        // TODO:先判断用户填写了表单的所有内容再往下执行
-        // 上传文件
-        const imageResponse = await useUploadFile(imageFile);
-        const videoResponse = await useUploadFile(videoFile);
-        console.log('imageResponse | videoResponse', imageResponse, videoResponse);
+        try {
+            if (form.title === '' || form.prompt === '' || !isImageSelected || !isVideoSelected) {
+                Alert.alert('Something content is not fill');
+                return;
+            }
+            // 上传文件
+            const imageResponse = await useUploadFile(imageFile);
+            const videoResponse = await useUploadFile(videoFile);
+            console.log('imageResponse | videoResponse', imageResponse, videoResponse);
 
-        const formData = {
-            title: form.title,
-            prompt: form.prompt,
-            thumbnail: files.image.uri,  // 修改为直接访问 uri
-            video: files.video.uri,      // 修改为直接访问 uri
-            creator: user.$id
+            const formData = {
+                title: form.title,
+                prompt: form.prompt,
+                thumbnail: files.image.uri,
+                video: files.video.uri,
+                creator: user.$id
+            }
+            await uploadData(formData);
+            Alert.alert('Upload Success !')
+            setForm({ title: '', prompt: '' })
+            setFiles({
+                image: { uri: '', name: '', mimeType: '' },
+                video: { uri: '', name: '', mimeType: '' }
+            })
+        } catch (e) {
+            console.error("Upload Failed", e);
+        } finally {
+            setUploading(false);
         }
-        await uploadData(formData);
+
     };
 
 
@@ -79,9 +98,11 @@ export default function Create() {
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                 {/* Upload Video */}
                 <Text className='text-white text-2xl font-psemibold mt-10 '>Upload Video</Text>
+
                 <CustomForm
                     title={'Video title'}
                     handleChangeText={(text) => setForm({ ...form, title: text })}
+                    value={form.title}
                 />
 
                 {/* Upload Video */}
@@ -142,7 +163,15 @@ export default function Create() {
                 <CustomForm
                     title={'AI prompt'}
                     handleChangeText={(text) => setForm({ ...form, prompt: text })}
+                    value={form.prompt}
                 />
+
+                {uploading ? (
+                    <View className="w-full h-20 justify-center items-center bg-primary">
+                        <ActivityIndicator size="large" color="#ffffff" />
+                        <Text className='mt-[10] text-white text-xl'>Uploading, please wait...</Text>
+                    </View>
+                ) : false}
 
                 {/* submit button */}
                 <CustomButton
@@ -150,7 +179,7 @@ export default function Create() {
                     title={'Submit & Publish'}
                     style={'h-16 my-8'}
                     textStyle={'text-black-100'}
-                    isLoading={false}
+                    isLoading={uploading}
                 />
             </ScrollView>
         </SafeAreaView>
