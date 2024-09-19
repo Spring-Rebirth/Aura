@@ -9,6 +9,7 @@ import VideoCard from '../../components/VideoCard'
 import { icons } from '../../constants'
 import { signOut } from '../../lib/appwrite'
 import { router } from 'expo-router'
+import { StatusBar } from 'expo-status-bar'
 
 export default function profile() {
     const [userPostsData, setUserPostsData] = useState([]);
@@ -98,7 +99,7 @@ export default function profile() {
                 }}
 
             />
-
+            <StatusBar style='light' />
         </SafeAreaView>
     )
 }

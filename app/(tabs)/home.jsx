@@ -10,6 +10,7 @@ import CustomButton from '../../components/CustomButton'
 import VideoCard from '../../components/VideoCard'
 import useGetData from '../../hooks/useGetData'
 import { useGlobalContext } from '../../context/GlobalProvider'
+import { StatusBar } from 'expo-status-bar'
 
 export default function Home() {
 	const [refreshing, setRefreshing] = useState(false);
@@ -17,7 +18,7 @@ export default function Home() {
 	const [data, setData] = useState([]);
 	const [latestData, setLatestData] = useState([]);
 	const { user } = useGlobalContext();
-	const { fetchPosts, fetchLatestPosts } = useGetData({ setData, setLoading, setLatestData });
+	const { fetchPosts, fetchLatestPosts } = useGetData({ setLoading, setData, setLatestData });
 
 	const handleRefresh = () => {
 		setRefreshing(true);
@@ -94,6 +95,7 @@ export default function Home() {
 				}
 			/>
 
+			<StatusBar style='light' />
 		</SafeAreaView>
 	)
 }

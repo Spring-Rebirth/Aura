@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { View, Text, Image, TouchableOpacity, ScrollView, Alert, ActivityIndicator } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import CustomForm from '../../components/CustomForm'
@@ -8,7 +8,9 @@ import { usePickFile } from '../../hooks/usePickFile'
 import { ResizeMode, Video } from 'expo-av'
 import { useGlobalContext } from '../../context/GlobalProvider'
 import { useUploadFile } from '../../hooks/useUploadFile'
+// cSpell:words appwrite psemibold
 import { uploadData } from '../../lib/appwrite'
+import { StatusBar } from 'expo-status-bar'
 
 export default function Create() {
     const { user } = useGlobalContext();
@@ -16,7 +18,7 @@ export default function Create() {
         title: '',
         prompt: ''
     });
-    // 确保 image 和 video 有一致的数据结构，包含 uri, name, mimeType
+
     const [files, setFiles] = useState({
         image: { uri: '', name: '', mimeType: '' },
         video: { uri: '', name: '', mimeType: '' }
@@ -24,12 +26,9 @@ export default function Create() {
 
     const isImageSelected = files.image.uri !== '';
     const isVideoSelected = files.video.uri !== '';
-
     const { pickImage, pickVideo } = usePickFile(setFiles);
-
     const [imageFile, setImageFile] = useState(null);
     const [videoFile, setVideoFile] = useState(null);
-
     const [uploading, setUploading] = useState(false);
 
 
@@ -134,7 +133,6 @@ export default function Create() {
                     </View>
                 )}
 
-
                 {/* Thumbnail Image */}
                 <Text className='text-gray-100 mt-5 text-lg'>Thumbnail Image</Text>
                 {/* TODO：图片存在则显示图片 */}
@@ -155,7 +153,6 @@ export default function Create() {
                                 resizeMode='contain'
                             />
                         </View>
-
                     )}
                 </TouchableOpacity>
 
@@ -182,6 +179,7 @@ export default function Create() {
                     isLoading={uploading}
                 />
             </ScrollView>
+            <StatusBar style='light' />
         </SafeAreaView>
     )
 }
