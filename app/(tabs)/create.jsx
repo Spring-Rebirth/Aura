@@ -6,24 +6,37 @@ import CustomButton from '../../components/CustomButton'
 import { icons } from '../../constants'
 import { usePickFile } from '../../hooks/usePickFile'
 import { ResizeMode, Video } from 'expo-av'
+import { useGlobalContext } from '../../context/GlobalProvider'
+import { useUploadFile } from '../../hooks/useUploadFile'
+import { uploadData } from '../../lib/appwrite'
 
 export default function Create() {
+    const { user } = useGlobalContext();
     const [form, setForm] = useState({
         title: '',
         prompt: ''
     });
+    // 确保 image 和 video 有一致的数据结构，包含 uri, name, mimeType
     const [files, setFiles] = useState({
-        image: null,
-        video: null
+        image: { uri: '', name: '', mimeType: '' },
+        video: { uri: '', name: '', mimeType: '' }
     });
 
+    const isImageSelected = files.image.uri !== '';
+    const isVideoSelected = files.video.uri !== '';
+
     const { pickImage, pickVideo } = usePickFile(setFiles);
+
+    const [imageFile, setImageFile] = useState(null);
+    const [videoFile, setVideoFile] = useState(null);
+
 
     // 处理图片选择
     const handlePickImage = async () => {
         try {
-            await pickImage();
-            // console.log(files.image);
+            result = await pickImage();
+            console.log('handlePickImage', result);
+            setImageFile(result);
         } catch (err) {
             console.log('Image selection failed:', err);
             Alert.alert('Error', 'There was an error selecting the image');
@@ -33,26 +46,32 @@ export default function Create() {
     // 处理视频选择
     const handlePickVideo = async () => {
         try {
-            await pickVideo();
-            // console.log(files.video);
+            result = await pickVideo();
+            console.log('handlePickVideo:', result);
+            setVideoFile(result);
         } catch (err) {
             console.log('Video selection failed:', err);
             Alert.alert('Error', 'There was an error selecting the video');
         }
     };
 
-    // 检查状态更新
-    useEffect(() => {
-        if (files.image) {
-            console.log('Image file:', files.image);
-        }
-    }, [files.image]);
+    const handleUpload = async () => {
+        console.log('imageFile:', imageFile, 'videoFile', videoFile);
+        // TODO:先判断用户填写了表单的所有内容再往下执行
+        // 上传文件
+        const imageResponse = await useUploadFile(imageFile);
+        const videoResponse = await useUploadFile(videoFile);
+        console.log('imageResponse | videoResponse', imageResponse, videoResponse);
 
-    useEffect(() => {
-        if (files.video) {
-            console.log('Video file:', files.video);
+        const formData = {
+            title: form.title,
+            prompt: form.prompt,
+            thumbnail: files.image.uri,  // 修改为直接访问 uri
+            video: files.video.uri,      // 修改为直接访问 uri
+            creator: user.$id
         }
-    }, [files.video]);
+        await uploadData(formData);
+    };
 
 
     return (
@@ -68,7 +87,7 @@ export default function Create() {
                 {/* Upload Video */}
                 <Text className='text-gray-100 mt-5 text-lg'>Upload Video</Text>
                 {/* TODO：视频存在则显示视频 */}
-                {!files.video ? (
+                {!isVideoSelected ? (
                     <TouchableOpacity onPress={handlePickVideo}>
                         <View className='w-full h-44 bg-[#1e1e2d] rounded-2xl mt-2 justify-center items-center'>
                             <View className='w-14 h-14 border border-dashed border-secondary-100
@@ -84,7 +103,7 @@ export default function Create() {
                     <View className='w-full h-60 bg-[#1e1e2d] rounded-2xl mt-2 justify-center items-center'>
                         <Video
                             // 参数格式待修改
-                            source={{ uri: files.video.assets[0].uri }}
+                            source={{ uri: files.video.uri }}
                             className='w-full h-4/5 rounded-xl'
                             resizeMode={ResizeMode.CONTAIN}
                             useNativeControls
@@ -99,7 +118,7 @@ export default function Create() {
                 <Text className='text-gray-100 mt-5 text-lg'>Thumbnail Image</Text>
                 {/* TODO：图片存在则显示图片 */}
                 <TouchableOpacity onPress={handlePickImage}>
-                    {!files.image ? (
+                    {!isImageSelected ? (
                         <View className='w-full h-16 bg-[#1e1e2d] rounded-2xl mt-2 flex-row justify-center items-center'>
                             <Image
                                 source={icons.upload}
@@ -110,7 +129,7 @@ export default function Create() {
                     ) : (
                         <View className='w-full h-52 bg-[#1e1e2d] rounded-2xl mt-2 flex-row justify-center items-center overflow-hidden'>
                             <Image
-                                source={{ uri: files.image.assets[0].uri }}
+                                source={{ uri: files.image.uri }}
                                 className='w-4/5 h-4/5'
                                 resizeMode='contain'
                             />
@@ -127,7 +146,7 @@ export default function Create() {
 
                 {/* submit button */}
                 <CustomButton
-                    onPress={() => { }}
+                    onPress={() => { handleUpload() }}
                     title={'Submit & Publish'}
                     style={'h-16 my-8'}
                     textStyle={'text-black-100'}
