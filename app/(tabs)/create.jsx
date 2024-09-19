@@ -124,8 +124,8 @@ export default function Create() {
                         <Video
                             // 参数格式待修改
                             source={{ uri: files.video.uri }}
-                            className='w-full h-4/5 rounded-xl'
-                            resizeMode={ResizeMode.CONTAIN}
+                            className='w-full h-full rounded-xl'
+                            resizeMode={ResizeMode.COVER}
                             useNativeControls
                         />
                     </View>
@@ -147,8 +147,8 @@ export default function Create() {
                         <View className='w-full h-52 bg-[#1e1e2d] rounded-2xl mt-2 flex-row justify-center items-center overflow-hidden'>
                             <Image
                                 source={{ uri: files.image.uri }}
-                                className='w-4/5 h-4/5'
-                                resizeMode='contain'
+                                className='w-full h-full'
+                                resizeMode='cover'
                             />
                         </View>
                     )}
