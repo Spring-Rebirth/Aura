@@ -1,5 +1,5 @@
 //cSpell:words psemibold appwrite
-import { View, Text, FlatList, Image, ActivityIndicator } from 'react-native'
+import { View, Text, FlatList, Image, ActivityIndicator, RefreshControl } from 'react-native'
 import { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { images } from '../../constants'
@@ -8,31 +8,31 @@ import EmptyState from '../../components/EmptyState'
 import CustomButton from '../../components/CustomButton'
 import VideoCard from '../../components/VideoCard'
 import useGetData from '../../hooks/useGetData'
-import { useLocalSearchParams } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
+import { useGlobalContext } from '../../context/GlobalProvider'
 
 export default function Saved() {
     const [refreshing, setRefreshing] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [queryData, setQueryData] = useState([]);
-    const { fetchQueryPosts } = useGetData({ setLoading, setQueryData });
-    const { query } = useLocalSearchParams();
+    const [savedPostsData, setSavedPostsData] = useState([]);
+    const { fetchSavedPosts } = useGetData({ setLoading, setSavedPostsData });
+    const { user } = useGlobalContext();
 
-    // const handleRefresh = () => {
-    //     setRefreshing(true);
-    //     fetchQueryPosts(query);
-    //     setRefreshing(false);
-    // }
+    const handleRefresh = () => {
+        setRefreshing(true);
+        fetchSavedPosts();
+        setRefreshing(false);
+    }
 
-    // useEffect(() => {
-    //     fetchQueryPosts(query);
-    // }, [query])
+    useEffect(() => {
+        fetchSavedPosts(user.favorite);
+    }, [user])
 
     return (
         <SafeAreaView className='bg-primary h-full'>
 
             <FlatList
-                data={loading ? [] : queryData}
+                data={loading ? [] : savedPostsData}
                 // item 是 data 数组中的每一项
                 keyExtractor={(item) => item.$id}
 
@@ -79,11 +79,10 @@ export default function Saved() {
                         </View>
                     );
                 }}
-
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+                }
             />
-
-
-
 
             <StatusBar style='light' />
         </SafeAreaView>

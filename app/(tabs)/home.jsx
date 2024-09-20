@@ -1,5 +1,5 @@
 //cSpell:words psemibold appwrite
-import { View, Text, FlatList, Image, RefreshControl, ActivityIndicator } from 'react-native'
+import { View, Text, FlatList, Image, RefreshControl, ActivityIndicator, Alert } from 'react-native'
 import { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { images } from '../../constants'
@@ -11,13 +11,14 @@ import VideoCard from '../../components/VideoCard'
 import useGetData from '../../hooks/useGetData'
 import { useGlobalContext } from '../../context/GlobalProvider'
 import { StatusBar } from 'expo-status-bar'
+import { updateSavedVideo } from '../../lib/appwrite'
 
 export default function Home() {
 	const [refreshing, setRefreshing] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [data, setData] = useState([]);
 	const [latestData, setLatestData] = useState([]);
-	const { user } = useGlobalContext();
+	const { user, setUser } = useGlobalContext();
 	const { fetchPosts, fetchLatestPosts } = useGetData({ setLoading, setData, setLatestData });
 
 	const handleRefresh = () => {
@@ -25,7 +26,31 @@ export default function Home() {
 		fetchPosts();
 		fetchLatestPosts();
 		setRefreshing(false);
+		console.log('user.favorite:', user.favorite);
 	}
+	// 更新API updateSavedVideo()
+	const handleAddSaved = (videoId) => {
+		if (!user.favorite.includes(videoId)) {
+			// 深拷贝对象
+			const newUser = JSON.parse(JSON.stringify(user));
+			newUser.favorite.push(videoId);
+			setUser(prev => ({
+				...prev,
+				favorite: newUser.favorite
+			}))
+			Alert.alert('Save successful');
+		} else {
+			Alert.alert('Already Saved this video');
+		}
+	}
+
+
+	// console.log(`home-data: ${JSON.stringify(data, null, 2)}`);
+
+	useEffect(() => {
+		const { favorite } = user;
+		updateSavedVideo(user.$id, { favorite });
+	}, [user])
 
 
 	useEffect(() => {
@@ -70,7 +95,7 @@ export default function Home() {
 				// renderItem 接受一个对象参数，通常解构为 { item, index, separators }
 				renderItem={({ item }) => {
 					return (
-						<VideoCard video={item} />
+						<VideoCard post={item} handleAddSaved={handleAddSaved} />
 					)
 				}}
 				ListEmptyComponent={() => {

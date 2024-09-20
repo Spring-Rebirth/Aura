@@ -6,9 +6,15 @@ import { ResizeMode, Video } from 'expo-av';
 import star from '../assets/menu/star-solid.png'
 import trash from '../assets/menu/trash-solid.png'
 
-export default function VideoCard({ video: { title, thumbnail, video, creator: { username, avatar } } }) {
+export default function VideoCard({
+    post: { $id, title, thumbnail, video, creator: { username, avatar, favorite } },
+    handleAddSaved,
+    handleDelete
+}) {
     const [playing, setPlaying] = useState(false);
     const [showControlMenu, setShowControlMenu] = useState(false);
+
+    console.log('VideoCard  $id:', $id)
 
     return (
         <View className='my-4 mx-4 relative'>
@@ -19,7 +25,7 @@ export default function VideoCard({ video: { title, thumbnail, video, creator: {
                                 px-6 py-0 '
                 >
                     <Pressable
-                        onPress={() => { }}
+                        onPress={() => handleAddSaved($id)}
                         className='w-full h-12 flex-row items-center'
                     >
                         <Image
@@ -30,7 +36,7 @@ export default function VideoCard({ video: { title, thumbnail, video, creator: {
                     </Pressable>
 
                     <Pressable
-                        onPress={() => { }}
+                        onPress={handleDelete}
                         className='w-full h-12 flex-row items-center'
                     >
                         <Image
