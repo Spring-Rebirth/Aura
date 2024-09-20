@@ -69,13 +69,13 @@ export default function Saved() {
                             <Text className='mt-[10] text-white text-xl'>Loading, please wait...</Text>
                         </View>
                     ) : (
-                        <View>
-                            <EmptyState />
-                            <CustomButton
-                                title={'Create Video'}
-                                textStyle={'text-black'}
-                                style={'h-16 my-5 mx-4'}
+                        <View className='items-center'>
+                            <Image
+                                source={images.empty}
+                                className='w-[270px] h-[215px]'
+                                resizeMode='contain'
                             />
+                            <Text className='mt-2 text-white font-psemibold text-xl'>No Videos Saved</Text>
                         </View>
                     );
                 }}

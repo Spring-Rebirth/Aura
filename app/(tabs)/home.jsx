@@ -111,6 +111,7 @@ export default function Home() {
 								title={'Create Video'}
 								textStyle={'text-black'}
 								style={'h-16 my-5 mx-4'}
+								onPress={() => router.push('/create')}
 							/>
 						</View>
 					);
