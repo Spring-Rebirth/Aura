@@ -18,9 +18,9 @@ export default function Saved() {
     const { fetchSavedPosts } = useGetData({ setLoading, setSavedPostsData });
     const { user } = useGlobalContext();
 
-    const handleRefresh = () => {
+    const handleRefresh = async () => {
         setRefreshing(true);
-        fetchSavedPosts();
+        await fetchSavedPosts(user.favorite);
         setRefreshing(false);
     }
 
