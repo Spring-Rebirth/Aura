@@ -62,15 +62,19 @@ export default function SignUp() {
 
                             <CustomForm title='User Name'
                                 handleChangeText={(text) => setForm({ ...form, username: text })}
+                                value={form.username}
                             />
                             <CustomForm title='Email'
                                 handleChangeText={(text) => setForm({ ...form, email: text })}
+                                value={form.email}
                             />
                             <CustomForm title='Password'
                                 handleChangeText={(text) => setForm({ ...form, password: text })}
+                                value={form.password}
                             />
                             <CustomForm title='Confirm Password'
                                 handleChangeText={(text) => setForm({ ...form, confirmPassword: text })}
+                                value={form.confirmPassword}
                             />
 
                             <CustomButton

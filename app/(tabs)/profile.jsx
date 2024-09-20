@@ -1,4 +1,4 @@
-import { View, Text, FlatList, Image, ActivityIndicator, TouchableOpacity } from 'react-native'
+import { View, Text, FlatList, Image, ActivityIndicator, TouchableOpacity, refreshControl } from 'react-native'
 import { useEffect, useState } from 'react'
 import useGetData from '../../hooks/useGetData'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -16,6 +16,7 @@ export default function profile() {
     const [loading, setLoading] = useState(false);
     const { fetchUserPosts } = useGetData({ setLoading, setUserPostsData });
     const { user, setUser, setIsLoggedIn } = useGlobalContext();
+    const [refreshing, setRefreshing] = useState(false);
 
 
     useEffect(() => {
@@ -29,6 +30,12 @@ export default function profile() {
         setUser(null);
         setIsLoggedIn(false);
         router.replace('/sign-in');
+    }
+
+    const handleRefresh = async () => {
+        setRefreshing(true);
+        await fetchUserPosts(user.$id)
+        setRefreshing(false);
     }
 
     return (
@@ -97,6 +104,10 @@ export default function profile() {
                         </View>
                     );
                 }}
+
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+                }
 
             />
             <StatusBar style='light' />
