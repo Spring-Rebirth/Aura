@@ -77,7 +77,7 @@ export default function profile() {
                 // renderItem 接受一个对象参数，通常解构为 { item, index, separators }
                 renderItem={({ item }) => {
                     return (
-                        <VideoCard video={item} />
+                        <VideoCard post={item} />
                     )
                 }}
                 ListEmptyComponent={() => {

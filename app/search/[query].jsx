@@ -1,5 +1,5 @@
 //cSpell:words psemibold appwrite
-import { View, Text, FlatList, Image, ActivityIndicator } from 'react-native'
+import { View, Text, FlatList, Image, ActivityIndicator, RefreshControl } from 'react-native'
 import { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { images } from '../../constants'
@@ -60,7 +60,7 @@ export default function Search() {
                 // renderItem 接受一个对象参数，通常解构为 { item, index, separators }
                 renderItem={({ item }) => {
                     return (
-                        <VideoCard video={item} />
+                        <VideoCard post={item} />
                     )
                 }}
                 ListEmptyComponent={() => {
@@ -80,6 +80,10 @@ export default function Search() {
                         </View>
                     );
                 }}
+
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+                }
             />
 
             <StatusBar style='light' />
