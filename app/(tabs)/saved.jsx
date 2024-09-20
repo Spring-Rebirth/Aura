@@ -11,22 +11,22 @@ import useGetData from '../../hooks/useGetData'
 import { useLocalSearchParams } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 
-export default function Search() {
+export default function Saved() {
     const [refreshing, setRefreshing] = useState(false);
     const [loading, setLoading] = useState(false);
     const [queryData, setQueryData] = useState([]);
     const { fetchQueryPosts } = useGetData({ setLoading, setQueryData });
     const { query } = useLocalSearchParams();
 
-    const handleRefresh = () => {
-        setRefreshing(true);
-        fetchQueryPosts(query);
-        setRefreshing(false);
-    }
+    // const handleRefresh = () => {
+    //     setRefreshing(true);
+    //     fetchQueryPosts(query);
+    //     setRefreshing(false);
+    // }
 
-    useEffect(() => {
-        fetchQueryPosts(query);
-    }, [query])
+    // useEffect(() => {
+    //     fetchQueryPosts(query);
+    // }, [query])
 
     return (
         <SafeAreaView className='bg-primary h-full'>
@@ -42,8 +42,7 @@ export default function Search() {
 
                             <View className='flex-row justify-between items-center'>
                                 <View >
-                                    <Text className='text-gray-100 text-lg'>Search Result</Text>
-                                    <Text className='text-white text-2xl font-psemibold '>{query}</Text>
+                                    <Text className='text-gray-100 text-lg'>Saved Videos</Text>
                                 </View>
                                 <Image
                                     source={images.logoSmall}
@@ -80,10 +79,18 @@ export default function Search() {
                         </View>
                     );
                 }}
+
             />
 
-            <StatusBar style='light' />
 
+
+
+            <StatusBar style='light' />
         </SafeAreaView>
     )
 }
+
+
+
+
+

@@ -61,13 +61,13 @@ export default function TabsLayout() {
                 }}
             />
             <Tabs.Screen
-                name='bookmark'
+                name='saved'
                 options={{
-                    title: 'Bookmark',
+                    title: 'Saved',
                     headerShown: false,
                     tabBarIcon: ({ color, focused }) => (
                         <TabIcon
-                            name={'Bookmark'}
+                            name={'Saved'}
                             icon={icons.bookmark}
                             color={color}
                             focused={focused} />

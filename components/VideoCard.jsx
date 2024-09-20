@@ -1,13 +1,49 @@
-import { View, Text, Image, TouchableOpacity } from 'react-native'
+// cSpell:ignore Pressable
+import { View, Text, Image, TouchableOpacity, Pressable } from 'react-native'
 import { useState } from 'react'
 import { icons } from '../constants'
 import { ResizeMode, Video } from 'expo-av';
+import star from '../assets/menu/star-solid.png'
+import trash from '../assets/menu/trash-solid.png'
 
 export default function VideoCard({ video: { title, thumbnail, video, creator: { username, avatar } } }) {
     const [playing, setPlaying] = useState(false);
+    const [showControlMenu, setShowControlMenu] = useState(false);
 
     return (
-        <View className='my-4 mx-4'>
+        <View className='my-4 mx-4 relative'>
+            {/* 菜单弹窗 */}
+            {showControlMenu ? (
+                <View
+                    className='absolute right-1 top-8 bg-[#1E1E2D] w-40 h-auto rounded-md z-10
+                                px-6 py-0 '
+                >
+                    <Pressable
+                        onPress={() => { }}
+                        className='w-full h-12 flex-row items-center'
+                    >
+                        <Image
+                            source={star}
+                            className='w-5 h-5 mr-3'
+                        />
+                        <Text className='text-white text-lg'>Save</Text>
+                    </Pressable>
+
+                    <Pressable
+                        onPress={() => { }}
+                        className='w-full h-12 flex-row items-center'
+                    >
+                        <Image
+                            source={trash}
+                            className='w-5 h-5 mr-3'
+                        />
+                        <Text className='text-white text-lg'>Delete</Text>
+                    </Pressable>
+
+                </View>
+            ) : false
+            }
+
             {/* 信息视图 */}
             <View className='flex-row'>
                 <Image
@@ -22,52 +58,56 @@ export default function VideoCard({ video: { title, thumbnail, video, creator: {
                         {username}
                     </Text>
                 </View>
-                <Image
-                    source={icons.menu}
-                    className='w-5 h-5'
-                    resizeMode='contain'
-                />
+                <TouchableOpacity onPress={() => setShowControlMenu(prev => !prev)}>
+                    <Image
+                        source={icons.menu}
+                        className='w-5 h-5'
+                        resizeMode='contain'
+                    />
+                </TouchableOpacity>
+
             </View>
 
             {/* 视频视图 */}
-            {!playing
-                ? (
-                    <TouchableOpacity
-                        className='w-full h-60 mt-6 rounded-xl justify-center items-center relative overflow-hidden' // 添加 overflow-hidden
-                        activeOpacity={0.7}
-                        onPress={() => setPlaying(true)}
-                    >
-                        <Image
-                            source={{ uri: thumbnail }}
-                            className='w-full h-full rounded-xl'
-                            resizeMode='cover' // 修改为 cover
-                        />
-                        <Image
-                            source={icons.play}
-                            className='w-12 h-12 absolute inset-0 m-auto'
-                            resizeMode='cover'
-                        />
-                    </TouchableOpacity>
+            {
+                !playing
+                    ? (
+                        <TouchableOpacity
+                            className='w-full h-60 mt-6 rounded-xl justify-center items-center relative overflow-hidden' // 添加 overflow-hidden
+                            activeOpacity={0.7}
+                            onPress={() => setPlaying(true)}
+                        >
+                            <Image
+                                source={{ uri: thumbnail }}
+                                className='w-full h-full rounded-xl'
+                                resizeMode='cover' // 修改为 cover
+                            />
+                            <Image
+                                source={icons.play}
+                                className='w-12 h-12 absolute inset-0 m-auto'
+                                resizeMode='cover'
+                            />
+                        </TouchableOpacity>
 
-                )
-                : (
-                    // latest changed code
-                    <Video
-                        source={{ uri: video }}
-                        className='w-full h-60 rounded-xl mt-6'
-                        resizeMode={ResizeMode.CONTAIN}
-                        useNativeControls
-                        shouldPlay
-                        onPlaybackStatusUpdate={(status) => {
-                            if (status.didJustFinish) {
-                                setPlaying(false);
-                            }
-                        }}
-                    />
+                    )
+                    : (
+                        // latest changed code
+                        <Video
+                            source={{ uri: video }}
+                            className='w-full h-60 rounded-xl mt-6'
+                            resizeMode={ResizeMode.CONTAIN}
+                            useNativeControls
+                            shouldPlay
+                            onPlaybackStatusUpdate={(status) => {
+                                if (status.didJustFinish) {
+                                    setPlaying(false);
+                                }
+                            }}
+                        />
 
-                )
+                    )
             }
 
-        </View>
+        </View >
     )
 }
