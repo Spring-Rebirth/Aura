@@ -10,6 +10,7 @@ function useGetData({ setLoading, setData, setLatestData, setQueryData, setUserP
             const res = await fetchFunction();
             setState(res);
         } catch (error) {
+            console.log('Error in useGetData > fetchData')
             Alert.alert(`Failed to load ${errorMessage} data`, error.message);
         } finally {
             setLoading(false);
