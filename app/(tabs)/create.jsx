@@ -9,7 +9,7 @@ import { ResizeMode, Video } from 'expo-av'
 import { useGlobalContext } from '../../context/GlobalProvider'
 import { useUploadFile } from '../../hooks/useUploadFile'
 // cSpell:words appwrite psemibold
-import { fetchFileUrl, getFileFromStorage, uploadData } from '../../lib/appwrite'
+import { fetchFileUrl, uploadData } from '../../lib/appwrite'
 import { StatusBar } from 'expo-status-bar'
 
 export default function Create() {
@@ -75,10 +75,12 @@ export default function Create() {
 
             const { response: imageResponse, fileId: imageId } = imageUpload;
             const { response: videoResponse, fileId: videoId } = videoUpload;
+            console.log(`imageId: ${imageId} \n videoId: ${videoId}`);
 
             // 获取数据库的图片和视频URI
             const StorageImageUrl = await fetchFileUrl(imageId);
             const StorageVideoUrl = await fetchFileUrl(videoId);
+            console.log(`StorageImageUrl: ${StorageImageUrl} \n 'StorageVideoUrl:' ${StorageVideoUrl}`);
 
             const formData = {
                 title: form.title,
