@@ -6,7 +6,7 @@ export const useUploadFile = async (file) => {
     try {
         // 检查 file 是否有效
         if (!file) {
-            throw new Error('No file selected or file selection was canceled.');
+            throw new Error('File does not exist');
         }
 
 
@@ -20,10 +20,10 @@ export const useUploadFile = async (file) => {
         // const fileContent = await FileSystem.readAsStringAsync(fileUri, { encoding: encodingType });
         const fileModel = { name, type: mimeType, size, uri };
         // 创建文件
-        const response = await createFile(fileModel);
+        const { response, fileId } = await createFile(fileModel);
 
-        console.log('File uploaded successfully', response);
-        return response;
+        console.log('File uploaded successfully', response, '\n', 'fileId:', fileId);
+        return { response, fileId };
     } catch (error) {
         console.error('File upload failed', error.message || error);
         throw error;

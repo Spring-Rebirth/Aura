@@ -9,7 +9,7 @@ import { ResizeMode, Video } from 'expo-av'
 import { useGlobalContext } from '../../context/GlobalProvider'
 import { useUploadFile } from '../../hooks/useUploadFile'
 // cSpell:words appwrite psemibold
-import { uploadData } from '../../lib/appwrite'
+import { fetchFileUrl, getFileFromStorage, uploadData } from '../../lib/appwrite'
 import { StatusBar } from 'expo-status-bar'
 
 export default function Create() {
@@ -65,19 +65,32 @@ export default function Create() {
                 return;
             }
             // 上传文件
-            const imageResponse = await useUploadFile(imageFile);
-            const videoResponse = await useUploadFile(videoFile);
-            console.log('imageResponse | videoResponse', imageResponse, videoResponse);
+
+            const [imageUpload, videoUpload] = await Promise.all([
+                useUploadFile(imageFile),
+                useUploadFile(videoFile)
+            ])
+            console.log('|| imageUpload:', imageUpload, '\n videoUpload:', videoUpload);
+
+
+            const { response: imageResponse, fileId: imageId } = imageUpload;
+            const { response: videoResponse, fileId: videoId } = videoUpload;
+
+            // 获取数据库的图片和视频URI
+            const StorageImageUrl = await fetchFileUrl(imageId);
+            const StorageVideoUrl = await fetchFileUrl(videoId);
 
             const formData = {
                 title: form.title,
                 prompt: form.prompt,
-                thumbnail: files.image.uri,
-                video: files.video.uri,
+                thumbnail: StorageImageUrl, //
+                video: StorageVideoUrl,     //
                 creator: user.$id
             }
+            // 修改这里URI为从数据库获取
             await uploadData(formData);
             Alert.alert('Upload Success !')
+
             setForm({ title: '', prompt: '' })
             setFiles({
                 image: { uri: '', name: '', mimeType: '' },
