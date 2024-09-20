@@ -1,4 +1,4 @@
-import { View, Text, FlatList, Image, ActivityIndicator, TouchableOpacity, refreshControl } from 'react-native'
+import { View, Text, FlatList, Image, ActivityIndicator, TouchableOpacity, RefreshControl } from 'react-native'
 import { useEffect, useState } from 'react'
 import useGetData from '../../hooks/useGetData'
 import { SafeAreaView } from 'react-native-safe-area-context'
