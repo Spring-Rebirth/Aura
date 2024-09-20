@@ -28,7 +28,7 @@ export default function Home() {
 		setRefreshing(false);
 		console.log('user.favorite:', user.favorite);
 	}
-	// 更新API updateSavedVideo()
+
 	const handleAddSaved = (videoId) => {
 		if (!user.favorite.includes(videoId)) {
 			// 深拷贝对象
@@ -46,7 +46,7 @@ export default function Home() {
 
 
 	// console.log(`home-data: ${JSON.stringify(data, null, 2)}`);
-
+	// 更新API updateSavedVideo()
 	useEffect(() => {
 		const { favorite } = user;
 		updateSavedVideo(user.$id, { favorite });

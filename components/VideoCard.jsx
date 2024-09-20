@@ -13,8 +13,14 @@ export default function VideoCard({
 }) {
     const [playing, setPlaying] = useState(false);
     const [showControlMenu, setShowControlMenu] = useState(false);
+    const [isSaved, setIsSaved] = useState(false);
 
-    console.log('VideoCard  $id:', $id)
+    const handleClickSave = () => {
+        setShowControlMenu(false);
+        handleAddSaved($id);
+        setIsSaved(true);
+    }
+
 
     return (
         <View className='my-4 mx-4 relative'>
@@ -25,14 +31,16 @@ export default function VideoCard({
                                 px-6 py-0 '
                 >
                     <Pressable
-                        onPress={() => handleAddSaved($id)}
+                        onPress={handleClickSave}
                         className='w-full h-12 flex-row items-center'
                     >
                         <Image
                             source={star}
                             className='w-5 h-5 mr-3'
                         />
-                        <Text className='text-white text-lg'>Save</Text>
+                        <Text className='text-white text-lg'>
+                            {isSaved ? 'saved' + '    √' : 'save'}
+                        </Text>
                     </Pressable>
 
                     <Pressable
