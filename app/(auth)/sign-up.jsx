@@ -40,6 +40,7 @@ export default function SignUp() {
         // 和创建Email api返回值进行比对
         if (userId === verifyInfo.userId) {
             Alert.alert('Verify Successful');
+            setIsLoggedIn(true);
             router.replace('/home');
         } else {
             Alert.alert('Verification failed, please check if the verification link is correct');
@@ -62,10 +63,10 @@ export default function SignUp() {
             // TODO: add to global state
             setUser(newUser);
             setVerifyInfo(Verification);
-            setIsLoggedIn(true);
 
 
-            Alert.alert('Success', 'Verification email sent. Please verify your email.');
+
+            Alert.alert('Success', 'Verification email sent. Please Copy the link in the email and cone back.');
             setOnVerify(true);
 
         } catch (error) {
