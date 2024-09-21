@@ -1,5 +1,5 @@
 import { View, Image, Text, ScrollView, Alert } from 'react-native'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import images from '../../constants/images'
 import CustomForm from '../../components/CustomForm'
@@ -9,6 +9,8 @@ import { Link, router } from 'expo-router'
 // cSpell:word appwrite username psemibold
 import { registerUser } from '../../lib/appwrite'
 import { useGlobalContext } from '../../context/GlobalProvider'
+import * as Clipboard from 'expo-clipboard';
+
 
 export default function SignUp() {
     const [form, setForm] = useState({
@@ -19,7 +21,32 @@ export default function SignUp() {
     })
 
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [onVerify, setOnVerify] = useState(false);
+    const [verifyInfo, setVerifyInfo] = useState(null);
     const { setUser, setIsLoggedIn } = useGlobalContext();
+    // const [clipboardContent, setClipboardContent] = useState('');
+
+    const readClipboard = async () => {
+        const content = await Clipboard.getStringAsync();
+        return content;
+    };
+
+    const handleVerify = async () => {
+        const clipboardContent = await readClipboard();
+
+        const parts = clipboardContent.split('?')[1].split('&');
+        const userId = parts[0].split('=')[1];
+        console.log('userId:', userId);
+        // 和创建Email api返回值进行比对
+        if (userId === verifyInfo.userId) {
+            Alert.alert('Verify Successful');
+            router.replace('/home');
+        } else {
+            Alert.alert('Verification failed, please check if the verification link is correct');
+        }
+
+    }
+
 
     async function submit() {
 
@@ -31,13 +58,15 @@ export default function SignUp() {
         setIsSubmitting(true);
 
         try {
-            const newUser = await registerUser(form.email, form.password, form.username);
+            const { userDocument: newUser, Verification } = await registerUser(form.email, form.password, form.username);
             // TODO: add to global state
             setUser(newUser);
+            setVerifyInfo(Verification);
             setIsLoggedIn(true);
 
 
             Alert.alert('Success', 'Verification email sent. Please verify your email.');
+            setOnVerify(true);
 
         } catch (error) {
             Alert.alert('Error', error.message);
@@ -63,39 +92,61 @@ export default function SignUp() {
 
                             <Text className='text-white text-2xl font-psemibold mt-6'>Sign up</Text>
 
-                            <CustomForm title='User Name'
-                                handleChangeText={(text) => setForm({ ...form, username: text })}
-                                value={form.username}
-                            />
-                            <CustomForm title='Email'
-                                handleChangeText={(text) => setForm({ ...form, email: text })}
-                                value={form.email}
-                            />
-                            <CustomForm title='Password'
-                                handleChangeText={(text) => setForm({ ...form, password: text })}
-                                value={form.password}
-                            />
-                            <CustomForm title='Confirm Password'
-                                handleChangeText={(text) => setForm({ ...form, confirmPassword: text })}
-                                value={form.confirmPassword}
-                            />
+                            {onVerify ? (
+                                <>
+                                    <Text className='text-white text-2xl font-psemibold mt-6'>
+                                        Already copied the verification link?
+                                    </Text>
+                                    <Text className='text-white text-2xl font-psemibold mt-6'>
+                                        Click the button to verify
+                                    </Text>
 
-                            <CustomButton
-                                title='Sign Up'
-                                style='h-16 mt-6 py-3'
-                                textStyle={'text-lg text-[#161622]'}
-                                onPress={submit}
-                                isLoading={isSubmitting}
-                            />
-                            <View className='items-center mt-6'>
-                                <Text className='text-gray-100'>
-                                    Already have an account?&nbsp;&nbsp;
-                                    <Link
-                                        href='/sign-in'
-                                        className='text-secondary'>Login
-                                    </Link>
-                                </Text>
-                            </View>
+                                    <CustomButton
+                                        title='Verify'
+                                        style='h-16 mt-6 py-3'
+                                        textStyle={'text-lg text-[#161622]'}
+                                        onPress={() => { handleVerify() }}
+                                        isLoading={isSubmitting}
+                                    />
+                                </>
+                            ) : (
+                                <>
+                                    <CustomForm title='User Name'
+                                        handleChangeText={(text) => setForm({ ...form, username: text })}
+                                        value={form.username}
+                                    />
+                                    <CustomForm title='Email'
+                                        handleChangeText={(text) => setForm({ ...form, email: text })}
+                                        value={form.email}
+                                    />
+                                    <CustomForm title='Password'
+                                        handleChangeText={(text) => setForm({ ...form, password: text })}
+                                        value={form.password}
+                                    />
+                                    <CustomForm title='Confirm Password'
+                                        handleChangeText={(text) => setForm({ ...form, confirmPassword: text })}
+                                        value={form.confirmPassword}
+                                    />
+
+                                    <CustomButton
+                                        title='Sign Up'
+                                        style='h-16 mt-6 py-3'
+                                        textStyle={'text-lg text-[#161622]'}
+                                        onPress={submit}
+                                        isLoading={isSubmitting}
+                                    />
+                                    <View className='items-center mt-6'>
+                                        <Text className='text-gray-100'>
+                                            Already have an account?&nbsp;&nbsp;
+                                            <Link
+                                                href='/sign-in'
+                                                className='text-secondary'>Login
+                                            </Link>
+                                        </Text>
+                                    </View>
+                                </>
+                            )}
+
                         </View>
                     </View>
                 </ScrollView>
