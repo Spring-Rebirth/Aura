@@ -39,7 +39,7 @@ export default function VideoCard({
                             className='w-5 h-5 mr-3'
                         />
                         <Text className='text-white text-lg'>
-                            {isSaved ? 'Saved' + '    √' : 'Save'}
+                            {isSaved ? ('Saved' + '    √') : 'Save'}
                         </Text>
                     </Pressable>
 
