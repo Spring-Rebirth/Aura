@@ -95,7 +95,7 @@ export default function Home() {
 				// renderItem 接受一个对象参数，通常解构为 { item, index, separators }
 				renderItem={({ item }) => {
 					return (
-						<VideoCard post={item} handleAddSaved={handleAddSaved} />
+						<VideoCard post={item} handleAddSaved={handleAddSaved} handleRefresh={handleRefresh} />
 					)
 				}}
 				ListEmptyComponent={() => {

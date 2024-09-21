@@ -10,7 +10,8 @@ import { deleteVideoDoc, deleteVideoFiles } from '../lib/appwrite'
 
 export default function VideoCard({
     post: { $id, title, thumbnail, video, creator: { accountId, username, avatar } },
-    handleAddSaved
+    handleAddSaved,
+    handleRefresh
 }) {
     const [playing, setPlaying] = useState(false);
     const [showControlMenu, setShowControlMenu] = useState(false);
@@ -41,6 +42,7 @@ export default function VideoCard({
                     deleteVideoFiles(videoId)
                 ]);
                 console.log("删除成功");
+                handleRefresh();
                 Alert.alert('Delete Success');
             } catch (error) {
                 console.error("删除过程中出错:", error);
