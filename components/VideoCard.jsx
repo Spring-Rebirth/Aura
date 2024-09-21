@@ -1,25 +1,62 @@
 // cSpell:ignore Pressable
-import { View, Text, Image, TouchableOpacity, Pressable } from 'react-native'
-import { useState } from 'react'
+import { View, Text, Image, TouchableOpacity, Pressable, Alert } from 'react-native'
+import { useEffect, useState } from 'react'
 import { icons } from '../constants'
 import { ResizeMode, Video } from 'expo-av';
 import star from '../assets/menu/star-solid.png'
 import trash from '../assets/menu/trash-solid.png'
+import { useGlobalContext } from '../context/GlobalProvider'
+import { deleteVideoDoc, deleteVideoFiles } from '../lib/appwrite'
 
 export default function VideoCard({
-    post: { $id, title, thumbnail, video, creator: { username, avatar, favorite } },
-    handleAddSaved,
-    handleDelete
+    post: { $id, title, thumbnail, video, creator: { accountId, username, avatar } },
+    handleAddSaved
 }) {
     const [playing, setPlaying] = useState(false);
     const [showControlMenu, setShowControlMenu] = useState(false);
     const [isSaved, setIsSaved] = useState(false);
+    const [isVideoCreator, setIsVideoCreator] = useState(false);
+    const { user, fileIdStore } = useGlobalContext();
 
     const handleClickSave = () => {
         setShowControlMenu(false);
         handleAddSaved($id);
         setIsSaved(true);
     }
+
+    const handleDelete = async () => {
+        setShowControlMenu(false);
+
+        const foundItem = fileIdStore.find(item => item.postId === $id);
+        if (foundItem) {
+            const { imageId, videoId } = foundItem;
+            console.log("Image ID:", imageId);
+            console.log("Video ID:", videoId);
+
+            try {
+                // 使用 Promise.all 并行执行多个异步操作
+                await Promise.all([
+                    deleteVideoDoc($id), // 假设这个函数删除文档
+                    deleteVideoFiles(imageId), // 假设这个函数删除文件
+                    deleteVideoFiles(videoId)
+                ]);
+                console.log("删除成功");
+                Alert.alert('Delete Success');
+            } catch (error) {
+                console.error("删除过程中出错:", error);
+            }
+        } else {
+            console.log("未找到匹配的 postId, fileIdStore这个视频的文件ID");
+            Alert.alert('This is a demonstration video and cannot be deleted');
+        }
+    }
+
+
+    useEffect(() => {
+        if (accountId === user.accountId) {
+            setIsVideoCreator(true);
+        }
+    }, [])
 
 
     return (
@@ -42,17 +79,19 @@ export default function VideoCard({
                             {isSaved ? ('Saved' + '    √') : 'Save'}
                         </Text>
                     </Pressable>
+                    {isVideoCreator ? (
+                        <Pressable
+                            onPress={handleDelete}
+                            className='w-full h-12 flex-row items-center'
+                        >
+                            <Image
+                                source={trash}
+                                className='w-5 h-5 mr-3'
+                            />
+                            <Text className='text-white text-lg'>Delete</Text>
+                        </Pressable>
+                    ) : false}
 
-                    <Pressable
-                        onPress={handleDelete}
-                        className='w-full h-12 flex-row items-center'
-                    >
-                        <Image
-                            source={trash}
-                            className='w-5 h-5 mr-3'
-                        />
-                        <Text className='text-white text-lg'>Delete</Text>
-                    </Pressable>
 
                 </View>
             ) : false

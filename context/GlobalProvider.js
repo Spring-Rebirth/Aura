@@ -13,6 +13,9 @@ function GlobalProvider({ children }) {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
+    // 每一项放入视频URL和文件ID
+    const [fileIdStore, setFileIdStore] = useState([]);
+
     useEffect(() => {
         getCurrentUser()
             .then((res) => {
@@ -42,7 +45,9 @@ function GlobalProvider({ children }) {
             setUser,
             isLoggedIn,
             setIsLoggedIn,
-            isLoading
+            isLoading,
+            fileIdStore,
+            setFileIdStore
         }}>
             {children}
         </GlobalContext.Provider>

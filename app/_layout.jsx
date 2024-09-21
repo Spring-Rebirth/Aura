@@ -1,5 +1,5 @@
 import 'react-native-url-polyfill/auto' // from App-write documentation
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Stack, SplashScreen } from "expo-router";
 import { useFonts } from 'expo-font';
 import { GlobalProvider } from '../context/GlobalProvider'
@@ -18,6 +18,7 @@ export default function RootLayout() {
         "Poppins-SemiBold": require("../assets/fonts/Poppins-SemiBold.ttf"),
         "Poppins-Thin": require("../assets/fonts/Poppins-Thin.ttf"),
     });
+
 
     useEffect(() => {
         if (error) throw error;
