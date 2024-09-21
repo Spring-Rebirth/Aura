@@ -35,7 +35,10 @@ export default function SignUp() {
             // TODO: add to global state
             setUser(newUser);
             setIsLoggedIn(true);
-            router.replace('/home');
+
+
+            Alert.alert('Success', 'Verification email sent. Please verify your email.');
+
         } catch (error) {
             Alert.alert('Error', error.message);
         } finally {
