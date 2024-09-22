@@ -20,7 +20,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff",
         "package": "com.mystseed.aora"
-      }
+      },
+      "package": "com.mystseed.aora"
     },
     "web": {
       "favicon": "./assets/favicon.png"
