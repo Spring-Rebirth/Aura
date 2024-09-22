@@ -14,9 +14,6 @@
     },
     "ios": {
       "supportsTablet": true,
-      "associatedDomains": [
-        "applinks:cloud.appwrite.io"
-      ]
     },
     "android": {
       "adaptiveIcon": {
@@ -24,22 +21,6 @@
         "backgroundColor": "#ffffff",
         "package": "com.mystseed.aora"
       },
-      "intentFilters": [
-        {
-          "action": "VIEW",
-          "data": [
-            {
-              "scheme": "https",
-              "host": "cloud.appwrite.io", // 监听特定域名
-              "pathPrefix": "/v1" // 监听特定路径前缀
-            }
-          ],
-          "category": [
-            "BROWSABLE",
-            "DEFAULT"
-          ]
-        }
-      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
