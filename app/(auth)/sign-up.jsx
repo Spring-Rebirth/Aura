@@ -123,7 +123,7 @@ export default function SignUp() {
             // deleteTempUser(tempUserId); // 清除未完成的用户
             Alert.alert(
                 `Exited the verification phase \n退出了验证阶段`,
-                `To re-register the same account, please contact the App administrator. \n如果需要重新注册相同的账号, 请联系App管理员。`
+                `To re-register the same account, please contact the App developer. \n如果需要重新注册相同的账号, 请联系开发者。`
             );
 
         });
