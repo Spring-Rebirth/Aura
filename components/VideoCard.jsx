@@ -18,11 +18,11 @@ export default function VideoCard({
     const [isVideoCreator, setIsVideoCreator] = useState(false);
     const { user, fileIdStore } = useGlobalContext();
 
-    const handleAddSaved = (videoId) => {
-        if (!user.favorite.includes(videoId)) {
+    const handleAddSaved = () => {
+        if (!user.favorite.includes($id)) {
             // 深拷贝对象
             const newUser = JSON.parse(JSON.stringify(user));
-            newUser.favorite.push(videoId);
+            newUser.favorite.push($id);
             setUser(prev => ({
                 ...prev,
                 favorite: newUser.favorite
@@ -30,7 +30,7 @@ export default function VideoCard({
             Alert.alert('Save successful');
         } else {
             // 剔除已保存项的新数组
-            const updatedItems = user.favorite.filter(item => item !== videoId);
+            const updatedItems = user.favorite.filter(item => item !== $id);
             setUser(prev => ({
                 ...prev,
                 favorite: updatedItems
@@ -42,7 +42,7 @@ export default function VideoCard({
 
     const handleClickSave = () => {
         setShowControlMenu(false);
-        handleAddSaved($id);
+        handleAddSaved();
         setIsSaved(prev => !prev);
     }
 
