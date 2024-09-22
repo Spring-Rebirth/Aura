@@ -1,14 +1,14 @@
+// cSpell:word appwrite
 import { View, Image, Text, ScrollView, Alert } from 'react-native'
 import { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { StatusBar } from 'expo-status-bar'
+import { Link, router } from 'expo-router'
+import { getCurrentUser, signIn } from '../../lib/appwrite'
+import { useGlobalContext } from '../../context/GlobalProvider'
 import images from '../../constants/images'
 import CustomForm from '../../components/CustomForm'
 import CustomButton from '../../components/CustomButton'
-import { StatusBar } from 'expo-status-bar'
-import { Link, router } from 'expo-router'
-// cSpell:word appwrite
-import { getCurrentUser, signIn } from '../../lib/appwrite'
-import { useGlobalContext } from '../../context/GlobalProvider'
 
 export default function SignIn() {
     const [form, setForm] = useState({
