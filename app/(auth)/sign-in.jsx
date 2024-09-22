@@ -49,7 +49,6 @@ export default function SignIn() {
 
     }
 
-
     return (
         <>
             <SafeAreaView className='bg-primary'>
