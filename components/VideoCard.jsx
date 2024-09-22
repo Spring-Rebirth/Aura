@@ -10,7 +10,6 @@ import { deleteVideoDoc, deleteVideoFiles } from '../lib/appwrite'
 
 export default function VideoCard({
     post: { $id, title, thumbnail, video, creator: { accountId, username, avatar } },
-    handleAddSaved,
     handleRefresh
 }) {
     const [playing, setPlaying] = useState(false);
@@ -19,10 +18,32 @@ export default function VideoCard({
     const [isVideoCreator, setIsVideoCreator] = useState(false);
     const { user, fileIdStore } = useGlobalContext();
 
+    const handleAddSaved = (videoId) => {
+        if (!user.favorite.includes(videoId)) {
+            // 深拷贝对象
+            const newUser = JSON.parse(JSON.stringify(user));
+            newUser.favorite.push(videoId);
+            setUser(prev => ({
+                ...prev,
+                favorite: newUser.favorite
+            }))
+            Alert.alert('Save successful');
+        } else {
+            // 剔除已保存项的新数组
+            const updatedItems = user.favorite.filter(item => item !== videoId);
+            setUser(prev => ({
+                ...prev,
+                favorite: updatedItems
+            }))
+            Alert.alert('Cancel save successfully');
+        }
+    }
+
+
     const handleClickSave = () => {
         setShowControlMenu(false);
         handleAddSaved($id);
-        setIsSaved(true);
+        setIsSaved(prev => !prev);
     }
 
     const handleDelete = async () => {

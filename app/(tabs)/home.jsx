@@ -29,20 +29,6 @@ export default function Home() {
 		console.log('user.favorite:', user.favorite);
 	}
 
-	const handleAddSaved = (videoId) => {
-		if (!user.favorite.includes(videoId)) {
-			// 深拷贝对象
-			const newUser = JSON.parse(JSON.stringify(user));
-			newUser.favorite.push(videoId);
-			setUser(prev => ({
-				...prev,
-				favorite: newUser.favorite
-			}))
-			Alert.alert('Save successful');
-		} else {
-			Alert.alert('Already Saved this video');
-		}
-	}
 
 
 	// console.log(`home-data: ${JSON.stringify(data, null, 2)}`);
