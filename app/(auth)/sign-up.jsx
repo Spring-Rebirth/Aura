@@ -12,7 +12,7 @@ import { useGlobalContext } from '../../context/GlobalProvider'
 import * as Clipboard from 'expo-clipboard';
 import { databases } from '../../lib/appwrite'
 import { useNavigation } from '@react-navigation/native';
-import { deleteUserIfNotCompleted } from '../../lib/appwrite'
+import { deleteTempUser } from '../../lib/appwrite'
 
 export default function SignUp() {
     const [form, setForm] = useState({
@@ -120,7 +120,12 @@ export default function SignUp() {
     useEffect(() => {
         // 监听页面卸载（用户离开页面）
         const unsubscribe = navigation.addListener('beforeRemove', () => {
-            deleteUserIfNotCompleted(tempUserId); // 清除未完成的用户
+            // deleteTempUser(tempUserId); // 清除未完成的用户
+            Alert.alert(
+                `Exited the verification phase \n退出了验证阶段`,
+                `To re-register the same account, please contact the App administrator. \n如果需要重新注册填写的账号, 请联系App管理员。`
+            );
+
         });
 
         return unsubscribe; // 清除监听器
