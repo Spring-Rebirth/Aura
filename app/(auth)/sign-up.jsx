@@ -10,7 +10,9 @@ import { Link, router } from 'expo-router'
 import { registerUser } from '../../lib/appwrite'
 import { useGlobalContext } from '../../context/GlobalProvider'
 import * as Clipboard from 'expo-clipboard';
-
+import { databases } from '../../lib/appwrite'
+import { useNavigation } from '@react-navigation/native';
+import { deleteUserIfNotCompleted } from '../../lib/appwrite'
 
 export default function SignUp() {
     const [form, setForm] = useState({
@@ -20,33 +22,71 @@ export default function SignUp() {
         confirmPassword: ''
     })
 
+    const navigation = useNavigation();
+    const { setUser, setIsLoggedIn } = useGlobalContext();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [onVerify, setOnVerify] = useState(false);
     const [verifyInfo, setVerifyInfo] = useState(null);
-    const { setUser, setIsLoggedIn } = useGlobalContext();
-    // const [clipboardContent, setClipboardContent] = useState('');
+    const [newUser, setNewUser] = useState(null);
+    const [tempUserId, setTempUserId] = useState(null);
 
-    const readClipboard = async () => {
-        const content = await Clipboard.getStringAsync();
-        return content;
-    };
 
     const handleVerify = async () => {
-        const clipboardContent = await readClipboard();
+        try {
+            // 读取剪贴板内容
+            const clipboardContent = await Clipboard.getStringAsync();
 
-        const parts = clipboardContent.split('?')[1].split('&');
-        const userId = parts[0].split('=')[1];
-        console.log('userId:', userId);
-        // 和创建Email api返回值进行比对
-        if (userId === verifyInfo.userId) {
-            Alert.alert('Verify Successful');
-            setIsLoggedIn(true);
-            router.replace('/home');
-        } else {
-            Alert.alert('Verification failed, please check if the verification link is correct');
+            // 检查剪贴板是否为空
+            if (!clipboardContent) {
+                Alert.alert('Empty content was read, please check the clipboard');
+                return;
+            }
+
+            // 检查内容是否包含 '?' 并解析参数
+            const queryString = clipboardContent.split('?')[1];
+            if (!queryString) {
+                Alert.alert('Invalid content format', 'The clipboard content is missing query parameters.');
+                return;
+            }
+
+            // 提取 userId
+            const userId = queryString.split('&')[0].split('=')[1];
+            if (!userId) {
+                Alert.alert('Invalid content format', 'The clipboard content does not contain a valid userId.');
+                return;
+            }
+
+            // 验证 userId 是否匹配
+            if (userId === verifyInfo.userId) {
+                Alert.alert('Verify Successful');
+
+                // 创建用户文档
+                const userDocument = await databases.createDocument(
+                    config.databaseId,
+                    config.usersCollectionId,
+                    ID.unique(),
+                    {
+                        accountId: newAccount.$id,
+                        email: newAccount.email,
+                        username: newAccount.name,
+                        avatar: avatarURL,
+                    }
+                );
+
+                setNewUser(userDocument);
+                console.log('用户文档已创建:', userDocument);
+
+                setIsLoggedIn(true);
+                router.replace('/home');
+            } else {
+                Alert.alert('Verification Failed', 'The userId does not match.');
+            }
+
+        } catch (error) {
+            // 捕获异常
+            Alert.alert('Error', 'Failed to read clipboard content. Please try again.');
         }
-
-    }
+    };
 
 
     async function submit() {
@@ -59,11 +99,11 @@ export default function SignUp() {
         setIsSubmitting(true);
 
         try {
-            const { userDocument: newUser, Verification } = await registerUser(form.email, form.password, form.username);
-            // TODO: add to global state
-            setUser(newUser);
-            setVerifyInfo(Verification);
+            const { Verification } = await registerUser(form.email, form.password, form.username, setTempUserId);
+            // TODO 待修改
 
+            setVerifyInfo(Verification);
+            setUser(newUser);
 
 
             Alert.alert('Success', 'Verification email sent. Please Copy the link in the email and cone back.');
@@ -76,6 +116,16 @@ export default function SignUp() {
         }
 
     }
+
+    useEffect(() => {
+        // 监听页面卸载（用户离开页面）
+        const unsubscribe = navigation.addListener('beforeRemove', () => {
+            deleteUserIfNotCompleted(tempUserId); // 清除未完成的用户
+        });
+
+        return unsubscribe; // 清除监听器
+    }, [navigation, tempUserId]);
+
 
     return (
         <>
