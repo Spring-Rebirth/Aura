@@ -9,85 +9,15 @@ import { Link, router } from 'expo-router'
 // cSpell:word appwrite username psemibold
 import { registerUser } from '../../lib/appwrite'
 import { useGlobalContext } from '../../context/GlobalProvider'
-import * as Clipboard from 'expo-clipboard';
 import { databases } from '../../lib/appwrite'
 import { useNavigation } from '@react-navigation/native';
-import { deleteTempUser } from '../../lib/appwrite'
 
 export default function SignUp() {
-    const [form, setForm] = useState({
-        username: '',
-        email: '',
-        password: '',
-        confirmPassword: ''
-    })
+    const [form, setForm] = useState({ username: '', email: '', password: '', confirmPassword: '' });
 
     const navigation = useNavigation();
     const { setUser, setIsLoggedIn } = useGlobalContext();
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [onVerify, setOnVerify] = useState(false);
-    const [verifyInfo, setVerifyInfo] = useState(null);
-    const [newUser, setNewUser] = useState(null);
-    const [tempUserId, setTempUserId] = useState(null);
-
-
-    const handleVerify = async () => {
-        try {
-            // 读取剪贴板内容
-            const clipboardContent = await Clipboard.getStringAsync();
-
-            // 检查剪贴板是否为空
-            if (!clipboardContent) {
-                Alert.alert('Empty content was read, please check the clipboard');
-                return;
-            }
-
-            // 检查内容是否包含 '?' 并解析参数
-            const queryString = clipboardContent.split('?')[1];
-            if (!queryString) {
-                Alert.alert('Invalid content format', 'The clipboard content is missing query parameters.');
-                return;
-            }
-
-            // 提取 userId
-            const userId = queryString.split('&')[0].split('=')[1];
-            if (!userId) {
-                Alert.alert('Invalid content format', 'The clipboard content does not contain a valid userId.');
-                return;
-            }
-
-            // 验证 userId 是否匹配
-            if (userId === verifyInfo.userId) {
-                Alert.alert('Verify Successful');
-
-                // 创建用户文档
-                const userDocument = await databases.createDocument(
-                    config.databaseId,
-                    config.usersCollectionId,
-                    ID.unique(),
-                    {
-                        accountId: newAccount.$id,
-                        email: newAccount.email,
-                        username: newAccount.name,
-                        avatar: avatarURL,
-                    }
-                );
-
-                setNewUser(userDocument);
-                console.log('用户文档已创建:', userDocument);
-
-                setIsLoggedIn(true);
-                router.replace('/home');
-            } else {
-                Alert.alert('Verification Failed', 'The userId does not match.');
-            }
-
-        } catch (error) {
-            // 捕获异常
-            Alert.alert('Error', 'Failed to read clipboard content. Please try again.');
-        }
-    };
-
 
     async function submit() {
 
@@ -95,19 +25,31 @@ export default function SignUp() {
             Alert.alert('Error', 'Please fill in all the fields!');
             return;
         }
+        if (form.password !== form.confirmPassword) {
+            Alert.alert('Error', 'The password and confirm password do not match.');
+            return;
+        }
 
         setIsSubmitting(true);
 
         try {
-            const { Verification } = await registerUser(form.email, form.password, form.username, setTempUserId);
-            // TODO 待修改
+            const { newAccount, avatarURL } = await registerUser(form.email, form.password, form.username);
 
-            setVerifyInfo(Verification);
-            setUser(newUser);
+            const userDocument = await databases.createDocument(
+                config.databaseId,
+                config.usersCollectionId,
+                ID.unique(),
+                {
+                    accountId: newAccount.$id,
+                    email: newAccount.email,
+                    username: newAccount.name,
+                    avatar: avatarURL,
+                }
+            );
 
-
-            Alert.alert('Success', 'Verification email sent. Please Copy the link in the email and cone back.');
-            setOnVerify(true);
+            setUser(userDocument);
+            setIsLoggedIn(true);
+            router.replace('/home');
 
         } catch (error) {
             Alert.alert('Error', error.message);
@@ -121,16 +63,11 @@ export default function SignUp() {
         // 监听页面卸载（用户离开页面）
         const unsubscribe = navigation.addListener('beforeRemove', () => {
             // deleteTempUser(tempUserId); // 清除未完成的用户
-            Alert.alert(
-                `Exited the verification phase \n退出了验证阶段`,
-                `To re-register the same account, please contact the App developer. \n如果需要重新注册相同的账号, 请联系开发者。`
-            );
-
+            Alert.alert(`请注册后再登录`);
         });
 
         return unsubscribe; // 清除监听器
-    }, [navigation, tempUserId]);
-
+    }, [navigation]);
 
     return (
         <>
@@ -138,7 +75,6 @@ export default function SignUp() {
                 <ScrollView contentContainerStyle={{ height: '100%' }}>
                     <View className='h-full justify-center px-6'>
                         <View className='h-[85vh] justify-center'>
-
 
                             <Image
                                 source={images.logo}
@@ -148,60 +84,30 @@ export default function SignUp() {
 
                             <Text className='text-white text-2xl font-psemibold mt-6'>Sign up</Text>
 
-                            {onVerify ? (
-                                <>
-                                    <Text className='text-white text-2xl font-psemibold mt-6'>
-                                        Already copied the verification link?
-                                    </Text>
-                                    <Text className='text-white text-2xl font-psemibold mt-6'>
-                                        Click the button to verify
-                                    </Text>
+                            <CustomForm title='User Name'
+                                handleChangeText={(text) => setForm({ ...form, username: text })}
+                                value={form.username}
+                            />
+                            <CustomForm title='Email'
+                                handleChangeText={(text) => setForm({ ...form, email: text })}
+                                value={form.email}
+                            />
+                            <CustomForm title='Password'
+                                handleChangeText={(text) => setForm({ ...form, password: text })}
+                                value={form.password}
+                            />
+                            <CustomForm title='Confirm Password'
+                                handleChangeText={(text) => setForm({ ...form, confirmPassword: text })}
+                                value={form.confirmPassword}
+                            />
 
-                                    <CustomButton
-                                        title='Verify'
-                                        style='h-16 mt-6 py-3'
-                                        textStyle={'text-lg text-[#161622]'}
-                                        onPress={() => { handleVerify() }}
-                                        isLoading={isSubmitting}
-                                    />
-                                </>
-                            ) : (
-                                <>
-                                    <CustomForm title='User Name'
-                                        handleChangeText={(text) => setForm({ ...form, username: text })}
-                                        value={form.username}
-                                    />
-                                    <CustomForm title='Email'
-                                        handleChangeText={(text) => setForm({ ...form, email: text })}
-                                        value={form.email}
-                                    />
-                                    <CustomForm title='Password'
-                                        handleChangeText={(text) => setForm({ ...form, password: text })}
-                                        value={form.password}
-                                    />
-                                    <CustomForm title='Confirm Password'
-                                        handleChangeText={(text) => setForm({ ...form, confirmPassword: text })}
-                                        value={form.confirmPassword}
-                                    />
-
-                                    <CustomButton
-                                        title='Sign Up'
-                                        style='h-16 mt-6 py-3'
-                                        textStyle={'text-lg text-[#161622]'}
-                                        onPress={submit}
-                                        isLoading={isSubmitting}
-                                    />
-                                    <View className='items-center mt-6'>
-                                        <Text className='text-gray-100'>
-                                            Already have an account?&nbsp;&nbsp;
-                                            <Link
-                                                href='/sign-in'
-                                                className='text-secondary'>Login
-                                            </Link>
-                                        </Text>
-                                    </View>
-                                </>
-                            )}
+                            <CustomButton
+                                title='Sign Up'
+                                style='h-16 mt-6 py-3'
+                                textStyle={'text-lg text-[#161622]'}
+                                onPress={submit}
+                                isLoading={isSubmitting}
+                            />
 
                         </View>
                     </View>

@@ -18,7 +18,7 @@ export default function SignIn() {
 
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const { user, setUser, isLoggedIn, setIsLoggedIn, isLoading } = useGlobalContext();
+    const { user, setUser, setIsLoggedIn } = useGlobalContext();
 
     async function submit() {
 
