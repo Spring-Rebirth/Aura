@@ -16,7 +16,7 @@ export default function VideoCard({
     const [showControlMenu, setShowControlMenu] = useState(false);
     const [isSaved, setIsSaved] = useState(false);
     const [isVideoCreator, setIsVideoCreator] = useState(false);
-    const { user, fileIdStore } = useGlobalContext();
+    const { user, setUser, fileIdStore } = useGlobalContext();
 
     const handleAddSaved = () => {
         if (!user.favorite.includes($id)) {
