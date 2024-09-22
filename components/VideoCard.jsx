@@ -7,6 +7,8 @@ import star from '../assets/menu/star-solid.png'
 import trash from '../assets/menu/trash-solid.png'
 import { useGlobalContext } from '../context/GlobalProvider'
 import { deleteVideoDoc, deleteVideoFiles } from '../lib/appwrite'
+import { useRoute } from '@react-navigation/native';
+
 
 export default function VideoCard({
     post: { $id, title, thumbnail, video, creator: { accountId, username, avatar } },
@@ -18,6 +20,9 @@ export default function VideoCard({
     const [isVideoCreator, setIsVideoCreator] = useState(false);
     const { user, setUser, fileIdStore } = useGlobalContext();
 
+    const route = useRoute();
+    const currentPath = route.name;
+
     const handleAddSaved = () => {
         if (!user.favorite.includes($id)) {
             // 深拷贝对象
@@ -27,6 +32,7 @@ export default function VideoCard({
                 ...prev,
                 favorite: newUser.favorite
             }))
+            setIsSaved(true);
             Alert.alert('Save successful');
         } else {
             // 剔除已保存项的新数组
@@ -35,6 +41,7 @@ export default function VideoCard({
                 ...prev,
                 favorite: updatedItems
             }))
+            setIsSaved(false);
             Alert.alert('Cancel save successfully');
         }
     }
@@ -43,7 +50,6 @@ export default function VideoCard({
     const handleClickSave = () => {
         setShowControlMenu(false);
         handleAddSaved();
-        setIsSaved(prev => !prev);
     }
 
     const handleDelete = async () => {
@@ -98,9 +104,14 @@ export default function VideoCard({
                             source={star}
                             className='w-5 h-5 mr-3'
                         />
-                        <Text className='text-white text-lg'>
-                            {isSaved ? ('Saved' + '    √') : 'Save'}
-                        </Text>
+                        {currentPath === 'saved' ? (
+                            <Text className='text-white text-lg'>Remove</Text>
+                        ) : (
+                            <Text className='text-white text-lg'>
+                                {isSaved ? ('Saved' + '    √') : 'Save'}
+                            </Text>
+                        )}
+
                     </Pressable>
                     {isVideoCreator ? (
                         <Pressable
