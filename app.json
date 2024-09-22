@@ -27,6 +27,12 @@
     },
     "plugins": [
       "expo-router"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "6843b7db-a6df-4edc-8561-253be5bd332c"
+      }
+    },
+    "owner": "myst-seed"
   }
 }
