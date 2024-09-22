@@ -5,7 +5,7 @@ import images from '../../constants/images'
 import CustomForm from '../../components/CustomForm'
 import CustomButton from '../../components/CustomButton'
 import { StatusBar } from 'expo-status-bar'
-import { Link, Redirect, router } from 'expo-router'
+import { Link, router } from 'expo-router'
 // cSpell:word appwrite
 import { getCurrentUser, signIn } from '../../lib/appwrite'
 import { useGlobalContext } from '../../context/GlobalProvider'
