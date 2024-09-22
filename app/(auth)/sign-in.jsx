@@ -32,13 +32,11 @@ export default function SignIn() {
         try {
             await signIn(form.email, form.password);
 
-            // 测试user是否获取成功      
             const result = await getCurrentUser();
             if (result && user !== result) {
                 setUser(result);
             }
             setIsLoggedIn(true);
-            // console.log('/sign-in  result:', result);
 
             router.replace('/home');
         } catch (error) {
