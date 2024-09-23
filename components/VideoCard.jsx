@@ -51,7 +51,7 @@ export default function VideoCard({
                 isIncrement = false;
                 Alert.alert('Cancel save successfully');
             }
-            await updateSavedCount($id, post);
+            await updateSavedCount($id, post, isIncrement);
         } catch (error) {
             console.error("Error handling favorite:", error);
             Alert.alert('An error occurred while updating favorite count');
