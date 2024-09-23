@@ -12,9 +12,10 @@ import { updateSavedCount } from '../lib/appwrite';
 
 
 export default function VideoCard({
-    post: { $id, title, thumbnail, video, creator: { accountId, username, avatar } },
+    post,
     handleRefresh
 }) {
+    const { $id, title, thumbnail, video, creator: { accountId, username, avatar } } = post;
     const [playing, setPlaying] = useState(false);
     const [showControlMenu, setShowControlMenu] = useState(false);
     const [isSaved, setIsSaved] = useState(false);
