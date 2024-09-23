@@ -17,14 +17,14 @@ export default function Home() {
 	const [refreshing, setRefreshing] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [data, setData] = useState([]);
-	const [latestData, setLatestData] = useState([]);
+	const [popularData, setPopularData] = useState([]);
 	const { user, setUser } = useGlobalContext();
-	const { fetchPosts, fetchLatestPosts } = useGetData({ setLoading, setData, setLatestData });
+	const { fetchPosts, fetchPopularPosts } = useGetData({ setLoading, setData, setPopularData });
 
 	const handleRefresh = () => {
 		setRefreshing(true);
 		fetchPosts();
-		fetchLatestPosts();
+		fetchPopularPosts();
 		setRefreshing(false);
 		console.log('user.favorite:', user.favorite);
 	}
@@ -41,7 +41,7 @@ export default function Home() {
 
 	useEffect(() => {
 		fetchPosts();
-		fetchLatestPosts();
+		fetchPopularPosts();
 	}, [])
 
 	return (
@@ -70,9 +70,9 @@ export default function Home() {
 							<SearchInput containerStyle={'mt-6'} />
 
 							<View className='mt-8'>
-								<Text className='text-white mb-4'>Trending Videos</Text>
+								<Text className='text-white mb-4'>Popular Videos</Text>
 								{/* 头部视频 */}
-								<Trending video={latestData} loading={loading} />
+								<Trending video={popularData} loading={loading} />
 							</View>
 
 						</View>

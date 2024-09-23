@@ -11,6 +11,8 @@ import { registerUser } from '../../lib/appwrite'
 import { useGlobalContext } from '../../context/GlobalProvider'
 import { databases } from '../../lib/appwrite'
 import { useNavigation } from '@react-navigation/native';
+import { config } from '../../lib/appwrite'
+import { ID } from 'react-native-appwrite';
 
 export default function SignUp() {
     const [form, setForm] = useState({ username: '', email: '', password: '', confirmPassword: '' });
@@ -59,15 +61,14 @@ export default function SignUp() {
 
     }
 
-    useEffect(() => {
-        // 监听页面卸载（用户离开页面）
-        const unsubscribe = navigation.addListener('beforeRemove', () => {
-            // deleteTempUser(tempUserId); // 清除未完成的用户
-            Alert.alert(`请注册后再登录`);
-        });
+    // useEffect(() => {
+    //     // 监听页面卸载（用户离开页面）
+    //     const unsubscribe = navigation.addListener('beforeRemove', () => {
 
-        return unsubscribe; // 清除监听器
-    }, [navigation]);
+    //     });
+
+    //     return unsubscribe; // 清除监听器
+    // }, [navigation]);
 
     return (
         <>

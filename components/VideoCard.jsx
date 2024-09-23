@@ -8,6 +8,7 @@ import trash from '../assets/menu/trash-solid.png'
 import { useGlobalContext } from '../context/GlobalProvider'
 import { deleteVideoDoc, deleteVideoFiles } from '../lib/appwrite'
 import { useRoute } from '@react-navigation/native';
+import { updateSavedCount } from '../lib/appwrite';
 
 
 export default function VideoCard({
@@ -23,26 +24,36 @@ export default function VideoCard({
     const route = useRoute();
     const currentPath = route.name;
 
-    const handleAddSaved = () => {
-        if (!user.favorite.includes($id)) {
-            // 深拷贝对象
-            const newUser = JSON.parse(JSON.stringify(user));
-            newUser.favorite.push($id);
-            setUser(prev => ({
-                ...prev,
-                favorite: newUser.favorite
-            }))
-            setIsSaved(true);
-            Alert.alert('Save successful');
-        } else {
-            // 剔除已保存项的新数组
-            const updatedItems = user.favorite.filter(item => item !== $id);
-            setUser(prev => ({
-                ...prev,
-                favorite: updatedItems
-            }))
-            setIsSaved(false);
-            Alert.alert('Cancel save successfully');
+    const handleAddSaved = async () => {
+        try {
+            let isIncrement;
+
+            if (!user.favorite.includes($id)) {
+                // 深拷贝对象
+                const newUser = JSON.parse(JSON.stringify(user));
+                newUser.favorite.push($id);
+                setUser(prev => ({
+                    ...prev,
+                    favorite: newUser.favorite
+                }))
+                setIsSaved(true);
+                isIncrement = true;
+                Alert.alert('Save successful');
+            } else {
+                // 剔除已保存项的新数组
+                const updatedItems = user.favorite.filter(item => item !== $id);
+                setUser(prev => ({
+                    ...prev,
+                    favorite: updatedItems
+                }))
+                setIsSaved(false);
+                isIncrement = false;
+                Alert.alert('Cancel save successfully');
+            }
+            await updateSavedCount($id, post);
+        } catch (error) {
+            console.error("Error handling favorite:", error);
+            Alert.alert('An error occurred while updating favorite count');
         }
     }
 
