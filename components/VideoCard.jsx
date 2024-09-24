@@ -189,8 +189,7 @@ export default function VideoCard({
                             />
                         </TouchableOpacity>
 
-                    )
-                    : (
+                    ) : (
                         // latest changed code
                         <>
                             {loading && (
