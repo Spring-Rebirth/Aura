@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { Image, ScrollView, Text, View } from 'react-native';
+import { Image, ScrollView, Text, View, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { images } from "../constants";
 import CustomButton from '../components/CustomButton';
@@ -10,7 +10,7 @@ import { useGlobalContext } from '../context/GlobalProvider';
 export default function Welcome() {
 
     const { isLoading, isLoggedIn } = useGlobalContext();
-    if (!isLoading && isLoggedIn) {
+    if (isLoggedIn) {
         return <Redirect href='/home' />;
     }
 
@@ -18,6 +18,7 @@ export default function Welcome() {
     return (
 
         <SafeAreaView className="bg-primary h-full">
+
             <StatusBar style="light" backgroundColor='#161622' />
             <ScrollView contentContainerStyle={{ height: '100%' }}>
                 <View className='justify-center items-center min-h-[85vh] px-4'>
@@ -47,12 +48,23 @@ export default function Welcome() {
                         Where Creativity Meets Innovation: Embark on a Journey of Limitless
                         Exploration with Aora
                     </Text>
-                    <CustomButton
-                        onPress={() => { router.push('/sign-in') }}
-                        style={'w-full mt-6 py-3'}
-                        title={'Login to continue'}
-                        textStyle={'text-lg text-[#161622]'}
-                    />
+
+                    {isLoading ? (
+                        <View className="w-full h-20 justify-center items-center bg-primary mt-6">
+                            <ActivityIndicator size="large" color="#ffffff" />
+                            <Text className='mt-[10] text-white text-xl'>Identifying login status</Text>
+                        </View>
+                    ) : (
+                        <CustomButton
+                            onPress={() => { router.push('/sign-in') }}
+                            style={'w-full mt-6 py-3'}
+                            title={'Login to continue'}
+                            textStyle={'text-lg text-[#161622]'}
+                        />
+                    )}
+
+
+
                 </View>
             </ScrollView>
         </SafeAreaView>
