@@ -193,7 +193,7 @@ export default function VideoCard({
                         // latest changed code
                         <>
                             {loading && (
-                                <ActivityIndicator size="large" color="#fff" style={{ position: 'absolute', top: '50%', left: '50%', transform: [{ translateX: -25 }, { translateY: -25 }] }} />
+                                <ActivityIndicator size="large" color="#fff" style={{ position: 'absolute', top: '50%', left: '50%', transform: [{ translateX: -20 }, { translateY: -20 }] }} />
                             )}
                             <Video
                                 source={{ uri: video }}
@@ -202,10 +202,11 @@ export default function VideoCard({
                                 useNativeControls
                                 shouldPlay
                                 onPlaybackStatusUpdate={(status) => {
+                                    setLoading(false); // 当视频准备好时，设置加载状态为false
                                     if (status.didJustFinish) {
                                         setPlaying(false);
+                                        setLoading(true);
                                     }
-                                    setLoading(false); // 当视频准备好时，设置加载状态为false
                                 }}
                             />
                         </>

@@ -52,7 +52,7 @@ function TrendingItem({ activeItem, item }) {
             ) : (
                 <>
                     {loading && (
-                        <ActivityIndicator size="large" color="#fff" style={{ position: 'absolute', top: '50%', left: '50%', transform: [{ translateX: -25 }, { translateY: -25 }] }} />
+                        <ActivityIndicator size="large" color="#fff" style={{ position: 'absolute', top: '50%', left: '50%', transform: [{ translateX: -20 }, { translateY: -20 }] }} />
 
                     )}
                     <Video
@@ -62,10 +62,11 @@ function TrendingItem({ activeItem, item }) {
                         useNativeControls
                         shouldPlay
                         onPlaybackStatusUpdate={(status) => {
+                            setLoading(false);
                             if (status.didJustFinish) {
                                 setPlaying(false);
+                                setLoading(true);
                             }
-                            setLoading(false);
                         }}
                     />
                 </>
