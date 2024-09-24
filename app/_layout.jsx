@@ -3,7 +3,6 @@ import { useEffect } from 'react'
 import { Stack, SplashScreen } from "expo-router";
 import { useFonts } from 'expo-font';
 import { GlobalProvider } from '../context/GlobalProvider'
-import * as Linking from 'expo-linking';
 
 SplashScreen.preventAutoHideAsync();
 
