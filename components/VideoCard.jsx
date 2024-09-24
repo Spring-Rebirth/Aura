@@ -1,5 +1,5 @@
 // cSpell:ignore Pressable
-import { View, Text, Image, TouchableOpacity, Pressable, Alert } from 'react-native'
+import { View, Text, Image, TouchableOpacity, Pressable, Alert, ActivityIndicator } from 'react-native'
 import { useEffect, useState } from 'react'
 import { icons } from '../constants'
 import { ResizeMode, Video } from 'expo-av';
@@ -17,6 +17,7 @@ export default function VideoCard({
 }) {
     const { $id, title, thumbnail, video, creator: { accountId, username, avatar } } = post;
     const [playing, setPlaying] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [showControlMenu, setShowControlMenu] = useState(false);
     const [isSaved, setIsSaved] = useState(false);
     const [isVideoCreator, setIsVideoCreator] = useState(false);
@@ -51,7 +52,7 @@ export default function VideoCard({
                 isIncrement = false;
                 Alert.alert('Cancel save successfully');
             }
-            await updateSavedCount($id, post, isIncrement);
+            await updateSavedCount($id, isIncrement);
         } catch (error) {
             console.error("Error handling favorite:", error);
             Alert.alert('An error occurred while updating favorite count');
@@ -191,18 +192,24 @@ export default function VideoCard({
                     )
                     : (
                         // latest changed code
-                        <Video
-                            source={{ uri: video }}
-                            className='w-full h-60 rounded-xl mt-6'
-                            resizeMode={ResizeMode.CONTAIN}
-                            useNativeControls
-                            shouldPlay
-                            onPlaybackStatusUpdate={(status) => {
-                                if (status.didJustFinish) {
-                                    setPlaying(false);
-                                }
-                            }}
-                        />
+                        <>
+                            {loading && (
+                                <ActivityIndicator size="large" color="#fff" style={{ position: 'absolute', top: '50%', left: '50%', transform: [{ translateX: -25 }, { translateY: -25 }] }} />
+                            )}
+                            <Video
+                                source={{ uri: video }}
+                                className='w-full h-60 rounded-xl mt-6'
+                                resizeMode={ResizeMode.CONTAIN}
+                                useNativeControls
+                                shouldPlay
+                                onPlaybackStatusUpdate={(status) => {
+                                    if (status.didJustFinish) {
+                                        setPlaying(false);
+                                    }
+                                    setLoading(false); // 当视频准备好时，设置加载状态为false
+                                }}
+                            />
+                        </>
 
                     )
             }
