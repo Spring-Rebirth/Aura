@@ -24,7 +24,6 @@ function TrendingItem({ activeItem, item }) {
         1: {
             scale: 0.9,
         }
-
     }
 
     return (

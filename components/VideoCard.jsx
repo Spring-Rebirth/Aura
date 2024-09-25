@@ -176,7 +176,10 @@ export default function VideoCard({
                         <TouchableOpacity
                             className='w-full h-60 mt-6 rounded-xl justify-center items-center relative overflow-hidden' // 添加 overflow-hidden
                             activeOpacity={0.7}
-                            onPress={() => setPlaying(true)}
+                            onPress={() => {
+                                setPlaying(true);
+                                setLoading(true); // 当用户点击播放时，将加载状态设置为 true
+                            }}
                         >
 
                             <Image
@@ -218,10 +221,12 @@ export default function VideoCard({
                                 useNativeControls
                                 shouldPlay
                                 onPlaybackStatusUpdate={(status) => {
-                                    setLoading(false); // 当视频准备好时，设置加载状态为false
+                                    if (status.isLoaded) {
+                                        setLoading(false); // 当视频准备好时，关闭加载状态
+                                    }
                                     if (status.didJustFinish) {
-                                        setPlaying(false);
-                                        setLoading(true);
+                                        setPlaying(false); // 视频播放结束时，设置为不播放
+                                        setLoading(true); // 重置加载状态，为下次播放做准备
                                     }
                                 }}
                             />
