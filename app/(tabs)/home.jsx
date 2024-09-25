@@ -29,20 +29,28 @@ export default function Home() {
 		console.log('user.favorite:', user.favorite);
 	}
 
-
-
-	// console.log(`home-data: ${JSON.stringify(data, null, 2)}`);
-	// 更新API updateSavedVideo()
 	useEffect(() => {
-		const { favorite } = user;
-		updateSavedVideo(user.$id, { favorite });
-	}, [user])
+		const fetchDataAndUpdateVideo = async () => {
+			setLoading(true); // 开始加载
 
+			try {
+				// 获取用户信息，更新收藏视频
+				const { favorite } = user;
+				await updateSavedVideo(user.$id, { favorite });
 
-	useEffect(() => {
-		fetchPosts();
-		fetchPopularPosts();
-	}, [])
+				// 并行请求 fetchPosts 和 fetchPopularPosts
+				await Promise.all([fetchPosts(), fetchPopularPosts()]);
+
+			} catch (error) {
+				console.error(error);  // 处理错误
+			} finally {
+				setLoading(false);  // 请求完成后设置 loading 为 false
+			}
+		};
+
+		fetchDataAndUpdateVideo();  // 调用异步函数
+	}, [user]);
+
 
 	return (
 		<SafeAreaView className='bg-primary h-full'>
