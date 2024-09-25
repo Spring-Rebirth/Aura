@@ -8,7 +8,7 @@ import EmptyState from '../../components/EmptyState'
 import CustomButton from '../../components/CustomButton'
 import VideoCard from '../../components/VideoCard'
 import useGetData from '../../hooks/useGetData'
-import { useLocalSearchParams } from 'expo-router'
+import { useLocalSearchParams, router } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 
 export default function Search() {
