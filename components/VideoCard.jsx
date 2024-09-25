@@ -125,8 +125,8 @@ export default function VideoCard({
                                 {isSaved ? ('Saved' + '    √') : 'Save'}
                             </Text>
                         )}
-
                     </Pressable>
+
                     {isVideoCreator ? (
                         <Pressable
                             onPress={handleDelete}
