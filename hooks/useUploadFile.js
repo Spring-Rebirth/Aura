@@ -1,4 +1,3 @@
-import * as FileSystem from 'expo-file-system';
 import { createFile } from '../lib/appwrite';
 
 // 处理文件上传
@@ -13,9 +12,7 @@ export const useUploadFile = async (file) => {
 
         const { mimeType, name, size, uri } = file.assets[0];
         // 读取文件内容
-        // const encodingType = mimeType.startsWith('image/') || mimeType.startsWith('video/')
-        //     ? FileSystem.EncodingType.Base64
-        //     : FileSystem.EncodingType.UTF8;
+
 
         // const fileContent = await FileSystem.readAsStringAsync(fileUri, { encoding: encodingType });
         const fileModel = { name, type: mimeType, size, uri };

@@ -1,4 +1,4 @@
-import { View, Text, FlatList, Image, ActivityIndicator, TouchableOpacity, RefreshControl } from 'react-native'
+import { View, Text, FlatList, Image, ActivityIndicator, TouchableOpacity, RefreshControl, Alert } from 'react-native'
 import { useEffect, useState } from 'react'
 import useGetData from '../../hooks/useGetData'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -10,6 +10,10 @@ import { icons } from '../../constants'
 import { signOut } from '../../lib/appwrite'
 import { router } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
+import * as ImagePicker from 'expo-image-picker';
+import { useUploadFile } from '../../hooks/useUploadFile'
+import { fetchFileUrl, updateAvatar, getCurrentUser } from '../../lib/appwrite'
+import { createFile } from '../../lib/appwrite';
 
 export default function profile() {
     const [userPostsData, setUserPostsData] = useState([]);
@@ -23,7 +27,7 @@ export default function profile() {
         setLoading(true);
         fetchUserPosts(user.$id)
         setLoading(false);
-    }, [user.$id])
+    }, [user.$id, user.avatar])
 
     const handleSignOut = () => {
         signOut();
@@ -34,9 +38,56 @@ export default function profile() {
 
     const handleRefresh = async () => {
         setRefreshing(true);
-        await fetchUserPosts(user.$id)
+        await fetchUserPosts(user.$id);
+        await getCurrentUser()
+            .then(res => setUser(res))
+            .catch(error => {
+                console.error('getCurrentUser() failed:', error);
+            })
         setRefreshing(false);
     }
+
+    const handleAvatarPress = async () => {
+        const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+        if (permissionResult.granted) {
+            const pickerResult = await ImagePicker.launchImageLibraryAsync();
+            console.log("pickerResult:", pickerResult);
+            if (!pickerResult.canceled) {
+                // 数据模型
+
+                // name: string; type: string; size: number; uri: string;             
+
+
+                const { fileName, mimeType, fileSize, uri } = pickerResult.assets[0];
+                const fileModel = { name: fileName, type: mimeType, size: fileSize, uri: uri }
+                console.log('fileModel:', fileModel);
+                try {
+                    const { response, fileId } = await createFile(fileModel);
+                    console.log('createFile response:', response, fileId);
+                    // 这里可以添加你的上传逻辑
+                    const StorageAvatarUrl = await fetchFileUrl(fileId);
+
+                    // 这里可以添加你的上传逻辑
+
+                    console.log(`StorageAvatarUrl: ${StorageAvatarUrl}`);
+                    const result = await updateAvatar(StorageAvatarUrl, user.$id);
+                    console.log('updateAvatar result:', result);
+                    setUser(result);
+                    if (result) {
+                        Alert.alert('Avatar uploaded successfully');
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
+
+
+            }
+        }
+    };
+
+
+
 
     return (
         <SafeAreaView className='bg-primary h-full'>
@@ -58,13 +109,15 @@ export default function profile() {
                             </TouchableOpacity>
 
                             <View className='justify-between items-center mt-10'>
-                                <View className='w-[56px] h-[56px] border-2 border-secondary rounded-lg overflow-hidden'>
-                                    <Image
-                                        source={{ uri: user?.avatar }}
-                                        className='w-full h-full'
-                                        resizeMode='cover'
-                                    />
-                                </View>
+                                <TouchableOpacity onPress={handleAvatarPress}>
+                                    <View className='w-[56px] h-[56px] border-2 border-secondary rounded-lg overflow-hidden'>
+                                        <Image
+                                            source={{ uri: user?.avatar }}
+                                            className='w-full h-full'
+                                            resizeMode='cover'
+                                        />
+                                    </View>
+                                </TouchableOpacity>
                                 <Text className='text-white text-xl font-psemibold mt-2.5 '>{user?.username}</Text>
                             </View>
                             <View className='flex-row space-x-14 mt-4 justify-center'>
