@@ -21,6 +21,7 @@ export default function Home() {
 	const { user, setUser } = useGlobalContext();
 	const { fetchPosts, fetchPopularPosts } = useGetData({ setLoading, setData, setPopularData });
 
+
 	const handleRefresh = () => {
 		setRefreshing(true);
 		fetchPosts();

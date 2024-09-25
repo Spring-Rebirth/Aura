@@ -22,6 +22,7 @@ export default function VideoCard({
     const [isSaved, setIsSaved] = useState(false);
     const [isVideoCreator, setIsVideoCreator] = useState(false);
     const { user, setUser, fileIdStore } = useGlobalContext();
+    const [imageLoaded, setImageLoaded] = useState(false);
 
     const route = useRoute();
     const currentPath = route.name;
@@ -177,23 +178,38 @@ export default function VideoCard({
                             activeOpacity={0.7}
                             onPress={() => setPlaying(true)}
                         >
+
                             <Image
                                 source={{ uri: thumbnail }}
                                 className='w-full h-full rounded-xl'
                                 resizeMode='cover' // 修改为 cover
+                                onLoad={() => setImageLoaded(true)}
+                                onError={() => {
+                                    setImageLoaded(false);
+                                    console.log("Failed to load image.");
+                                }}
                             />
-                            <Image
-                                source={icons.play}
-                                className='w-12 h-12 absolute inset-0 m-auto'
-                                resizeMode='cover'
-                            />
+                            {!imageLoaded ? (
+                                <ActivityIndicator size="large" color="#fff" style={{
+                                    position: 'absolute', top: '50%', left: '50%', transform: [{ translateX: -20 }, { translateY: -20 }]
+                                }} />
+                            ) : (
+                                <Image
+                                    source={icons.play}
+                                    className='w-12 h-12 absolute inset-0 m-auto'
+                                    resizeMode='cover'
+                                />
+                            )}
+
                         </TouchableOpacity>
 
                     ) : (
                         // latest changed code
                         <>
                             {loading && (
-                                <ActivityIndicator size="large" color="#fff" style={{ position: 'absolute', top: '50%', left: '50%', transform: [{ translateX: -20 }, { translateY: -20 }] }} />
+                                <ActivityIndicator size="large" color="#fff" style={{
+                                    position: 'absolute', top: '50%', left: '50%', transform: [{ translateX: -20 }, { translateY: -20 }]
+                                }} />
                             )}
                             <Video
                                 source={{ uri: video }}

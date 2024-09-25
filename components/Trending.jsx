@@ -7,6 +7,7 @@ import { Video, ResizeMode } from 'expo-av';
 function TrendingItem({ activeItem, item }) {
     const [playing, setPlaying] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [imageLoaded, setImageLoaded] = useState(false);
 
     const zoomIn = {
         0: {
@@ -42,17 +43,31 @@ function TrendingItem({ activeItem, item }) {
                         source={{ uri: item.thumbnail }}
                         className='w-[208px] h-[332px] rounded-[24px] overflow-hidden'
                         resizeMode='cover'
+                        onLoad={() => setImageLoaded(true)}  // 图片加载成功
+                        onError={() => {
+                            setImageLoaded(false);
+                            console.log("Failed to load image.");
+                        }}
                     />
-                    <Image
-                        source={icons.play}
-                        className='w-12 h-12 absolute'
-                        resizeMode='contain'
-                    />
+                    {!imageLoaded ? (
+                        <ActivityIndicator size="large" color="#fff" style={{
+                            position: 'absolute', top: '50%', left: '50%', transform: [{ translateX: -20 }, { translateY: -20 }]
+                        }} />
+                    ) : (
+                        <Image
+                            source={icons.play}
+                            className='w-12 h-12 absolute'
+                            resizeMode='contain'
+                        />
+                    )}
+
                 </TouchableOpacity>
             ) : (
                 <>
                     {loading && (
-                        <ActivityIndicator size="large" color="#fff" style={{ position: 'absolute', top: '50%', left: '50%', transform: [{ translateX: -20 }, { translateY: -20 }] }} />
+                        <ActivityIndicator size="large" color="#fff" style={{
+                            position: 'absolute', top: '50%', left: '50%', transform: [{ translateX: -20 }, { translateY: -20 }]
+                        }} />
 
                     )}
                     <Video
