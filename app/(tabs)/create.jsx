@@ -185,7 +185,7 @@ export default function Create() {
 
                 {/* AI Prompt */}
                 <CustomForm
-                    title={'AI prompt'}
+                    title={'Video Introduction'}
                     handleChangeText={(text) => setForm({ ...form, prompt: text })}
                     value={form.prompt}
                 />

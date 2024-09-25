@@ -11,7 +11,6 @@ import { signOut } from '../../lib/appwrite'
 import { router } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import * as ImagePicker from 'expo-image-picker';
-import { useUploadFile } from '../../hooks/useUploadFile'
 import { fetchFileUrl, updateAvatar, getCurrentUser } from '../../lib/appwrite'
 import { createFile } from '../../lib/appwrite';
 
@@ -21,6 +20,8 @@ export default function profile() {
     const { fetchUserPosts } = useGetData({ setLoading, setUserPostsData });
     const { user, setUser, setIsLoggedIn } = useGlobalContext();
     const [refreshing, setRefreshing] = useState(false);
+    const [avatarUploading, setAvatarUploading] = useState(false);
+
 
 
     useEffect(() => {
@@ -54,33 +55,41 @@ export default function profile() {
             const pickerResult = await ImagePicker.launchImageLibraryAsync();
             console.log("pickerResult:", pickerResult);
             if (!pickerResult.canceled) {
-                // 数据模型
-
-                // name: string; type: string; size: number; uri: string;             
-
-
+                setAvatarUploading(true);
+                // 数据参数模型转换           
                 const { fileName, mimeType, fileSize, uri } = pickerResult.assets[0];
                 const fileModel = { name: fileName, type: mimeType, size: fileSize, uri: uri }
                 console.log('fileModel:', fileModel);
                 try {
-                    const { response, fileId } = await createFile(fileModel);
-                    console.log('createFile response:', response, fileId);
-                    // 这里可以添加你的上传逻辑
-                    const StorageAvatarUrl = await fetchFileUrl(fileId);
+                    let file;
+                    await createFile(fileModel)
+                        .then(res => { file = res; })
+                        .catch(err => {
+                            console.warn('还没读取到创建的文件:', err);
+                            Alert.alert('Network error, please try again.');
+                            return;
+                        })
 
-                    // 这里可以添加你的上传逻辑
+                    if (file) {
+                        const { response, fileId } = file;
 
-                    console.log(`StorageAvatarUrl: ${StorageAvatarUrl}`);
-                    const result = await updateAvatar(StorageAvatarUrl, user.$id);
-                    console.log('updateAvatar result:', result);
-                    setUser(result);
-                    if (result) {
-                        Alert.alert('Avatar uploaded successfully');
+                        console.log('createFile response:', response, fileId);
+
+                        const StorageAvatarUrl = await fetchFileUrl(fileId);
+
+                        console.log(`StorageAvatarUrl: ${StorageAvatarUrl}`);
+                        const result = await updateAvatar(StorageAvatarUrl, user.$id);
+                        console.log('updateAvatar result:', result);
+                        setUser(result);
+                        if (result) {
+                            Alert.alert('Avatar uploaded successfully');
+                        }
                     }
                 } catch (error) {
                     console.error(error);
+                } finally {
+                    setAvatarUploading(false);
                 }
-
 
             }
         }
@@ -110,12 +119,21 @@ export default function profile() {
 
                             <View className='justify-between items-center mt-10'>
                                 <TouchableOpacity onPress={handleAvatarPress}>
-                                    <View className='w-[56px] h-[56px] border-2 border-secondary rounded-lg overflow-hidden'>
-                                        <Image
-                                            source={{ uri: user?.avatar }}
-                                            className='w-full h-full'
-                                            resizeMode='cover'
-                                        />
+                                    <View
+                                        className='w-[56px] h-[56px] border-2 border-secondary rounded-lg overflow-hidden
+                                                    justify-center'
+                                    >
+                                        {avatarUploading ? (
+                                            <ActivityIndicator size="large" color="#ffffff" />
+                                        ) : (
+                                            <Image
+                                                source={{ uri: user?.avatar }}
+                                                className='w-full h-full'
+                                                resizeMode='cover'
+                                            />
+                                        )}
+
+
                                     </View>
                                 </TouchableOpacity>
                                 <Text className='text-white text-xl font-psemibold mt-2.5 '>{user?.username}</Text>
