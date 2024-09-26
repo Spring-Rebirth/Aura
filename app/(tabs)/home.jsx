@@ -52,7 +52,6 @@ export default function Home() {
 		fetchDataAndUpdateVideo();  // 调用异步函数
 	}, [user]);
 
-
 	return (
 		<SafeAreaView className='bg-primary h-full'>
 

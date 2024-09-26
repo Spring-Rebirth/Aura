@@ -16,7 +16,6 @@ export default function Create() {
     const { user } = useGlobalContext();
     const [form, setForm] = useState({
         title: '',
-        prompt: ''
     });
 
     const [files, setFiles] = useState({
@@ -60,7 +59,7 @@ export default function Create() {
         setUploading(true);
         console.log('imageFile:', imageFile, 'videoFile', videoFile);
         try {
-            if (form.title === '' || form.prompt === '' || !isImageSelected || !isVideoSelected) {
+            if (form.title === '' || !isImageSelected || !isVideoSelected) {
                 Alert.alert('Something content is not fill');
                 return;
             }
@@ -72,11 +71,9 @@ export default function Create() {
             ])
             console.log('|| imageUpload:', imageUpload, '\n videoUpload:', videoUpload);
 
-
-            const { response: imageResponse, fileId: imageId } = imageUpload;
-            const { response: videoResponse, fileId: videoId } = videoUpload;
+            const { fileId: imageId } = imageUpload;
+            const { fileId: videoId } = videoUpload;
             console.log(`imageId: ${imageId} \n videoId: ${videoId}`);
-
 
             // 获取数据库的图片和视频URI
             const StorageImageUrl = await fetchFileUrl(imageId);
@@ -113,12 +110,13 @@ export default function Create() {
 
     };
 
-
     return (
-        <SafeAreaView className='bg-primary h-full px-6 '>
+        <SafeAreaView className='bg-primary h-full px-4 '>
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                 {/* Upload Video */}
+                {/* 加个logo图片 */}
                 <Text className='text-white text-2xl font-psemibold mt-10 '>Upload Video</Text>
+
 
                 <CustomForm
                     title={'Video title'}
@@ -166,7 +164,7 @@ export default function Create() {
                             <Text className='text-white ml-2'>Choose a file</Text>
                         </View>
                     ) : (
-                        <View className='w-full h-52 bg-[#1e1e2d] rounded-2xl mt-2 flex-row justify-center items-center overflow-hidden'>
+                        <View className='w-full h-60 bg-[#1e1e2d] rounded-2xl mt-2 flex-row justify-center items-center overflow-hidden'>
                             <Image
                                 source={{ uri: files.image.uri }}
                                 className='w-full h-full'
@@ -175,13 +173,6 @@ export default function Create() {
                         </View>
                     )}
                 </TouchableOpacity>
-
-                {/* AI Prompt */}
-                <CustomForm
-                    title={'Video Introduction'}
-                    handleChangeText={(text) => setForm({ ...form, prompt: text })}
-                    value={form.prompt}
-                />
 
                 {uploading ? (
                     <View className="w-full h-20 justify-center items-center bg-primary">

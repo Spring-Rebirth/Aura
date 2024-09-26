@@ -1,8 +1,10 @@
-import { useState, useCallback } from 'react'
+import { useState } from 'react'
 import { FlatList, ImageBackground, Text, TouchableOpacity, View, Image, ActivityIndicator } from 'react-native'
 import * as Animatable from 'react-native-animatable'
 import { icons } from '../constants';
 import { Video, ResizeMode } from 'expo-av';
+import EmptyState from '../components/EmptyState'
+
 
 function TrendingItem({ activeItem, item }) {
     const [playing, setPlaying] = useState(false);
@@ -92,16 +94,16 @@ function TrendingItem({ activeItem, item }) {
 }
 
 export default function Trending({ video, loading }) {
-    const [activeItem, setActiveItem] = useState(video[1]);
     // cSpell: words viewability
     const viewabilityConfig = { itemVisiblePercentThreshold: 70 }; // 配置可见性百分比
 
-    // 使用 useCallback 确保 handleViewableItemsChanged 能正确访问 setActiveItem
-    const handleViewableItemsChanged = useCallback(({ viewableItems }) => {
+    const [activeItem, setActiveItem] = useState(video && video.length > 0 ? video[0] : null); // 设置默认 activeItem
+
+    const handleViewableItemsChanged = ({ viewableItems }) => {
         if (viewableItems && viewableItems.length > 0) {
             setActiveItem(viewableItems[0].item); // 访问每个可见项的实际 item
         }
-    }, [setActiveItem]); // 将 setActiveItem 作为依赖
+    };
 
     return loading ? (
         <View className="flex-1 justify-center items-center bg-primary mt-12">
@@ -112,13 +114,26 @@ export default function Trending({ video, loading }) {
         <FlatList
             horizontal
             className=''
-            data={video}
+            data={loading || video.length === 0 ? [] : video}
             keyExtractor={(item) => item.$id}
             renderItem={({ item }) => (
                 <TrendingItem item={item} activeItem={activeItem} />
             )}
             onViewableItemsChanged={handleViewableItemsChanged}
             viewabilityConfig={viewabilityConfig}
+            ListEmptyComponent={() => {
+                return loading ? (
+                    <View className="flex-1 justify-center items-center bg-primary mt-64">
+                        <ActivityIndicator size="large" color="#ffffff" />
+                        <Text className='mt-[10] text-white text-xl'>Loading, please wait...</Text>
+                    </View>
+                ) : (
+                    <View>
+                        <EmptyState />
+
+                    </View>
+                );
+            }}
         />
     )
 }

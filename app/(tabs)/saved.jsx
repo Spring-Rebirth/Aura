@@ -38,9 +38,9 @@ export default function Saved() {
                     return (
                         <View className='my-6 px-4'>
 
-                            <View className='flex-row justify-between items-center'>
+                            <View className='flex-row justify-between items-center mt-4'>
                                 <View >
-                                    <Text className='text-gray-100 text-lg'>Saved Videos</Text>
+                                    <Text className='text-white text-2xl font-psemibold'>Saved Videos</Text>
                                 </View>
                                 <Image
                                     source={images.logoSmall}
