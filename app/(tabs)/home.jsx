@@ -64,7 +64,7 @@ export default function Home() {
 					return (
 						<View className='my-6 px-4'>
 
-							<View className='flex-row justify-between items-center'>
+							<View className='flex-row justify-between items-center mt-4 h-[60px]'>
 								<View >
 									<Text className='text-gray-100 text-lg'>Welcome Back</Text>
 									<Text className='text-white text-2xl font-psemibold '>{user?.username}</Text>
@@ -75,6 +75,7 @@ export default function Home() {
 									resizeMode='contain'
 								/>
 							</View>
+
 							<SearchInput containerStyle={'mt-6'} />
 
 							<View className='mt-8'>

@@ -11,6 +11,7 @@ import { useUploadFile } from '../../hooks/useUploadFile'
 // cSpell:words appwrite psemibold
 import { fetchFileUrl, uploadData } from '../../lib/appwrite'
 import { StatusBar } from 'expo-status-bar'
+import { images } from '../../constants'
 
 export default function Create() {
     const { user } = useGlobalContext();
@@ -114,9 +115,14 @@ export default function Create() {
         <SafeAreaView className='bg-primary h-full px-4 '>
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                 {/* Upload Video */}
-                {/* 加个logo图片 */}
-                <Text className='text-white text-2xl font-psemibold mt-10 '>Upload Video</Text>
-
+                <View className='flex-row justify-between items-center mt-10 h-[60px]'>
+                    <Text className='text-white text-2xl font-psemibold'>Upload Video</Text>
+                    <Image
+                        source={images.logoSmall}
+                        className='w-9 h-10'
+                        resizeMode='contain'
+                    />
+                </View>
 
                 <CustomForm
                     title={'Video title'}
