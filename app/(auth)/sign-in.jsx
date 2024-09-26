@@ -64,10 +64,12 @@ export default function SignIn() {
                             <CustomForm title='Email'
                                 handleChangeText={(text) => setForm({ ...form, email: text })}
                                 value={form.email}
+                                placeholder={'Enter your email address'}
                             />
                             <CustomForm title='Password'
                                 handleChangeText={(text) => setForm({ ...form, password: text })}
                                 value={form.password}
+                                placeholder={'Enter your password'}
                             />
 
                             <CustomButton

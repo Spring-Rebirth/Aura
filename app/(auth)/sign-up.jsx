@@ -61,15 +61,6 @@ export default function SignUp() {
 
     }
 
-    // useEffect(() => {
-    //     // 监听页面卸载（用户离开页面）
-    //     const unsubscribe = navigation.addListener('beforeRemove', () => {
-
-    //     });
-
-    //     return unsubscribe; // 清除监听器
-    // }, [navigation]);
-
     return (
         <>
             <SafeAreaView className='bg-primary'>
@@ -88,18 +79,22 @@ export default function SignUp() {
                             <CustomForm title='User Name'
                                 handleChangeText={(text) => setForm({ ...form, username: text })}
                                 value={form.username}
+                                placeholder={'Give your account a catchy name'}
                             />
                             <CustomForm title='Email'
                                 handleChangeText={(text) => setForm({ ...form, email: text })}
                                 value={form.email}
+                                placeholder={'Enter your email address'}
                             />
                             <CustomForm title='Password'
                                 handleChangeText={(text) => setForm({ ...form, password: text })}
                                 value={form.password}
+                                placeholder={'Enter your new password'}
                             />
                             <CustomForm title='Confirm Password'
                                 handleChangeText={(text) => setForm({ ...form, confirmPassword: text })}
                                 value={form.confirmPassword}
+                                placeholder={'Enter your password to confirm'}
                             />
 
                             <CustomButton

@@ -2,7 +2,7 @@ import { View, Text, TextInput, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { icons } from '../constants'
 
-export default function CustomForm({ title, handleChangeText, value = 'default' }) {
+export default function CustomForm({ title, handleChangeText, value, placeholder }) {
     const [showPassword, setShowPassword] = React.useState(false)
     return (
         <View className={`mt-4 space-y-2`}>
@@ -15,7 +15,7 @@ export default function CustomForm({ title, handleChangeText, value = 'default' 
 
                 <TextInput
                     className='w-full h-full px-4 text-white'
-                    placeholder={`Enter your ${title}`}
+                    placeholder={` ${placeholder}`}
                     placeholderTextColor='#7f7f7f'
                     style={{ outline: 'none' }}
                     secureTextEntry={(title === 'Password' || title === 'Confirm Password') && !showPassword}

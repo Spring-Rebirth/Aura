@@ -13,7 +13,7 @@ export default function SearchInput({ title, handleChangeText, containerStyle })
         >
             <TextInput
                 className={'flex-1 h-full px-4 text-white'}
-                placeholder={`Search for a video topic`}
+                placeholder={"Search by the beginning of the title"}
                 placeholderTextColor={'#7f7f7f'}
                 style={{ outline: 'none' }}
                 value={queryText}
