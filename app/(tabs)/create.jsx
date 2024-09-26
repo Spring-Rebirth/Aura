@@ -29,10 +29,9 @@ export default function Create() {
     const isImageSelected = files.image.uri !== '';
     const isVideoSelected = files.video.uri !== '';
     const { pickImage, pickVideo } = usePickFile(setFiles);
+    const [uploading, setUploading] = useState(false);
     const [imageFile, setImageFile] = useState(null);
     const [videoFile, setVideoFile] = useState(null);
-    const [uploading, setUploading] = useState(false);
-    const [pickCancel, setPickCancel] = useState({ image: false, video: false });
 
 
     // 处理图片选择
@@ -119,6 +118,16 @@ export default function Create() {
 
     };
 
+    const handleCancelSelected = (type) => {
+        if (type === 'image') {
+            setFiles(prev => ({ ...prev, image: { uri: '', name: '', mimeType: '' } }));
+            setImageFile(null);
+        } else if (type === 'video') {
+            setFiles(prev => ({ ...prev, video: { uri: '', name: '', mimeType: '' } }));
+            setVideoFile(null);
+        }
+    }
+
     return (
         <SafeAreaView className='bg-primary h-full px-4 '>
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
@@ -157,16 +166,20 @@ export default function Create() {
                 ) : (
                     <View className='w-full h-60 bg-[#1e1e2d] rounded-2xl mt-2 justify-center items-center relative'>
                         <Video
-                            // 参数格式待修改
                             source={{ uri: files.video.uri }}
                             className='w-full h-full rounded-xl'
                             resizeMode={ResizeMode.COVER}
-                            useNativeControls
+
                         />
-                        <Image
-                            source={closeY}
-                            className='w-8 h-8 absolute top-2.5 right-2.5 z-10'
-                        />
+                        <TouchableOpacity
+                            onPress={() => handleCancelSelected('video')}
+                            className='absolute top-0 right-0 z-10 w-16 h-16 justify-center items-center'
+                        >
+                            <Image
+                                source={closeY}
+                                className='w-8 h-8'
+                            />
+                        </TouchableOpacity>
                     </View>
                 )}
 
@@ -190,10 +203,15 @@ export default function Create() {
                             className='w-full h-full'
                             resizeMode='cover'
                         />
-                        <Image
-                            source={closeY}
-                            className='w-8 h-8 absolute top-2.5 right-2.5 z-10'
-                        />
+                        <TouchableOpacity
+                            onPress={() => handleCancelSelected('image')}
+                            className='absolute top-0 right-0 z-10 w-16 h-16 justify-center items-center'
+                        >
+                            <Image
+                                source={closeY}
+                                className='w-8 h-8'
+                            />
+                        </TouchableOpacity>
                     </View>
                 )}
 
