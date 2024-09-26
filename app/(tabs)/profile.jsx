@@ -108,7 +108,7 @@ export default function profile() {
 
                 ListHeaderComponent={() => {
                     return (
-                        <View className='my-6 px-4 relative'>
+                        <View className='my-6 px-4 mb-8 relative'>
                             <TouchableOpacity onPress={handleSignOut}>
                                 <Image
                                     source={icons.logout}
@@ -137,7 +137,8 @@ export default function profile() {
                                 </TouchableOpacity>
                                 <Text className='text-white text-xl font-psemibold mt-2.5 '>{user?.username}</Text>
                             </View>
-                            <View className='flex-row space-x-14 mt-4 justify-center'>
+                            {/* 待实现的数据视图 */}
+                            {/* <View className='flex-row space-x-14 mt-4 justify-center'>
                                 <View className='items-center'>
                                     <Text className='text-white font-psemibold text-xl'>?</Text>
                                     <Text className='text-gray-100 text-sm'>Posts</Text>
@@ -147,14 +148,14 @@ export default function profile() {
                                     <Text className='text-gray-100 text-sm'>Views</Text>
                                 </View>
 
-                            </View>
+                            </View> */}
                         </View>
                     );
                 }}
                 // renderItem 接受一个对象参数，通常解构为 { item, index, separators }
                 renderItem={({ item }) => {
                     return (
-                        <VideoCard post={item} />
+                        <VideoCard post={item} handleRefresh={handleRefresh} />
                     )
                 }}
                 ListEmptyComponent={() => {
