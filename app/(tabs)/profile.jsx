@@ -133,18 +133,17 @@ export default function profile() {
                                             />
                                         )}
 
-
                                     </View>
                                 </TouchableOpacity>
                                 <Text className='text-white text-xl font-psemibold mt-2.5 '>{user?.username}</Text>
                             </View>
                             <View className='flex-row space-x-14 mt-4 justify-center'>
                                 <View className='items-center'>
-                                    <Text className='text-white font-psemibold text-xl'>？</Text>
+                                    <Text className='text-white font-psemibold text-xl'>?</Text>
                                     <Text className='text-gray-100 text-sm'>Posts</Text>
                                 </View>
                                 <View className='items-center'>
-                                    <Text className='text-white font-psemibold text-xl'>？</Text>
+                                    <Text className='text-white font-psemibold text-xl'>?</Text>
                                     <Text className='text-gray-100 text-sm'>Views</Text>
                                 </View>
 
