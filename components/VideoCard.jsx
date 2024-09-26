@@ -22,7 +22,7 @@ export default function VideoCard({
     const [showControlMenu, setShowControlMenu] = useState(false);
     const [isSaved, setIsSaved] = useState(false);
     const [isVideoCreator, setIsVideoCreator] = useState(false);
-    const { user, setUser, fileIdArray } = useGlobalContext();
+    const { user, setUser } = useGlobalContext();
     const [imageLoaded, setImageLoaded] = useState(false);
 
     const route = useRoute();
@@ -61,7 +61,6 @@ export default function VideoCard({
         }
     }
 
-
     const handleClickSave = () => {
         setShowControlMenu(false);
         handleAddSaved();
@@ -98,7 +97,6 @@ export default function VideoCard({
             setIsVideoCreator(true);
         }
     }, [])
-
 
     return (
         <View className='my-4 mx-4 relative'>
