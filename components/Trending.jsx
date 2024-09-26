@@ -1,10 +1,8 @@
 import { useState } from 'react'
 import { FlatList, ImageBackground, Text, TouchableOpacity, View, Image, ActivityIndicator } from 'react-native'
 import * as Animatable from 'react-native-animatable'
-import { icons } from '../constants';
+import { icons, images } from '../constants';
 import { Video, ResizeMode } from 'expo-av';
-import EmptyState from '../components/EmptyState'
-
 
 function TrendingItem({ activeItem, item }) {
     const [playing, setPlaying] = useState(false);
@@ -121,19 +119,7 @@ export default function Trending({ video, loading }) {
             )}
             onViewableItemsChanged={handleViewableItemsChanged}
             viewabilityConfig={viewabilityConfig}
-            ListEmptyComponent={() => {
-                return loading ? (
-                    <View className="flex-1 justify-center items-center bg-primary mt-64">
-                        <ActivityIndicator size="large" color="#ffffff" />
-                        <Text className='mt-[10] text-white text-xl'>Loading, please wait...</Text>
-                    </View>
-                ) : (
-                    <View>
-                        <EmptyState />
 
-                    </View>
-                );
-            }}
         />
     )
 }
