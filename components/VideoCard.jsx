@@ -20,9 +20,10 @@ export default function VideoCard({
     const [playing, setPlaying] = useState(false);
     const [loading, setLoading] = useState(true);
     const [showControlMenu, setShowControlMenu] = useState(false);
-    const [isSaved, setIsSaved] = useState(false);
+
     const [isVideoCreator, setIsVideoCreator] = useState(false);
     const { user, setUser } = useGlobalContext();
+    const [isSaved, setIsSaved] = useState(user.favorite.includes($id));
     const [imageLoaded, setImageLoaded] = useState(false);
 
     const route = useRoute();
@@ -40,7 +41,10 @@ export default function VideoCard({
                     ...prev,
                     favorite: newUser.favorite
                 }))
-                setIsSaved(true);
+                setIsSaved(prevIsSaved => {
+                    console.log("Saving, previous isSaved:", prevIsSaved);
+                    return true;
+                });
                 isIncrement = true;
                 Alert.alert('Save successful');
             } else {
@@ -50,7 +54,10 @@ export default function VideoCard({
                     ...prev,
                     favorite: updatedItems
                 }))
-                setIsSaved(false);
+                setIsSaved(prevIsSaved => {
+                    console.log("Removing, previous isSaved:", prevIsSaved);
+                    return false;
+                });
                 isIncrement = false;
                 Alert.alert('Cancel save successfully');
             }
@@ -62,8 +69,10 @@ export default function VideoCard({
     }
 
     const handleClickSave = () => {
+        console.log("Before click, isSaved:", isSaved); // Debugging
         setShowControlMenu(false);
         handleAddSaved();
+
     }
 
     const handleDelete = async () => {
@@ -96,7 +105,8 @@ export default function VideoCard({
         if (accountId === user.accountId) {
             setIsVideoCreator(true);
         }
-    }, [])
+        console.log("isSaved 状态已更新:", isSaved);
+    }, [isSaved]);
 
     return (
         <View className='my-4 mx-4 relative'>
@@ -114,13 +124,10 @@ export default function VideoCard({
                             source={star}
                             className='w-5 h-5 mr-3'
                         />
-                        {currentPath === 'saved' ? (
-                            <Text className='text-white text-lg'>Remove</Text>
-                        ) : (
-                            <Text className='text-white text-lg'>
-                                {isSaved ? ('Saved' + '    √') : 'Save'}
-                            </Text>
-                        )}
+                        <Text className='text-white text-lg'>
+                            {currentPath === 'saved' ? 'Remove' : (isSaved ? 'Saved    √' : 'Save')}
+                        </Text>
+
                     </Pressable>
 
                     {isVideoCreator ? (

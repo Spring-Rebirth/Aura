@@ -58,7 +58,7 @@ export default function Create() {
 
     const handleUpload = async () => {
         setUploading(true);
-        console.log('imageFile:', imageFile, 'videoFile', videoFile);
+        console.log('imageFile:', imageFile, '\n', 'videoFile', videoFile);
         try {
             if (form.title === '' || !isImageSelected || !isVideoSelected) {
                 Alert.alert('Something content is not fill');
@@ -70,8 +70,12 @@ export default function Create() {
                 useUploadFile(imageFile),
                 useUploadFile(videoFile)
             ])
-            console.log('|| imageUpload:', imageUpload, '\n videoUpload:', videoUpload);
 
+            if (!imageUpload || !videoUpload) {
+                throw new Error('One or more files failed to upload');
+            }
+
+            // 有时候可能因为网络的问题没有上传成功
             const { fileId: imageId } = imageUpload;
             const { fileId: videoId } = videoUpload;
             console.log(`imageId: ${imageId} \n videoId: ${videoId}`);
@@ -105,6 +109,7 @@ export default function Create() {
             })
         } catch (e) {
             console.error("Upload Failed", e);
+            Alert.alert('File upload failed', 'Please try again.');
         } finally {
             setUploading(false);
         }

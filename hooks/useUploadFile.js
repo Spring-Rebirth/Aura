@@ -1,28 +1,34 @@
 import { createFile } from '../lib/appwrite';
 
 // 处理文件上传
-export const useUploadFile = async (file) => {
+export const useUploadFile = async (file, retries = 3) => {
     try {
         // 检查 file 是否有效
         if (!file) {
             throw new Error('File does not exist');
         }
 
-
-
         const { mimeType, name, size, uri } = file.assets[0];
-        // 读取文件内容
-
-
-        // const fileContent = await FileSystem.readAsStringAsync(fileUri, { encoding: encodingType });
         const fileModel = { name, type: mimeType, size, uri };
-        // 创建文件
-        const { response, fileId } = await createFile(fileModel);
 
-        console.log('File uploaded successfully', response, '\n', 'fileId:', fileId);
+        // 尝试上传，允许重试
+        let response, fileId;
+        for (let attempt = 0; attempt < retries; attempt++) {
+            try {
+                const result = await createFile(fileModel);
+                response = result.response;
+                fileId = result.fileId;
+                console.log('File uploaded successfully on attempt:', attempt + 1);
+                break; // 成功上传后退出循环
+            } catch (error) {
+                console.error(`Attempt ${attempt + 1} failed:`, error.message || error);
+                if (attempt === retries - 1) throw new Error('File upload failed after maximum retries');
+            }
+        }
+
         return { response, fileId };
     } catch (error) {
-        console.error('File upload failed', error.message || error);
-        throw error;
+        console.error('Final file upload failure:', error.message || error);
+        return null;
     }
 };
