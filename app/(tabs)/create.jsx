@@ -13,7 +13,7 @@ import { fetchFileUrl, uploadData } from '../../lib/appwrite'
 import { StatusBar } from 'expo-status-bar'
 
 export default function Create() {
-    const { user, setFileIdStore } = useGlobalContext();
+    const { user } = useGlobalContext();
     const [form, setForm] = useState({
         title: '',
         prompt: ''
@@ -87,21 +87,14 @@ export default function Create() {
             const formData = {
                 title: form.title,
                 prompt: form.prompt,
-                thumbnail: StorageImageUrl, //
-                video: StorageVideoUrl,     //
-                creator: user.$id
+                thumbnail: StorageImageUrl,
+                video: StorageVideoUrl,
+                creator: user.$id,
+                imageId,                     // 存储 imageId
+                videoId,                     // 存储 videoId
             }
             // 修改这里URI为从数据库获取
             const videoResult = await uploadData(formData);
-            console.log('准备存入 FileIdStore', imageId, '-------', videoId);
-            setFileIdStore(prev => [
-                ...prev,
-                {
-                    postId: videoResult.$id,
-                    imageId,
-                    videoId
-                }
-            ]);
 
             Alert.alert('Upload Success !')
             console.log('Upload Success  videoResult:', JSON.stringify(videoResult, null, 2));

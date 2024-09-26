@@ -8,7 +8,8 @@ import trash from '../assets/menu/trash-solid.png'
 import { useGlobalContext } from '../context/GlobalProvider'
 import { deleteVideoDoc, deleteVideoFiles } from '../lib/appwrite'
 import { useRoute } from '@react-navigation/native';
-import { updateSavedCount } from '../lib/appwrite';
+import { updateSavedCount, getVideoDetails } from '../lib/appwrite';
+
 
 
 export default function VideoCard({
@@ -21,7 +22,7 @@ export default function VideoCard({
     const [showControlMenu, setShowControlMenu] = useState(false);
     const [isSaved, setIsSaved] = useState(false);
     const [isVideoCreator, setIsVideoCreator] = useState(false);
-    const { user, setUser, fileIdStore } = useGlobalContext();
+    const { user, setUser, fileIdArray } = useGlobalContext();
     const [imageLoaded, setImageLoaded] = useState(false);
 
     const route = useRoute();
@@ -69,31 +70,28 @@ export default function VideoCard({
     const handleDelete = async () => {
         setShowControlMenu(false);
 
-        const foundItem = fileIdStore.find(item => item.postId === $id);
-        if (foundItem) {
-            const { imageId, videoId } = foundItem;
-            console.log("Image ID:", imageId);
-            console.log("Video ID:", videoId);
+        try {
+            const videoDetails = await getVideoDetails($id); // 假设 getVideoDetails 从数据库获取视频详细信息
+            const { imageId, videoId } = videoDetails;
 
-            try {
-                // 使用 Promise.all 并行执行多个异步操作
+            if (imageId && videoId) {
                 await Promise.all([
-                    deleteVideoDoc($id), // 假设这个函数删除文档
-                    deleteVideoFiles(imageId), // 假设这个函数删除文件
-                    deleteVideoFiles(videoId)
+                    deleteVideoDoc($id), // 删除视频文档
+                    deleteVideoFiles(imageId), // 删除图片文件
+                    deleteVideoFiles(videoId)  // 删除视频文件
                 ]);
                 console.log("删除成功");
                 handleRefresh();
                 Alert.alert('Delete Success');
-            } catch (error) {
-                console.error("删除过程中出错:", error);
+            } else {
+                console.log("未找到与该视频关联的文件 ID");
+                Alert.alert('File ID not found');
             }
-        } else {
-            console.log("未找到匹配的 postId, fileIdStore这个视频的文件ID");
-            Alert.alert('This is a demonstration video and cannot be deleted');
+        } catch (error) {
+            console.error("删除过程中出错:", error);
         }
-    }
 
+    }
 
     useEffect(() => {
         if (accountId === user.accountId) {
