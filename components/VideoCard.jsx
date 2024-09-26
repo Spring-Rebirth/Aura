@@ -10,8 +10,6 @@ import { deleteVideoDoc, deleteVideoFiles } from '../lib/appwrite'
 import { useRoute } from '@react-navigation/native';
 import { updateSavedCount, getVideoDetails } from '../lib/appwrite';
 
-
-
 export default function VideoCard({
     post,
     handleRefresh

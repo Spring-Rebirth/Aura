@@ -12,6 +12,8 @@ import { useUploadFile } from '../../hooks/useUploadFile'
 import { fetchFileUrl, uploadData } from '../../lib/appwrite'
 import { StatusBar } from 'expo-status-bar'
 import { images } from '../../constants'
+import closeY from '../../assets/menu/close-yuan.png'
+
 
 export default function Create() {
     const { user } = useGlobalContext();
@@ -30,6 +32,7 @@ export default function Create() {
     const [imageFile, setImageFile] = useState(null);
     const [videoFile, setVideoFile] = useState(null);
     const [uploading, setUploading] = useState(false);
+    const [pickCancel, setPickCancel] = useState({ image: false, video: false });
 
 
     // 处理图片选择
@@ -152,7 +155,7 @@ export default function Create() {
                         </View>
                     </TouchableOpacity>
                 ) : (
-                    <View className='w-full h-60 bg-[#1e1e2d] rounded-2xl mt-2 justify-center items-center'>
+                    <View className='w-full h-60 bg-[#1e1e2d] rounded-2xl mt-2 justify-center items-center relative'>
                         <Video
                             // 参数格式待修改
                             source={{ uri: files.video.uri }}
@@ -160,14 +163,18 @@ export default function Create() {
                             resizeMode={ResizeMode.COVER}
                             useNativeControls
                         />
+                        <Image
+                            source={closeY}
+                            className='w-8 h-8 absolute top-2.5 right-2.5 z-10'
+                        />
                     </View>
                 )}
 
                 {/* Thumbnail Image */}
                 <Text className='text-gray-100 mt-5 text-lg'>Thumbnail Image</Text>
                 {/* TODO：图片存在则显示图片 */}
-                <TouchableOpacity onPress={handlePickImage}>
-                    {!isImageSelected ? (
+                {!isImageSelected ? (
+                    <TouchableOpacity onPress={handlePickImage}>
                         <View className='w-full h-16 bg-[#1e1e2d] rounded-2xl mt-2 flex-row justify-center items-center'>
                             <Image
                                 source={icons.upload}
@@ -175,16 +182,21 @@ export default function Create() {
                             />
                             <Text className='text-white ml-2'>Choose a file</Text>
                         </View>
-                    ) : (
-                        <View className='w-full h-60 bg-[#1e1e2d] rounded-2xl mt-2 flex-row justify-center items-center overflow-hidden'>
-                            <Image
-                                source={{ uri: files.image.uri }}
-                                className='w-full h-full'
-                                resizeMode='cover'
-                            />
-                        </View>
-                    )}
-                </TouchableOpacity>
+                    </TouchableOpacity>
+                ) : (
+                    <View className='w-full h-60 bg-[#1e1e2d] rounded-2xl mt-2 flex-row justify-center items-center overflow-hidden relative'>
+                        <Image
+                            source={{ uri: files.image.uri }}
+                            className='w-full h-full'
+                            resizeMode='cover'
+                        />
+                        <Image
+                            source={closeY}
+                            className='w-8 h-8 absolute top-2.5 right-2.5 z-10'
+                        />
+                    </View>
+                )}
+
 
                 {uploading ? (
                     <View className="w-full h-20 justify-center items-center bg-primary">
