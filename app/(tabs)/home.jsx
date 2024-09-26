@@ -89,7 +89,7 @@ export default function Home() {
 											resizeMode='contain'
 										/>
 										<Text className='text-sky-300 text-center font-bold'>
-											Save the video to help it {'\n'}become a popular one!
+											Save the video to help it {'\n'}become a popular one !
 										</Text>
 									</View>
 								) : (
