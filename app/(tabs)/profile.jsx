@@ -23,7 +23,6 @@ export default function profile() {
     const [avatarUploading, setAvatarUploading] = useState(false);
 
 
-
     useEffect(() => {
         setLoading(true);
         fetchUserPosts(user.$id)
@@ -94,9 +93,6 @@ export default function profile() {
             }
         }
     };
-
-
-
 
     return (
         <SafeAreaView className='bg-primary h-full'>
