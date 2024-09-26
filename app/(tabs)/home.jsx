@@ -79,9 +79,23 @@ export default function Home() {
 							<SearchInput containerStyle={'mt-6'} />
 
 							<View className='mt-8'>
-								<Text className='text-white mb-4'>Popular Videos</Text>
+								<Text className='text-white mb-4 font-pmedium text-lg'>Popular Videos</Text>
 								{/* 头部视频 */}
-								<Trending video={popularData} loading={loading} />
+								{popularData.length === 0 ? (
+									<View className='items-center'>
+										<Image
+											source={images.empty}
+											className='w-[75px] h-[60px]'
+											resizeMode='contain'
+										/>
+										<Text className='text-sky-300 text-center font-bold'>
+											Save the video to help it {'\n'}become a popular one!
+										</Text>
+									</View>
+								) : (
+									<Trending video={popularData} loading={loading} />
+								)}
+
 							</View>
 
 						</View>
