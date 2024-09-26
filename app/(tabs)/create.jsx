@@ -145,7 +145,7 @@ export default function Create() {
                     title={'Video title'}
                     handleChangeText={(text) => setForm({ ...form, title: text })}
                     value={form.title}
-                    placeholder={'Catchy titles get more clicks!'}
+                    placeholder={'Catchy titles get more clicks !'}
                 />
 
                 {/* Upload Video */}
