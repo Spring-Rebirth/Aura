@@ -1,6 +1,6 @@
 // cSpell:ignore Pressable
 import { View, Text, Image, TouchableOpacity, Pressable, Alert, ActivityIndicator } from 'react-native'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { icons } from '../constants'
 import { ResizeMode, Video } from 'expo-av';
 import star from '../assets/menu/star-solid.png'
@@ -23,6 +23,10 @@ export default function VideoCard({
     const { user, setUser } = useGlobalContext();
     const [isSaved, setIsSaved] = useState(user.favorite.includes($id));
     const [imageLoaded, setImageLoaded] = useState(false);
+
+    const videoRef = useRef(null);
+    const [videoNaturalSize, setVideoNaturalSize] = useState({ width: 0, height: 0, orientation: 'portrait' });
+
 
     const route = useRoute();
     const currentPath = route.name;
@@ -109,22 +113,23 @@ export default function VideoCard({
     const handleFullscreenUpdate = (status) => {
         if (status.fullscreen) {
             setIsFullscreen(true);
-            // 判断视频比例
-            const videoWidth = status.playableDurationMillis; // 获取视频宽度
-            const videoHeight = status.positionMillis; // 获取视频高度
+
+            // 获取视频自然尺寸
+            const videoWidth = 1920; // 假设的视频宽度，实际需要通过 API 获取
+            const videoHeight = 1080; // 假设的视频高度，实际需要通过 API 获取
             const currentAspectRatio = videoWidth / videoHeight;
 
             if (currentAspectRatio >= aspectRatio) {
-                // 这里可以设置视频样式为横屏
-
+                setVideoOrientation('landscape');
             } else {
-                // 这里可以设置视频样式为竖屏
-
+                setVideoOrientation('portrait');
             }
         } else {
             setIsFullscreen(false);
+            setVideoOrientation('portrait'); // 退出全屏时重置为竖屏
         }
     };
+
 
     useEffect(() => {
         if (accountId === user.accountId) {
@@ -242,25 +247,30 @@ export default function VideoCard({
                                 }} />
                             )}
                             <Video
+                                ref={videoRef}
                                 source={{ uri: video }}
                                 className={`w-full h-60 rounded-xl mt-6 ${isFullscreen ? (
-                                    videoOrientation === 'landscape' ? landscapeStyle : portraitStyle
+                                    videoOrientation === 'landscape' ? 'w-full h-full' : 'h-full w-auto'
                                 ) : ''}`}
                                 resizeMode={ResizeMode.CONTAIN}
                                 useNativeControls
                                 shouldPlay
-                                onPlaybackStatusUpdate={(status) => {
+                                onReadyForDisplay={({ naturalSize: { width, height } }) => {
+                                    console.log({ width, height, })
+                                }}
+                                onPlaybackStatusUpdate={async (status) => {
                                     if (status.isLoaded) {
-                                        setLoading(false); // 当视频准备好时，关闭加载状态
+                                        setLoading(false);
                                     }
                                     if (status.didJustFinish) {
-                                        setPlaying(false); // 视频播放结束时，设置为不播放
-                                        setLoading(true); // 重置加载状态，为下次播放做准备
+                                        setPlaying(false);
+                                        setLoading(true);
                                     }
                                 }}
-                                // cSpell:words Millis
+
                                 onFullscreenUpdate={handleFullscreenUpdate}
                             />
+
                         </>
                     )
             }
