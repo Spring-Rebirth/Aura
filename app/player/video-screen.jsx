@@ -4,7 +4,7 @@ import { View, Modal, StyleSheet } from 'react-native';
 import { Video } from 'expo-av';
 
 function VideoScreen({ route }) {
-    const { videoUrl } = route.params;
+    const { videoUri } = route.params;
     const [isFullscreen, setIsFullscreen] = useState(false);
 
     const handleFullscreenUpdate = (status) => {
