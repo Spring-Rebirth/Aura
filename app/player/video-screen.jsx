@@ -15,7 +15,7 @@ function VideoScreen({ videoUrl }) {
     };
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#000' }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#161622' }}>
             <Video
                 source={{ uri: videoUrl }}
                 useNativeControls
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     },
     modalContainer: {
         flex: 1,
-        backgroundColor: 'black',
+        backgroundColor: '#161622',
         justifyContent: 'center',
         alignItems: 'center',
     },
