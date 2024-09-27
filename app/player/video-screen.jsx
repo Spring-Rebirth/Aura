@@ -23,7 +23,7 @@ function VideoScreen({ videoUrl }) {
                 >
                     <View style={styles.modalContainer}>
                         <Video
-                            source={{ uri: videoUri }}
+                            source={{ uri: videoUrl }}
                             useNativeControls
                             onFullscreenUpdate={handleFullscreenUpdate}
                             style={styles.fullscreenVideo}
