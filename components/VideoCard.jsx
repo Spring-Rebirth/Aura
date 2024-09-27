@@ -96,18 +96,44 @@ export default function VideoCard({
         } catch (error) {
             console.error("删除过程中出错:", error);
         }
-
     }
+
+    const [isFullscreen, setIsFullscreen] = useState(false);
+    const aspectRatio = 16 / 9; // 你可以根据需要调整这个比例
+    const [videoOrientation, setVideoOrientation] = useState('portrait'); // 默认竖屏, 横屏为 landscape
+    let landscapeStyle = 'w-full h-full';
+    let portraitStyle = 'h-full w-auto';
+    let container = 'my-4 mx-4';
+    let fullscreenContainer = 'flex-1';
+
+    const handleFullscreenUpdate = (status) => {
+        if (status.fullscreen) {
+            setIsFullscreen(true);
+            // 判断视频比例
+            const videoWidth = status.playableDurationMillis; // 获取视频宽度
+            const videoHeight = status.positionMillis; // 获取视频高度
+            const currentAspectRatio = videoWidth / videoHeight;
+
+            if (currentAspectRatio >= aspectRatio) {
+                // 这里可以设置视频样式为横屏
+
+            } else {
+                // 这里可以设置视频样式为竖屏
+
+            }
+        } else {
+            setIsFullscreen(false);
+        }
+    };
 
     useEffect(() => {
         if (accountId === user.accountId) {
             setIsVideoCreator(true);
         }
-        console.log("isSaved 状态已更新:", isSaved);
     }, [isSaved]);
 
     return (
-        <View className='my-4 mx-4 relative'>
+        <View className={`relative ${isFullscreen ? fullscreenContainer : container}`}>
             {/* 菜单弹窗 */}
             {showControlMenu ? (
                 <View
@@ -217,7 +243,9 @@ export default function VideoCard({
                             )}
                             <Video
                                 source={{ uri: video }}
-                                className='w-full h-60 rounded-xl mt-6'
+                                className={`w-full h-60 rounded-xl mt-6 ${isFullscreen ? (
+                                    videoOrientation === 'landscape' ? landscapeStyle : portraitStyle
+                                ) : ''}`}
                                 resizeMode={ResizeMode.CONTAIN}
                                 useNativeControls
                                 shouldPlay
@@ -230,9 +258,10 @@ export default function VideoCard({
                                         setLoading(true); // 重置加载状态，为下次播放做准备
                                     }
                                 }}
+                                // cSpell:words Millis
+                                onFullscreenUpdate={handleFullscreenUpdate}
                             />
                         </>
-
                     )
             }
 
