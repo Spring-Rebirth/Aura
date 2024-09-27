@@ -18,7 +18,7 @@ export default function Home() {
 	const [loading, setLoading] = useState(false);
 	const [data, setData] = useState([]);
 	const [popularData, setPopularData] = useState([]);
-	const { user, setUser } = useGlobalContext();
+	const { user } = useGlobalContext();
 	const { fetchPosts, fetchPopularPosts } = useGetData({ setLoading, setData, setPopularData });
 
 
