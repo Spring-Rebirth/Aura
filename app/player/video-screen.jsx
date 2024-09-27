@@ -3,7 +3,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { View, Modal, StyleSheet } from 'react-native';
 import { Video } from 'expo-av';
 
-function VideoScreen({ videoUri }) {
+function VideoScreen({ route }) {
+    const { videoUrl } = route.params;
     const [isFullscreen, setIsFullscreen] = useState(false);
 
     const handleFullscreenUpdate = (status) => {
