@@ -3,7 +3,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { View, Modal, StyleSheet } from 'react-native';
 import { Video } from 'expo-av';
 
-function VideoScreen({ videoUrl }) {
+function VideoScreen({ videoUri }) {
     const [isFullscreen, setIsFullscreen] = useState(false);
 
     const handleFullscreenUpdate = (status) => {
@@ -17,7 +17,7 @@ function VideoScreen({ videoUrl }) {
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#161622' }}>
             <Video
-                source={{ uri: videoUrl }}
+                source={{ uri: videoUri }}
                 useNativeControls
                 onFullscreenUpdate={handleFullscreenUpdate}
                 style={isFullscreen ? styles.fullscreenVideo : styles.normalVideo}
@@ -34,7 +34,7 @@ function VideoScreen({ videoUrl }) {
                 >
                     <View style={styles.modalContainer}>
                         <Video
-                            source={{ uri: videoUrl }}
+                            source={{ uri: videoUri }}
                             useNativeControls
                             onFullscreenUpdate={handleFullscreenUpdate}
                             style={styles.fullscreenVideo}
