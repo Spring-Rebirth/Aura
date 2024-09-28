@@ -20,11 +20,11 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icon_app.png",
         "backgroundColor": "#ffffff",
-        "package": "com.mystseed.aora"
+        "package": "com.mystseed.aura"
       },
-      "package": "com.mystseed.aora"
+      "package": "com.mystseed.aura"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -33,10 +33,5 @@
       "expo-router"
     ],
     "owner": "myst-seed",
-    "extra": {
-      "eas": {
-        "projectId": "b42e4b62-07a8-4671-b223-82c614092207"
-      }
-    }
   }
 }
