@@ -1,8 +1,11 @@
 import { View, Text, Image } from 'react-native'
 import { Tabs } from 'expo-router'
 import icons from '../../constants/icons'
+import { useWindowDimensions } from 'react-native'
 
 function TabIcon({ name, icon, color, focused }) {
+    const { width, height } = useWindowDimensions();
+    const isLandscape = width > height;
     return (
         <View className='justify-center items-center gap-1.5'>
             <Image
@@ -12,9 +15,16 @@ function TabIcon({ name, icon, color, focused }) {
                 className='w-6 h-6'
             />
             {/* //cSpell:disable-next-line */}
-            <Text style={{ color: color }} className={`text-xs ${focused ? 'font-psemibold' : 'font-pregular'}`}>
-                {name}
-            </Text>
+            {!isLandscape && (
+                <Text
+                    style={{ color: color }}
+                    className={`text-xs ${focused ? 'font-psemibold' : 'font-pregular'}`}
+                    numberOfLines={1}
+                    ellipsizeMode='tail'
+                >
+                    {name}
+                </Text>
+            )}
         </View >
     )
 }
