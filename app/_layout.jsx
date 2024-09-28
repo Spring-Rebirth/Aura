@@ -1,8 +1,9 @@
-import 'react-native-url-polyfill/auto' // from App-write documentation
-import { useEffect } from 'react'
+import 'react-native-url-polyfill/auto';
+import { useEffect } from 'react';
 import { Stack, SplashScreen } from "expo-router";
 import { useFonts } from 'expo-font';
-import { GlobalProvider } from '../context/GlobalProvider'
+import { GlobalProvider } from '../context/GlobalProvider';
+import VideoScreen from './player/video-screen';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -42,7 +43,7 @@ export default function RootLayout() {
                 <Stack.Screen name="(auth)/sign-in" options={{ headerShown: false }} />
                 <Stack.Screen name="(auth)/sign-up" options={{ headerShown: false }} />
                 <Stack.Screen name="search/[query]" options={{ headerShown: false }} />
-                <Stack.Screen name='player/video-screen' options={{ headerShown: false }} />
+                <Stack.Screen name='player/video-screen' component={VideoScreen} options={{ headerShown: false }} />
             </Stack>
         </GlobalProvider>
     )
