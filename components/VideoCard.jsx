@@ -209,9 +209,7 @@ export default function VideoCard({
                             className='w-full h-60 mt-6 rounded-xl justify-center items-center relative overflow-hidden' // 添加 overflow-hidden
                             activeOpacity={0.7}
                             onPress={() => {
-                                () => navigation.navigate('details', { videoUri: video })
-                                setPlaying(true);
-                                setLoading(true); // 当用户点击播放时，将加载状态设置为 true
+                                navigation.navigate('details', { videoUri: video })
                             }}
                         >
 
