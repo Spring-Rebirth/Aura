@@ -24,6 +24,7 @@
     "expo-router": "~3.5.23",
     "expo-screen-orientation": "^7.0.5",
     "expo-status-bar": "~1.12.1",
+    "expo-updates": "^0.25.25",
     "js-jieba": "^1.0.12",
     "nativewind": "^2.0.11",
     "node-appwrite": "^14.1.0",
