@@ -53,11 +53,14 @@ export default function SignIn() {
                 <ScrollView contentContainerStyle={{ height: '100%' }}>
                     <View className='h-full justify-center px-6'>
                         <View className='h-[85vh] justify-center'>
-                            <Image
-                                source={images.logo}
-                                className='w-[160] h-auto '
-                                resizeMode='contain'
-                            />
+                            <View className='flex-row items-center space-x-2'>
+                                <Image
+                                    source={images.logoSmall}
+                                    resizeMode='contain'
+                                    className='w-9 h-10'
+                                />
+                                <Text className='text-white text-4xl font-semibold'>Aura</Text>
+                            </View>
 
                             <Text className='text-white text-2xl font-psemibold mt-6'>Sign in</Text>
 

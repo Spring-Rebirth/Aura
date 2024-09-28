@@ -33,5 +33,10 @@
       "expo-router"
     ],
     "owner": "myst-seed",
+    "extra": {
+      "eas": {
+        "projectId": "b42e4b62-07a8-4671-b223-82c614092207"
+      }
+    }
   }
 }
