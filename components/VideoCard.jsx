@@ -208,7 +208,10 @@ export default function VideoCard({
                         <TouchableOpacity
                             className='w-full h-60 mt-6 rounded-xl justify-center items-center relative overflow-hidden' // 添加 overflow-hidden
                             activeOpacity={0.7}
-                            onPress={() => router.push('player/video-screen', video)}
+                            onPress={() => {
+                                setPlaying(true);
+                                setLoading(true);
+                            }}
 
                         >
 
