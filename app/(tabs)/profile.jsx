@@ -21,6 +21,7 @@ export default function profile() {
     const { user, setUser, setIsLoggedIn } = useGlobalContext();
     const [refreshing, setRefreshing] = useState(false);
     const [avatarUploading, setAvatarUploading] = useState(false);
+    const [currentPlayingPost, setCurrentPlayingPost] = useState(null);
 
 
     useEffect(() => {
@@ -151,7 +152,7 @@ export default function profile() {
                 // renderItem 接受一个对象参数，通常解构为 { item, index, separators }
                 renderItem={({ item }) => {
                     return (
-                        <VideoCard post={item} handleRefresh={handleRefresh} />
+                        <VideoCard post={item} handleRefresh={handleRefresh} setCurrentPlayingPost={setCurrentPlayingPost} />
                     )
                 }}
                 ListEmptyComponent={() => {

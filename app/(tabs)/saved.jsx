@@ -15,6 +15,7 @@ export default function Saved() {
     const [savedPostsData, setSavedPostsData] = useState([]);
     const { fetchSavedPosts } = useGetData({ setLoading, setSavedPostsData });
     const { user } = useGlobalContext();
+    const [currentPlayingPost, setCurrentPlayingPost] = useState(null);
 
     const handleRefresh = async () => {
         setRefreshing(true);
@@ -57,7 +58,7 @@ export default function Saved() {
                 // renderItem 接受一个对象参数，通常解构为 { item, index, separators }
                 renderItem={({ item }) => {
                     return (
-                        <VideoCard post={item} />
+                        <VideoCard post={item} setCurrentPlayingPost={setCurrentPlayingPost} />
                     )
                 }}
                 ListEmptyComponent={() => {
