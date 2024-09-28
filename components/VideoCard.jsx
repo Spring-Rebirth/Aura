@@ -9,11 +9,12 @@ import { useGlobalContext } from '../context/GlobalProvider'
 import { deleteVideoDoc, deleteVideoFiles } from '../lib/appwrite'
 import { useRoute } from '@react-navigation/native';
 import { updateSavedCount, getVideoDetails } from '../lib/appwrite';
-import { useRouter } from 'expo-router';
+import * as ScreenOrientation from 'expo-screen-orientation';
 
 export default function VideoCard({
     post,
-    handleRefresh
+    handleRefresh,
+    toggleFullscreen
 }) {
     const { $id, title, thumbnail, video, creator: { accountId, username, avatar } } = post;
     const [playing, setPlaying] = useState(false);
@@ -28,7 +29,14 @@ export default function VideoCard({
     const videoRef = useRef(null);
     const route = useRoute();
     const currentPath = route.name;
-    const router = useRouter();
+
+    const onFullscreenUpdate = (status) => {
+        if (status.fullscreen) {
+            toggleFullscreen(true);
+        } else {
+            toggleFullscreen(false);
+        }
+    };
 
 
     const handleAddSaved = async () => {
@@ -108,27 +116,37 @@ export default function VideoCard({
     let landscapeStyle = 'w-full h-full';
     let portraitStyle = 'h-full w-auto';
     let container = 'my-4 mx-4';
-    let fullscreenContainer = 'flex-1';
+    let fullscreenContainer = 'w-screen';
 
-    const handleFullscreenUpdate = (status) => {
-        if (status.fullscreen) {
-            setIsFullscreen(true);
+    // const handleFullscreenUpdate = (status) => {
+    //     if (status.fullscreen) {
+    //         setIsFullscreen(true);
 
-            // 获取视频自然尺寸
-            const videoWidth = 1920; // 假设的视频宽度，实际需要通过 API 获取
-            const videoHeight = 1080; // 假设的视频高度，实际需要通过 API 获取
-            const currentAspectRatio = videoWidth / videoHeight;
+    //         // 获取视频自然尺寸
+    //         const videoWidth = 1920; // 假设的视频宽度，实际需要通过 API 获取
+    //         const videoHeight = 1080; // 假设的视频高度，实际需要通过 API 获取
+    //         const currentAspectRatio = videoWidth / videoHeight;
 
-            if (currentAspectRatio >= aspectRatio) {
-                setVideoOrientation('landscape');
-            } else {
-                setVideoOrientation('portrait');
-            }
-        } else {
-            setIsFullscreen(false);
-            setVideoOrientation('portrait'); // 退出全屏时重置为竖屏
-        }
-    };
+    //         if (currentAspectRatio >= aspectRatio) {
+    //             setVideoOrientation('landscape');
+    //         } else {
+    //             setVideoOrientation('portrait');
+    //         }
+    //     } else {
+    //         setIsFullscreen(false);
+    //         setVideoOrientation('portrait'); // 退出全屏时重置为竖屏
+    //     }
+    // };
+
+    // const handleFullscreenUpdate = async (status) => {
+    //     if (status.fullscreen) {
+    //         await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
+    //     } else {
+    //         await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
+    //     }
+    // };
+
+
 
 
     useEffect(() => {
@@ -138,7 +156,7 @@ export default function VideoCard({
     }, [isSaved]);
 
     return (
-        <View className={`relative ${isFullscreen ? fullscreenContainer : container}`}>
+        <View className={`relative ${isFullscreen ? 'w-screen h-screen' : 'h-auto'}`}>
             {/* 菜单弹窗 */}
             {showControlMenu ? (
                 <View
@@ -250,9 +268,7 @@ export default function VideoCard({
                             <Video
                                 ref={videoRef}
                                 source={{ uri: video }}
-                                className={`w-full h-60 rounded-xl mt-6 ${isFullscreen ? (
-                                    videoOrientation === 'landscape' ? 'w-full h-full' : 'h-full w-auto'
-                                ) : ''}`}
+                                className={`w-full h-60 rounded-xl mt-6 `}
                                 resizeMode={ResizeMode.CONTAIN}
                                 useNativeControls
                                 shouldPlay
@@ -269,7 +285,7 @@ export default function VideoCard({
                                     }
                                 }}
 
-                                onFullscreenUpdate={handleFullscreenUpdate}
+                                onFullscreenUpdate={onFullscreenUpdate}
                             />
 
                         </>

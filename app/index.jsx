@@ -5,6 +5,7 @@ import { images } from "../constants";
 import CustomButton from '../components/CustomButton';
 import { Redirect, router } from 'expo-router';
 import { useGlobalContext } from '../context/GlobalProvider';
+import home from '../assets/images/home.jpg';
 // cSpell:word pregular appwrite
 //cSpell:ignore Aora pregular
 export default function Welcome() {
@@ -22,21 +23,26 @@ export default function Welcome() {
             <StatusBar style="light" backgroundColor='#161622' />
             <ScrollView contentContainerStyle={{ height: '100%' }}>
                 <View className='justify-center items-center min-h-[85vh] px-4'>
-                    <Image
-                        source={images.logo}
-                        resizeMode='contain'
-                        className='w-[130] h-[84]'
-                    />
-                    <Image
-                        source={images.cards}
-                        resizeMode='contain'
-                        className='w-[380] h-[300]'
-                    />
+                    <View className='flex-row items-center space-x-2'>
+                        <Image
+                            source={images.logoSmall}
+                            resizeMode='contain'
+                            className='w-9 h-10'
+                        />
+                        <Text className='text-white text-4xl font-semibold'>Aura</Text>
+                    </View>
+                    <View className='w-80 h-44 rounded-xl overflow-hidden my-8'>
+                        <Image
+                            source={home}
+                            resizeMode='cover'
+                            className='w-full h-full'
+                        />
+                    </View>
                     <View className='relative mt-5'>
                         <Text className='text-white text-3xl font-bold text-center'>
                             Discover Endless{'\n'}
                             Possibilities with{' '}
-                            <Text className='text-secondary-200'>Aora</Text>
+                            <Text className='text-secondary-200'>Aura</Text>
                         </Text>
                         <Image
                             source={images.path}
@@ -46,7 +52,7 @@ export default function Welcome() {
                     </View>
                     <Text className='text-gray-100 text-center mt-6 font-pregular text-sm'>
                         Where Creativity Meets Innovation: Embark on a Journey of Limitless
-                        Exploration with Aora
+                        Exploration with Aura
                     </Text>
 
                     {isLoading ? (

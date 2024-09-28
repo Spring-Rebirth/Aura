@@ -22,6 +22,7 @@
     "expo-image-picker": "^15.0.7",
     "expo-linking": "~6.3.1",
     "expo-router": "~3.5.23",
+    "expo-screen-orientation": "^7.0.5",
     "expo-status-bar": "~1.12.1",
     "js-jieba": "^1.0.12",
     "nativewind": "^2.0.11",
