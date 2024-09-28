@@ -10,11 +10,15 @@ import { deleteVideoDoc, deleteVideoFiles } from '../lib/appwrite'
 import { useRoute } from '@react-navigation/native';
 import { updateSavedCount, getVideoDetails } from '../lib/appwrite';
 import * as ScreenOrientation from 'expo-screen-orientation';
+import { StatusBar } from 'expo-status-bar';
+
 
 export default function VideoCard({
     post,
     handleRefresh,
-    toggleFullscreen
+    toggleFullscreen,
+    setCurrentPlayingPost,
+    isFullscreen,
 }) {
     const { $id, title, thumbnail, video, creator: { accountId, username, avatar } } = post;
     const [playing, setPlaying] = useState(false);
@@ -29,8 +33,9 @@ export default function VideoCard({
     const videoRef = useRef(null);
     const route = useRoute();
     const currentPath = route.name;
+    const aspectRatio = 16 / 9; // 你可以根据需要调整这个比例
 
-    // 在 VideoCard 组件中
+
     const onFullscreenUpdate = async ({ fullscreenUpdate }) => {
         if (fullscreenUpdate === Video.FULLSCREEN_UPDATE_PLAYER_WILL_PRESENT) {
             await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
@@ -114,44 +119,6 @@ export default function VideoCard({
         }
     }
 
-    const [isFullscreen, setIsFullscreen] = useState(false);
-    const aspectRatio = 16 / 9; // 你可以根据需要调整这个比例
-    const [videoOrientation, setVideoOrientation] = useState('portrait'); // 默认竖屏, 横屏为 landscape
-    let landscapeStyle = 'w-full h-full';
-    let portraitStyle = 'h-full w-auto';
-    let container = 'my-4 mx-4';
-    let fullscreenContainer = 'w-screen';
-
-    // const handleFullscreenUpdate = (status) => {
-    //     if (status.fullscreen) {
-    //         setIsFullscreen(true);
-
-    //         // 获取视频自然尺寸
-    //         const videoWidth = 1920; // 假设的视频宽度，实际需要通过 API 获取
-    //         const videoHeight = 1080; // 假设的视频高度，实际需要通过 API 获取
-    //         const currentAspectRatio = videoWidth / videoHeight;
-
-    //         if (currentAspectRatio >= aspectRatio) {
-    //             setVideoOrientation('landscape');
-    //         } else {
-    //             setVideoOrientation('portrait');
-    //         }
-    //     } else {
-    //         setIsFullscreen(false);
-    //         setVideoOrientation('portrait'); // 退出全屏时重置为竖屏
-    //     }
-    // };
-
-    // const handleFullscreenUpdate = async (status) => {
-    //     if (status.fullscreen) {
-    //         await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
-    //     } else {
-    //         await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
-    //     }
-    // };
-
-
-
 
     useEffect(() => {
         if (accountId === user.accountId) {
@@ -160,66 +127,69 @@ export default function VideoCard({
     }, [isSaved]);
 
     return (
-        <View className={`relative my-4 ${isFullscreen ? 'w-screen h-screen' : 'h-auto'}`}>
-            {/* 菜单弹窗 */}
-            {showControlMenu ? (
-                <View
-                    className='absolute right-1 top-8 bg-[#1E1E2D] w-40 h-auto rounded-md z-10
-                                px-6 py-0 '
-                >
-                    <Pressable
-                        onPress={handleClickSave}
-                        className='w-full h-12 flex-row items-center'
-                    >
-                        <Image
-                            source={star}
-                            className='w-5 h-5 mr-3'
-                        />
-                        <Text className='text-white text-lg'>
-                            {currentPath === 'saved' ? 'Remove' : (isSaved ? 'Saved    √' : 'Save')}
-                        </Text>
-
-                    </Pressable>
-
-                    {isVideoCreator ? (
-                        <Pressable
-                            onPress={handleDelete}
-                            className='w-full h-12 flex-row items-center'
+        <View className={`relative ${isFullscreen ? 'flex-1 w-full h-full' : 'my-4'}`}>
+            {/* 在全屏模式下隐藏状态栏 */}
+            {isFullscreen && <StatusBar hidden />}
+            {!isFullscreen && (
+                <>
+                    {/* 菜单弹窗 */}
+                    {showControlMenu ? (
+                        <View
+                            className='absolute right-1 top-8 bg-[#1E1E2D] w-40 h-auto rounded-md z-10 px-6 py-0'
                         >
+                            <Pressable
+                                onPress={handleClickSave}
+                                className='w-full h-12 flex-row items-center'
+                            >
+                                <Image
+                                    source={star}
+                                    className='w-5 h-5 mr-3'
+                                />
+                                <Text className='text-white text-lg'>
+                                    {currentPath === 'saved' ? 'Remove' : (isSaved ? 'Saved    √' : 'Save')}
+                                </Text>
+                            </Pressable>
+
+                            {isVideoCreator ? (
+                                <Pressable
+                                    onPress={handleDelete}
+                                    className='w-full h-12 flex-row items-center'
+                                >
+                                    <Image
+                                        source={trash}
+                                        className='w-5 h-5 mr-3'
+                                    />
+                                    <Text className='text-white text-lg'>Delete</Text>
+                                </Pressable>
+                            ) : null}
+                        </View>
+                    ) : null}
+
+                    {/* 信息视图 */}
+                    <View className='flex-row'>
+                        <Image
+                            source={{ uri: avatar }}
+                            className='w-[46px] h-[46px] border border-secondary rounded-lg'
+                        />
+                        <View className='gap-y-1 justify-center flex-1 mx-3'>
+                            <Text className='text-white font-psemibold text-sm' numberOfLines={1}>
+                                {title}
+                            </Text>
+                            <Text className='text-gray-100 font-pregular text-xs' numberOfLines={1}>
+                                {username}
+                            </Text>
+                        </View>
+                        <TouchableOpacity onPress={() => setShowControlMenu(prev => !prev)}>
                             <Image
-                                source={trash}
-                                className='w-5 h-5 mr-3'
+                                source={icons.menu}
+                                className='w-5 h-5'
+                                resizeMode='contain'
                             />
-                            <Text className='text-white text-lg'>Delete</Text>
-                        </Pressable>
-                    ) : false}
-                </View>
+                        </TouchableOpacity>
+                    </View>
+                </>
+            )}
 
-            ) : false}
-
-            {/* 信息视图 */}
-            <View className='flex-row'>
-                <Image
-                    source={{ uri: avatar }}
-                    className='w-[46px] h-[46px] border border-secondary rounded-lg'
-                />
-                <View className='gap-y-1 justify-center flex-1 mx-3'>
-                    <Text className='text-white font-psemibold text-sm' numberOfLines={1}>
-                        {title}
-                    </Text>
-                    <Text className='text-gray-100 font-pregular text-xs' numberOfLines={1}>
-                        {username}
-                    </Text>
-                </View>
-                <TouchableOpacity onPress={() => setShowControlMenu(prev => !prev)}>
-                    <Image
-                        source={icons.menu}
-                        className='w-5 h-5'
-                        resizeMode='contain'
-                    />
-                </TouchableOpacity>
-
-            </View>
 
             {/* 视频视图 */}
             {
@@ -231,6 +201,7 @@ export default function VideoCard({
                             onPress={() => {
                                 setPlaying(true);
                                 setLoading(true);
+                                setCurrentPlayingPost(post); // 设置当前播放的视频
                             }}
                         >
 
@@ -270,7 +241,7 @@ export default function VideoCard({
                             <Video
                                 ref={videoRef}
                                 source={{ uri: video }}
-                                className={isFullscreen ? 'w-full h-full' : 'w-full h-52 rounded-xl mt-6'}
+                                className={isFullscreen ? 'flex-1 w-full h-full' : 'w-full h-52 rounded-xl mt-6'}
                                 resizeMode={ResizeMode.CONTAIN}
                                 useNativeControls
                                 shouldPlay
