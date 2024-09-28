@@ -1,5 +1,5 @@
 // cSpell:ignore Pressable
-import { View, Text, Image, TouchableOpacity, Pressable, Alert, ActivityIndicator } from 'react-native'
+import { View, Text, Image, TouchableOpacity, Pressable, Alert, ActivityIndicator, Button } from 'react-native'
 import { useEffect, useState, useRef } from 'react'
 import { icons } from '../constants'
 import { ResizeMode, Video } from 'expo-av';
@@ -9,6 +9,7 @@ import { useGlobalContext } from '../context/GlobalProvider'
 import { deleteVideoDoc, deleteVideoFiles } from '../lib/appwrite'
 import { useRoute } from '@react-navigation/native';
 import { updateSavedCount, getVideoDetails } from '../lib/appwrite';
+import { useNavigation } from 'expo-router';
 
 export default function VideoCard({
     post,
@@ -25,11 +26,10 @@ export default function VideoCard({
     const [imageLoaded, setImageLoaded] = useState(false);
 
     const videoRef = useRef(null);
-    const [videoNaturalSize, setVideoNaturalSize] = useState({ width: 0, height: 0, orientation: 'portrait' });
-
-
     const route = useRoute();
     const currentPath = route.name;
+    const navigation = useNavigation();
+
 
     const handleAddSaved = async () => {
         try {
@@ -209,6 +209,7 @@ export default function VideoCard({
                             className='w-full h-60 mt-6 rounded-xl justify-center items-center relative overflow-hidden' // 添加 overflow-hidden
                             activeOpacity={0.7}
                             onPress={() => {
+                                () => navigation.navigate('details', { videoUri: video })
                                 setPlaying(true);
                                 setLoading(true); // 当用户点击播放时，将加载状态设置为 true
                             }}

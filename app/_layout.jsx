@@ -3,7 +3,6 @@ import { useEffect } from 'react';
 import { Stack, SplashScreen } from "expo-router";
 import { useFonts } from 'expo-font';
 import { GlobalProvider } from '../context/GlobalProvider';
-import VideoScreen from './player/video-screen';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -43,7 +42,7 @@ export default function RootLayout() {
                 <Stack.Screen name="(auth)/sign-in" options={{ headerShown: false }} />
                 <Stack.Screen name="(auth)/sign-up" options={{ headerShown: false }} />
                 <Stack.Screen name="search/[query]" options={{ headerShown: false }} />
-                <Stack.Screen name='player/video-screen' component={VideoScreen} options={{ headerShown: false }} />
+                <Stack.Screen name='player/video-screen' options={{ headerShown: false }} />
             </Stack>
         </GlobalProvider>
     )
