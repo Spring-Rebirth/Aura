@@ -205,7 +205,7 @@ export default function VideoCard({
                     {/* 菜单弹窗 */}
                     {showControlMenu ? (
                         <View
-                            className='absolute right-2 bottom-14 bg-[#1E1E2D] w-40 h-auto rounded-md z-10 px-6 py-0'
+                            className='absolute right-2 bottom-[77px] bg-[#1E1E2D] w-40 h-auto rounded-md z-10 px-6 py-0'
                         >
                             <Pressable
                                 onPress={handleClickSave}
