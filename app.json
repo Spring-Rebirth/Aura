@@ -8,7 +8,8 @@
     "icon": "./assets/icon_app.png",
     "userInterfaceStyle": "light",
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/b42e4b62-07a8-4671-b223-82c614092207"
     },
     "splash": {
       "image": "./assets/splash.png",
@@ -21,8 +22,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon_app.png",
-        "backgroundColor": "#ffffff",
-        "package": "com.mystseed.aura"
+        "backgroundColor": "#ffffff"
       },
       "package": "com.mystseed.aura"
     },
@@ -37,6 +37,7 @@
       "eas": {
         "projectId": "b42e4b62-07a8-4671-b223-82c614092207"
       }
-    }
+    },
+    "runtimeVersion": "1.0"
   }
 }
