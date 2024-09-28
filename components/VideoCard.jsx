@@ -127,76 +127,16 @@ export default function VideoCard({
     }, [isSaved]);
 
     return (
-        <View className={`relative ${isFullscreen ? 'flex-1 w-full h-full' : 'my-4 px-1'}`}>
+        <View className={`relative ${isFullscreen ? 'flex-1 w-full h-full' : 'my-4 '}`}>
             {/* 在全屏模式下隐藏状态栏 */}
             {isFullscreen && <StatusBar hidden />}
-            {!isFullscreen && (
-                <>
-                    {/* 菜单弹窗 */}
-                    {showControlMenu ? (
-                        <View
-                            className='absolute right-1 top-8 bg-[#1E1E2D] w-40 h-auto rounded-md z-10 px-6 py-0'
-                        >
-                            <Pressable
-                                onPress={handleClickSave}
-                                className='w-full h-12 flex-row items-center'
-                            >
-                                <Image
-                                    source={star}
-                                    className='w-5 h-5 mr-3'
-                                />
-                                <Text className='text-white text-lg'>
-                                    {currentPath === 'saved' ? 'Remove' : (isSaved ? 'Saved    √' : 'Save')}
-                                </Text>
-                            </Pressable>
-
-                            {isVideoCreator ? (
-                                <Pressable
-                                    onPress={handleDelete}
-                                    className='w-full h-12 flex-row items-center'
-                                >
-                                    <Image
-                                        source={trash}
-                                        className='w-5 h-5 mr-3'
-                                    />
-                                    <Text className='text-white text-lg'>Delete</Text>
-                                </Pressable>
-                            ) : null}
-                        </View>
-                    ) : null}
-
-                    {/* 信息视图 */}
-                    <View className='flex-row'>
-                        <Image
-                            source={{ uri: avatar }}
-                            className='w-[46px] h-[46px] border border-secondary rounded-lg'
-                        />
-                        <View className='gap-y-1 justify-center flex-1 mx-3'>
-                            <Text className='text-white font-psemibold text-sm' numberOfLines={1}>
-                                {title}
-                            </Text>
-                            <Text className='text-gray-100 font-pregular text-xs' numberOfLines={1}>
-                                {username}
-                            </Text>
-                        </View>
-                        <TouchableOpacity onPress={() => setShowControlMenu(prev => !prev)}>
-                            <Image
-                                source={icons.menu}
-                                className='w-5 h-5'
-                                resizeMode='contain'
-                            />
-                        </TouchableOpacity>
-                    </View>
-                </>
-            )}
-
 
             {/* 视频视图 */}
             {
                 !playing
                     ? (
                         <TouchableOpacity
-                            className='w-full h-60 mt-4 rounded-xl justify-center items-center relative overflow-hidden' // 添加 overflow-hidden
+                            className='w-full h-60 justify-center items-center relative overflow-hidden' // 添加 overflow-hidden
                             activeOpacity={0.7}
                             onPress={() => {
                                 setPlaying(true);
@@ -207,7 +147,7 @@ export default function VideoCard({
 
                             <Image
                                 source={{ uri: thumbnail }}
-                                className='w-full h-full rounded-xl'
+                                className='w-full h-full mb-4'
                                 resizeMode='cover'
                                 onLoad={() => setImageLoaded(true)}
                                 onError={() => {
@@ -241,7 +181,7 @@ export default function VideoCard({
                             <Video
                                 ref={videoRef}
                                 source={{ uri: video }}
-                                className={isFullscreen ? 'flex-1 w-full h-full' : 'w-full h-52 rounded-xl mt-6'}
+                                className={isFullscreen ? 'flex-1 w-full h-full' : 'w-full h-52 mb-4'}
                                 resizeMode={ResizeMode.CONTAIN}
                                 useNativeControls
                                 shouldPlay
@@ -256,11 +196,72 @@ export default function VideoCard({
                                 }}
                                 onFullscreenUpdate={onFullscreenUpdate}
                             />
-
-
                         </>
                     )
             }
+
+            {!isFullscreen && (
+                <>
+                    {/* 菜单弹窗 */}
+                    {showControlMenu ? (
+                        <View
+                            className='absolute right-2 bottom-14 bg-[#1E1E2D] w-40 h-auto rounded-md z-10 px-6 py-0'
+                        >
+                            <Pressable
+                                onPress={handleClickSave}
+                                className='w-full h-12 flex-row items-center'
+                            >
+                                <Image
+                                    source={star}
+                                    className='w-5 h-5 mr-3'
+                                />
+                                <Text className='text-white text-lg'>
+                                    {currentPath === 'saved' ? 'Remove' : (isSaved ? 'Saved    √' : 'Save')}
+                                </Text>
+                            </Pressable>
+
+                            {isVideoCreator ? (
+                                <Pressable
+                                    onPress={handleDelete}
+                                    className='w-full h-12 flex-row items-center'
+                                >
+                                    <Image
+                                        source={trash}
+                                        className='w-5 h-5 mr-3'
+                                    />
+                                    <Text className='text-white text-lg'>Delete</Text>
+                                </Pressable>
+                            ) : null}
+                        </View>
+                    ) : null}
+
+                    {/* 信息视图 */}
+                    <View className='flex-row mb-3.5'>
+                        <Image
+                            source={{ uri: avatar }}
+                            className='w-[46px] h-[46px] border border-secondary rounded-lg ml-2'
+                        />
+                        <View className='gap-y-1 justify-center flex-1 mx-3'>
+                            <Text className='text-white font-psemibold text-sm' numberOfLines={1}>
+                                {title}
+                            </Text>
+                            <Text className='text-gray-100 font-pregular text-xs' numberOfLines={1}>
+                                {username}
+                            </Text>
+                        </View>
+                        <TouchableOpacity onPress={() => setShowControlMenu(prev => !prev)}>
+                            <Image
+                                source={icons.menu}
+                                className='w-5 h-5 mr-2'
+                                resizeMode='contain'
+                            />
+                        </TouchableOpacity>
+                    </View>
+                </>
+            )}
+
+
+
 
         </View >
     )
