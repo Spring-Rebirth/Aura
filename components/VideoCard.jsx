@@ -156,7 +156,7 @@ export default function VideoCard({
     }, [isSaved]);
 
     return (
-        <View className={`relative ${isFullscreen ? 'w-screen h-screen' : 'h-auto'}`}>
+        <View className={`relative my-4 ${isFullscreen ? 'w-screen h-screen' : 'h-auto'}`}>
             {/* 菜单弹窗 */}
             {showControlMenu ? (
                 <View
