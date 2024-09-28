@@ -29,11 +29,13 @@ export default function RootLayout() {
 
         async function checkForUpdates() {
             try {
+                console.log('Checking for updates...');
                 const update = await Updates.checkForUpdateAsync();
+                console.log('Update available:', update.isAvailable);
                 if (update.isAvailable) {
-                    // 有更新可用
+                    console.log('Fetching update...');
                     await Updates.fetchUpdateAsync();
-                    // 通知用户，重新启动应用以应用更新
+                    console.log('Update fetched.');
                     Alert.alert(
                         '有可用的更新',
                         '已经下载了新的更新，是否立即重启应用？',
@@ -49,6 +51,7 @@ export default function RootLayout() {
                             {
                                 text: '立即重启',
                                 onPress: async () => {
+                                    console.log('Reloading app...');
                                     await Updates.reloadAsync();
                                 },
                             },
@@ -56,11 +59,11 @@ export default function RootLayout() {
                         { cancelable: false }
                     );
                 } else {
-                    // 没有更新，隐藏启动屏幕
+                    console.log('No updates available.');
                     SplashScreen.hideAsync();
                 }
             } catch (e) {
-                console.log(e);
+                console.log('Error checking for updates:', e);
                 // 检查更新失败，隐藏启动屏幕
                 SplashScreen.hideAsync();
             }
