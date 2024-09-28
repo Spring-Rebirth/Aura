@@ -21,7 +21,6 @@ export default function Home() {
 	const [popularData, setPopularData] = useState([]);
 	const { user } = useGlobalContext();
 	const { fetchPosts, fetchPopularPosts } = useGetData({ setLoading, setData, setPopularData });
-	const [orientation, setOrientation] = useState('portrait');
 
 	const toggleFullscreen = (fullscreen) => {
 		setIsFullscreen(fullscreen);
@@ -59,14 +58,6 @@ export default function Home() {
 
 		fetchDataAndUpdateVideo();  // 调用异步函数
 
-		const handleOrientationChange = () => {
-			const { width, height } = Dimensions.get('window');
-			setOrientation(width > height ? 'landscape' : 'portrait');
-		};
-
-		const subscription = Dimensions.addEventListener('change', handleOrientationChange);
-
-		return () => subscription?.remove();
 	}, [user]);
 
 	return (
@@ -74,9 +65,7 @@ export default function Home() {
 
 			<FlatList
 				data={loading ? [] : data}
-				// item 是 data 数组中的每一项
 				keyExtractor={(item) => item.$id}
-				horizontal={orientation === 'landscape'} // 横屏时水平排列
 				ListHeaderComponent={() => {
 					return (
 						<View className='my-6 px-4'>
@@ -118,7 +107,7 @@ export default function Home() {
 						</View>
 					);
 				}}
-				// renderItem 接受一个对象参数，通常解构为 { item, index, separators }
+
 				renderItem={({ item }) => {
 					return (
 						<VideoCard post={item} handleRefresh={handleRefresh} isFullscreen={isFullscreen}

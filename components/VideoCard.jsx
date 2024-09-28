@@ -30,13 +30,17 @@ export default function VideoCard({
     const route = useRoute();
     const currentPath = route.name;
 
-    const onFullscreenUpdate = (status) => {
-        if (status.fullscreen) {
+    // 在 VideoCard 组件中
+    const onFullscreenUpdate = async ({ fullscreenUpdate }) => {
+        if (fullscreenUpdate === Video.FULLSCREEN_UPDATE_PLAYER_WILL_PRESENT) {
+            await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
             toggleFullscreen(true);
-        } else {
+        } else if (fullscreenUpdate === Video.FULLSCREEN_UPDATE_PLAYER_WILL_DISMISS) {
+            await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
             toggleFullscreen(false);
         }
     };
+
 
 
     const handleAddSaved = async () => {
@@ -189,11 +193,9 @@ export default function VideoCard({
                             <Text className='text-white text-lg'>Delete</Text>
                         </Pressable>
                     ) : false}
-
-
                 </View>
-            ) : false
-            }
+
+            ) : false}
 
             {/* 信息视图 */}
             <View className='flex-row'>
@@ -230,13 +232,12 @@ export default function VideoCard({
                                 setPlaying(true);
                                 setLoading(true);
                             }}
-
                         >
 
                             <Image
                                 source={{ uri: thumbnail }}
                                 className='w-full h-full rounded-xl'
-                                resizeMode='cover' // 修改为 cover
+                                resizeMode='cover'
                                 onLoad={() => setImageLoaded(true)}
                                 onError={() => {
                                     setImageLoaded(false);
@@ -258,23 +259,21 @@ export default function VideoCard({
                         </TouchableOpacity>
 
                     ) : (
-                        // latest changed code
+
                         <>
                             {loading && (
                                 <ActivityIndicator size="large" color="#fff" style={{
                                     position: 'absolute', top: '50%', left: '50%', transform: [{ translateX: -20 }, { translateY: -20 }]
                                 }} />
                             )}
+
                             <Video
                                 ref={videoRef}
                                 source={{ uri: video }}
-                                className={`w-full h-60 rounded-xl mt-6 `}
+                                className={isFullscreen ? 'w-full h-full' : 'w-full h-52 rounded-xl mt-6'}
                                 resizeMode={ResizeMode.CONTAIN}
                                 useNativeControls
                                 shouldPlay
-                                onReadyForDisplay={({ naturalSize: { width, height } }) => {
-                                    console.log({ width, height, })
-                                }}
                                 onPlaybackStatusUpdate={async (status) => {
                                     if (status.isLoaded) {
                                         setLoading(false);
@@ -284,9 +283,9 @@ export default function VideoCard({
                                         setLoading(true);
                                     }
                                 }}
-
                                 onFullscreenUpdate={onFullscreenUpdate}
                             />
+
 
                         </>
                     )
