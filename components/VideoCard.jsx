@@ -127,7 +127,7 @@ export default function VideoCard({
     }, [isSaved]);
 
     return (
-        <View className={`relative ${isFullscreen ? 'flex-1 w-full h-full' : 'my-4'}`}>
+        <View className={`relative ${isFullscreen ? 'flex-1 w-full h-full' : 'my-4 px-1'}`}>
             {/* 在全屏模式下隐藏状态栏 */}
             {isFullscreen && <StatusBar hidden />}
             {!isFullscreen && (
@@ -196,7 +196,7 @@ export default function VideoCard({
                 !playing
                     ? (
                         <TouchableOpacity
-                            className='w-full h-60 mt-6 rounded-xl justify-center items-center relative overflow-hidden' // 添加 overflow-hidden
+                            className='w-full h-60 mt-4 rounded-xl justify-center items-center relative overflow-hidden' // 添加 overflow-hidden
                             activeOpacity={0.7}
                             onPress={() => {
                                 setPlaying(true);
