@@ -32,11 +32,11 @@
     "plugins": [
       "expo-router"
     ],
+    "owner": "myst-seed",
     "extra": {
       "eas": {
-        "projectId": "6843b7db-a6df-4edc-8561-253be5bd332c"
+        "projectId": "b42e4b62-07a8-4671-b223-82c614092207"
       }
-    },
-    "owner": "myst-seed"
+    }
   }
 }
