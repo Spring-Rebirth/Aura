@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { View, Modal, StyleSheet } from 'react-native';
+import { View, Modal, StyleSheet, Text } from 'react-native';
 import { Video } from 'expo-av';
+import { useRouter } from 'expo-router';
 
-function VideoScreen({ route }) {
-    const { videoUri } = route.params;
-    const [isFullscreen, setIsFullscreen] = useState(false);
+function VideoScreen() {
+    const router = useRouter();
+    const videoUri = router.query;
 
     const handleFullscreenUpdate = (status) => {
         if (status.didJustEnterFullscreen) {
@@ -14,6 +15,17 @@ function VideoScreen({ route }) {
             setIsFullscreen(false);
         }
     };
+
+    return (
+        <View>
+            <Text>Video Screen</Text>
+            {videoUri ? (
+                <Text>Video URI: {videoUri}</Text>
+            ) : (
+                <Text>No video URI provided</Text>
+            )}
+        </View>
+    );
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#161622' }}>

@@ -9,7 +9,7 @@ import { useGlobalContext } from '../context/GlobalProvider'
 import { deleteVideoDoc, deleteVideoFiles } from '../lib/appwrite'
 import { useRoute } from '@react-navigation/native';
 import { updateSavedCount, getVideoDetails } from '../lib/appwrite';
-import { useNavigation } from 'expo-router';
+import { useRouter } from 'expo-router';
 
 export default function VideoCard({
     post,
@@ -28,7 +28,7 @@ export default function VideoCard({
     const videoRef = useRef(null);
     const route = useRoute();
     const currentPath = route.name;
-    const navigation = useNavigation();
+    const router = useRouter();
 
 
     const handleAddSaved = async () => {
@@ -208,9 +208,8 @@ export default function VideoCard({
                         <TouchableOpacity
                             className='w-full h-60 mt-6 rounded-xl justify-center items-center relative overflow-hidden' // 添加 overflow-hidden
                             activeOpacity={0.7}
-                            onPress={() => {
-                                navigation.navigate('details', { videoUri: video })
-                            }}
+                            onPress={() => router.push('player/video-screen', video)}
+
                         >
 
                             <Image
