@@ -22,6 +22,7 @@ export default function RootLayout() {
     });
 
     const [isUpdating, setIsUpdating] = useState(false);
+    const [canNavigate, setCanNavigate] = useState(false);  // 新增状态变量
 
     useEffect(() => {
         // 处理字体加载错误
@@ -44,6 +45,7 @@ export default function RootLayout() {
                                 text: '稍后',
                                 onPress: () => {
                                     setIsUpdating(false);
+                                    setCanNavigate(true);
                                     SplashScreen.hideAsync(); // 隐藏启动屏幕，显示应用内容
                                 },
                                 style: 'cancel',
@@ -60,10 +62,12 @@ export default function RootLayout() {
                     );
                 } else {
                     console.log('No updates available.');
+                    setCanNavigate(true);
                     SplashScreen.hideAsync();
                 }
             } catch (e) {
                 console.log('Error checking for updates:', e);
+                setCanNavigate(true);
                 // 检查更新失败，隐藏启动屏幕
                 SplashScreen.hideAsync();
             }
@@ -76,8 +80,7 @@ export default function RootLayout() {
 
     }, [fontsLoaded, error]);
 
-    if (!fontsLoaded || isUpdating) {
-        // 在字体未加载完成或正在更新时，保持启动屏幕
+    if (!fontsLoaded || isUpdating || !canNavigate) {
         return null;
     }
 

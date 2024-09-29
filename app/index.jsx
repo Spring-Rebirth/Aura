@@ -11,6 +11,7 @@ import home from '../assets/images/home.jpg';
 export default function Welcome() {
 
     const { isLoading, isLoggedIn } = useGlobalContext();
+
     if (isLoggedIn) {
         return <Redirect href='/home' />;
     }
