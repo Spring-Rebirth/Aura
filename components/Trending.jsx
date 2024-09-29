@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { FlatList, ImageBackground, Text, TouchableOpacity, View, Image, ActivityIndicator } from 'react-native'
 import * as Animatable from 'react-native-animatable'
-import { icons, images } from '../constants';
+import { icons } from '../constants';
 import { Video, ResizeMode } from 'expo-av';
 
 function TrendingItem({ activeItem, item }) {

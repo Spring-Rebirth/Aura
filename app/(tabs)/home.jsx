@@ -1,7 +1,6 @@
 //cSpell:words psemibold appwrite
-import { View, Text, FlatList, Image, RefreshControl, ActivityIndicator, Alert, Dimensions } from 'react-native'
+import { View, Text, FlatList, Image, RefreshControl, ActivityIndicator } from 'react-native'
 import { useEffect, useState } from 'react'
-
 import { images } from '../../constants'
 import SearchInput from '../../components/SearchInput'
 import Trending from "../../components/Trending"

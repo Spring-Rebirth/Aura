@@ -1,5 +1,5 @@
 // cSpell:ignore Pressable
-import { View, Text, Image, TouchableOpacity, Pressable, Alert, ActivityIndicator, Button } from 'react-native'
+import { View, Text, Image, TouchableOpacity, Pressable, Alert, ActivityIndicator } from 'react-native'
 import { useEffect, useState, useRef } from 'react'
 import { icons } from '../constants'
 import { ResizeMode, Video } from 'expo-av';
