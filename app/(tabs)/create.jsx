@@ -164,7 +164,7 @@ export default function Create() {
                         </View>
                     </TouchableOpacity>
                 ) : (
-                    <View className='w-full h-60 bg-[#1e1e2d] rounded-2xl mt-2 justify-center items-center relative'>
+                    <View className='w-full h-56 bg-[#1e1e2d] rounded-2xl mt-2 justify-center items-center relative'>
                         <Video
                             source={{ uri: files.video.uri }}
                             className='w-full h-full rounded-xl'
@@ -197,7 +197,7 @@ export default function Create() {
                         </View>
                     </TouchableOpacity>
                 ) : (
-                    <View className='w-full h-60 bg-[#1e1e2d] rounded-2xl mt-2 flex-row justify-center items-center overflow-hidden relative'>
+                    <View className='w-full h-56 bg-[#1e1e2d] rounded-2xl mt-2 flex-row justify-center items-center overflow-hidden relative'>
                         <Image
                             source={{ uri: files.image.uri }}
                             className='w-full h-full'
