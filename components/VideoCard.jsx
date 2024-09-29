@@ -260,9 +260,6 @@ export default function VideoCard({
                 </>
             )}
 
-
-
-
         </View >
     )
 }
