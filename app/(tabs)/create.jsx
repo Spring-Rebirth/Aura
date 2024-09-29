@@ -142,14 +142,14 @@ export default function Create() {
                 </View>
 
                 <CustomForm
-                    title={'Video title'}
+                    title={'Title'}
                     handleChangeText={(text) => setForm({ ...form, title: text })}
                     value={form.title}
                     placeholder={'Catchy titles get more clicks !'}
                 />
 
                 {/* Upload Video */}
-                <Text className='text-gray-100 mt-5 text-lg'>Upload Video</Text>
+                <Text className='text-gray-100 mt-5 text-lg'>Video</Text>
                 {/* TODO：视频存在则显示视频 */}
                 {!isVideoSelected ? (
                     <TouchableOpacity onPress={handlePickVideo}>
@@ -184,7 +184,7 @@ export default function Create() {
                 )}
 
                 {/* Thumbnail Image */}
-                <Text className='text-gray-100 mt-5 text-lg'>Thumbnail Image</Text>
+                <Text className='text-gray-100 mt-5 text-lg'>Thumbnail</Text>
                 {/* TODO：图片存在则显示图片 */}
                 {!isImageSelected ? (
                     <TouchableOpacity onPress={handlePickImage}>
