@@ -174,7 +174,7 @@ export default function VideoCard({
                         <>
                             {loading && (
                                 <ActivityIndicator size="large" color="#fff" style={{
-                                    position: 'absolute', top: '50%', left: '50%', transform: [{ translateX: -20 }, { translateY: -20 }]
+                                    position: 'absolute', top: '30%', left: '50%', transform: [{ translateX: -20 }, { translateY: -20 }]
                                 }} />
                             )}
 
