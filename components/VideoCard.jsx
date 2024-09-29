@@ -136,7 +136,7 @@ export default function VideoCard({
                 !playing
                     ? (
                         <TouchableOpacity
-                            className='w-full h-60 justify-center items-center relative overflow-hidden' // 添加 overflow-hidden
+                            className='w-full h-52 justify-center items-center relative overflow-hidden' // 添加 overflow-hidden
                             activeOpacity={0.7}
                             onPress={() => {
                                 setPlaying(true);
