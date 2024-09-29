@@ -56,9 +56,9 @@ export default function Home() {
 			}
 		};
 
-		fetchDataAndUpdateVideo();  // 调用异步函数
-
+		fetchDataAndUpdateVideo();  // 调用异步函数		
 	}, [user]);
+
 
 	return (
 		<View className={`flex-1 bg-primary ${isFullscreen ? 'w-full h-full' : 'h-full'}`}>
@@ -149,7 +149,7 @@ export default function Home() {
 						}
 					/>
 
-					<StatusBar style='light' />
+					<StatusBar style='light' hidden={true} />
 				</>
 			)}
 		</View>

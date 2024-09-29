@@ -130,6 +130,7 @@ export default function Create() {
 
     return (
         <SafeAreaView className='bg-primary h-full px-4 '>
+
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                 {/* Upload Video */}
                 <View className='flex-row justify-between items-center mt-10 h-[60px]'>
