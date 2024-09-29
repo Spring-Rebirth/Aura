@@ -112,7 +112,7 @@ export default function Home() {
 										)}
 
 									</View>
-									<Text className='text-white mt-10 font-psemibold text-lg text-center'> Latest Released Videos</Text>
+									<Text className='text-sky-300 mt-10 font-psemibold text-lg text-center'> Latest Videos</Text>
 								</View>
 
 							);
