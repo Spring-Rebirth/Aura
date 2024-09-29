@@ -16,7 +16,8 @@
       "distribution": "store",
       "android": {
         "buildType": "apk" // 确保使用 APK 文件
-      }
+      },
+      "channel": "main" // 使用 main 分支对应的更新渠道
     }
   },
   "submit": {
