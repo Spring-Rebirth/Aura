@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from 'react'
 import { icons } from '../constants'
 import { ResizeMode, Video } from 'expo-av';
 import star from '../assets/menu/star-solid.png'
+import starThree from '../assets/menu/star3.png'
 import trash from '../assets/menu/trash-solid.png'
 import { useGlobalContext } from '../context/GlobalProvider'
 import { deleteVideoDoc, deleteVideoFiles } from '../lib/appwrite'
@@ -212,11 +213,11 @@ export default function VideoCard({
                                 className='w-full h-12 flex-row items-center'
                             >
                                 <Image
-                                    source={star}
+                                    source={isSaved ? star : starThree}
                                     className='w-5 h-5 mr-3'
                                 />
                                 <Text className='text-white text-lg'>
-                                    {currentPath === 'saved' ? 'Remove' : (isSaved ? 'Saved    √' : 'Save')}
+                                    {currentPath === 'saved' ? 'Remove' : (isSaved ? 'Saved' : 'Save')}
                                 </Text>
                             </Pressable>
 
