@@ -6,7 +6,9 @@ import { Video, ResizeMode } from 'expo-av';
 import star from '../assets/menu/star-solid.png'
 import starThree from '../assets/menu/star3.png'
 import { useGlobalContext } from '../context/GlobalProvider'
-import { updateSavedCount, getVideoDetails } from '../lib/appwrite';
+import { updateSavedCount } from '../lib/appwrite';
+import closeY from '../assets/menu/close-yuan.png'
+
 import {
     FlatList, ImageBackground, Text, TouchableOpacity, View, Image, ActivityIndicator, Pressable,
     Alert
@@ -128,6 +130,15 @@ function TrendingItem({ activeItem, item }) {
                         }} />
 
                     )}
+                    <TouchableOpacity
+                        onPress={() => { setPlaying(false) }}
+                        className='absolute top-3 left-3 z-10'
+                    >
+                        <Image
+                            source={closeY}
+                            className='w-7 h-7'
+                        />
+                    </TouchableOpacity>
                     <Video
                         source={{ uri: item.video }}
                         className='w-[208px] h-[332px] rounded-[24px]'
