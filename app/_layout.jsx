@@ -25,7 +25,6 @@ export default function RootLayout() {
     const [canNavigate, setCanNavigate] = useState(false);  // 新增状态变量
 
     useEffect(() => {
-        // 处理字体加载错误
         if (error) throw error;
 
         async function checkForUpdates() {
@@ -33,10 +32,14 @@ export default function RootLayout() {
                 console.log('Checking for updates...');
                 const update = await Updates.checkForUpdateAsync();
                 console.log('Update available:', update.isAvailable);
+
                 if (update.isAvailable) {
                     console.log('Fetching update...');
+                    setIsUpdating(true);  // 设置更新状态为 true
                     await Updates.fetchUpdateAsync();
                     console.log('Update fetched.');
+
+                    // 在更新下载完成后，提示用户
                     Alert.alert(
                         '有可用的更新',
                         '已经下载了新的更新，是否立即重启应用？',
@@ -46,7 +49,6 @@ export default function RootLayout() {
                                 onPress: () => {
                                     setIsUpdating(false);
                                     setCanNavigate(true);
-                                    SplashScreen.hideAsync(); // 隐藏启动屏幕，显示应用内容
                                 },
                                 style: 'cancel',
                             },
@@ -63,27 +65,24 @@ export default function RootLayout() {
                 } else {
                     console.log('No updates available.');
                     setCanNavigate(true);
-                    SplashScreen.hideAsync();
                 }
             } catch (e) {
                 console.log('Error checking for updates:', e);
                 setCanNavigate(true);
-                // 检查更新失败，隐藏启动屏幕
+            } finally {
+                // 无论如何都要在更新检查完成后隐藏启动屏幕
                 SplashScreen.hideAsync();
             }
         }
 
         if (fontsLoaded) {
-            // 字体加载完成后，进行更新检查
             checkForUpdates();
         }
-
     }, [fontsLoaded, error]);
 
     if (!fontsLoaded || isUpdating || !canNavigate) {
         return null;
     }
-
     return (
         <GlobalProvider>
             <Stack>
