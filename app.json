@@ -3,9 +3,9 @@
     "name": "Aura",
     "slug": "aura",
     "scheme": "aura",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "orientation": "default",
-    "icon": "./assets/app_icon2.png",
+    "icon": "./assets/app_icon3.png",
     "userInterfaceStyle": "light",
     "updates": {
       "fallbackToCacheTimeout": 0,
@@ -22,7 +22,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/app_icon2.png",
+        "foregroundImage": "./assets/app_icon3.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.mystseed.aura"
