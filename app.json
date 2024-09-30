@@ -3,7 +3,7 @@
     "name": "Aura",
     "slug": "aura",
     "scheme": "aura",
-    "version": "1.3.0",
+    "version": "1.4.0",
     "orientation": "default",
     "icon": "./assets/app_icon3.png",
     "userInterfaceStyle": "light",
@@ -12,9 +12,9 @@
       "url": "https://u.expo.dev/b42e4b62-07a8-4671-b223-82c614092207"
     },
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/app_icon3.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#161622"
     },
     "ios": {
       "supportsTablet": true,
