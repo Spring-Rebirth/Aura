@@ -95,7 +95,7 @@ export default function Home() {
 									<SearchInput containerStyle={'mt-6'} />
 
 									<View className='mt-8'>
-										<Text className=' mb-4 font-psemibold text-lg text-sky-300'>Most Saved Videos</Text>
+										<Text className=' mb-8 font-psemibold text-lg text-sky-300'>Most Saved Videos</Text>
 										{/* 头部视频 */}
 										{popularData.length === 0 ? (
 											<View className='items-center'>
