@@ -11,6 +11,7 @@ import useGetData from '../../hooks/useGetData'
 import { useGlobalContext } from '../../context/GlobalProvider'
 import { StatusBar } from 'expo-status-bar'
 import { updateSavedVideo } from '../../lib/appwrite'
+import downIcon from '../../assets/icons/down.png'
 
 
 export default function Home() {
@@ -113,7 +114,19 @@ export default function Home() {
 										)}
 
 									</View>
-									<Text className='text-sky-300 mt-10 font-psemibold text-lg text-center'> Latest Videos</Text>
+									<View className='flex-row items-center justify-center mt-10'>
+										<Image
+											source={downIcon}
+											resizeMode='contain'
+											className='w-6 h-6'
+										/>
+										<Text className='text-sky-300  font-psemibold text-lg text-center mx-12'>Latest Videos</Text>
+										<Image
+											source={downIcon}
+											resizeMode='contain'
+											className='w-6 h-6'
+										/>
+									</View>
 								</View>
 
 							);
