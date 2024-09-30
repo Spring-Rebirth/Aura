@@ -146,7 +146,9 @@ function TrendingItem({ activeItem, item }) {
                         useNativeControls
                         shouldPlay
                         onPlaybackStatusUpdate={(status) => {
-                            setLoading(false);
+                            if (status.isLoaded) {
+                                setLoading(false);
+                            }
                             if (status.didJustFinish) {
                                 setPlaying(false);
                                 setLoading(true);
