@@ -12,6 +12,7 @@ import { useRoute } from '@react-navigation/native';
 import { updateSavedCount, getVideoDetails } from '../lib/appwrite';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { StatusBar } from 'expo-status-bar';
+import closeY from '../assets/menu/close-yuan.png'
 
 
 export default function VideoCard({
@@ -178,11 +179,19 @@ export default function VideoCard({
                                     position: 'absolute', top: '30%', left: '50%', transform: [{ translateX: -20 }, { translateY: -20 }]
                                 }} />
                             )}
-
+                            <TouchableOpacity
+                                onPress={() => { setPlaying(false) }}
+                                className='absolute -top-3.5 right-2.5 z-10 w-16 h-16 justify-center items-center'
+                            >
+                                <Image
+                                    source={closeY}
+                                    className='w-8 h-8'
+                                />
+                            </TouchableOpacity>
                             <Video
                                 ref={videoRef}
                                 source={{ uri: video }}
-                                className={isFullscreen ? 'flex-1 w-full h-full' : 'w-full h-56 mb-4'}
+                                className={`relative ${isFullscreen ? 'flex-1 w-full h-full' : 'w-full h-56 mb-4'} `}
                                 resizeMode={ResizeMode.CONTAIN}
                                 useNativeControls
                                 shouldPlay
