@@ -1,13 +1,24 @@
-import { useState } from 'react'
-import { FlatList, ImageBackground, Text, TouchableOpacity, View, Image, ActivityIndicator } from 'react-native'
+// cSpell:ignore Pressable
+import { useState, useEffect } from 'react'
 import * as Animatable from 'react-native-animatable'
 import { icons } from '../constants';
 import { Video, ResizeMode } from 'expo-av';
+import star from '../assets/menu/star-solid.png'
+import starThree from '../assets/menu/star3.png'
+import { useGlobalContext } from '../context/GlobalProvider'
+import { updateSavedCount, getVideoDetails } from '../lib/appwrite';
+import {
+    FlatList, ImageBackground, Text, TouchableOpacity, View, Image, ActivityIndicator, Pressable,
+    Alert
+} from 'react-native'
 
 function TrendingItem({ activeItem, item }) {
     const [playing, setPlaying] = useState(false);
     const [loading, setLoading] = useState(true);
     const [imageLoaded, setImageLoaded] = useState(false);
+    const { user, setUser } = useGlobalContext();
+    const [isSaved, setIsSaved] = useState(user.favorite.includes($id));
+    const { $id } = item;
 
     const zoomIn = {
         0: {
@@ -26,13 +37,61 @@ function TrendingItem({ activeItem, item }) {
         }
     }
 
+    const handleAddSaved = async () => {
+        try {
+            let isIncrement;
+
+            if (!user.favorite.includes($id)) {
+                // 深拷贝对象
+                const newUser = JSON.parse(JSON.stringify(user));
+                newUser.favorite.push($id);
+                setUser(prev => ({
+                    ...prev,
+                    favorite: newUser.favorite
+                }))
+                setIsSaved(true);
+                isIncrement = true;
+                Alert.alert('Save successful');
+            } else {
+                // 剔除已保存项的新数组
+                const updatedItems = user.favorite.filter(item => item !== $id);
+                setUser(prev => ({
+                    ...prev,
+                    favorite: updatedItems
+                }))
+                setIsSaved(false);
+                isIncrement = false;
+                Alert.alert('Cancel save successfully');
+            }
+            await updateSavedCount($id, isIncrement);
+        } catch (error) {
+            console.error("Error handling favorite:", error);
+            Alert.alert('An error occurred while updating favorite count');
+        }
+    }
+
+    useEffect(() => {
+        setIsSaved(user.favorite.includes($id));
+    }, [user, $id]);
+
     return (
         <Animatable.View
             animation={activeItem.$id === item.$id ? zoomIn : zoomOut}
             duration={500}
             style={{ borderRadius: 16, overflow: 'hidden' }} // 使用样式直接设置圆角
-            className='mr-2'
+            className='mr-2 relative'
         >
+            <TouchableOpacity
+                onPress={handleAddSaved}
+                className='absolute z-10 top-3 right-3'
+            >
+                <Image
+                    source={isSaved ? star : starThree}
+                    className='w-7 h-7'
+                    resizeMode='contain'
+                />
+            </TouchableOpacity>
+
 
             {!playing ? (
                 <TouchableOpacity onPress={() => setPlaying(true)}
