@@ -255,7 +255,7 @@ export default function VideoCard({
                             className='w-[46px] h-[46px] border border-secondary rounded-lg ml-2'
                         />
                         <View className='gap-y-1 justify-center flex-1 mx-3'>
-                            <Text className='text-white font-psemibold text-sm' numberOfLines={1}>
+                            <Text className='text-white font-psemibold text-sm' numberOfLines={2}>
                                 {title}
                             </Text>
                             <Text className='text-gray-100 font-pregular text-xs' numberOfLines={1}>
