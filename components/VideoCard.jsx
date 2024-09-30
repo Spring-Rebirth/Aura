@@ -180,7 +180,10 @@ export default function VideoCard({
                                 }} />
                             )}
                             <TouchableOpacity
-                                onPress={() => { setPlaying(false) }}
+                                onPress={() => {
+                                    setPlaying(false);
+                                    setLoading(true);
+                                }}
                                 className='absolute -top-3.5 right-2.5 z-10 w-16 h-16 justify-center items-center'
                             >
                                 <Image

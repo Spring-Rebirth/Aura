@@ -131,7 +131,10 @@ function TrendingItem({ activeItem, item }) {
 
                     )}
                     <TouchableOpacity
-                        onPress={() => { setPlaying(false) }}
+                        onPress={() => {
+                            setPlaying(false);
+                            setLoading(true);
+                        }}
                         className='absolute top-3 left-3 z-10'
                     >
                         <Image
