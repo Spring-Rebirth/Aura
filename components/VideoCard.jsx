@@ -157,16 +157,10 @@ export default function VideoCard({
                                     console.log("Failed to load image.");
                                 }}
                             />
-                            {!imageLoaded ? (
+                            {!imageLoaded && (
                                 <ActivityIndicator size="large" color="#fff" style={{
                                     position: 'absolute', top: '50%', left: '50%', transform: [{ translateX: -20 }, { translateY: -20 }]
                                 }} />
-                            ) : (
-                                <Image
-                                    source={icons.play}
-                                    className='w-12 h-12 absolute inset-0 m-auto'
-                                    resizeMode='cover'
-                                />
                             )}
 
                         </TouchableOpacity>

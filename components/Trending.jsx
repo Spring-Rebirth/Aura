@@ -109,15 +109,9 @@ function TrendingItem({ activeItem, item }) {
                             console.log("Failed to load image.");
                         }}
                     />
-                    {!imageLoaded ? (
-                        <ActivityIndicator size="large" color="#fff" style={{
-                            position: 'absolute', top: '50%', left: '50%', transform: [{ translateX: -20 }, { translateY: -20 }]
-                        }} />
-                    ) : (
-                        <Image
-                            source={icons.play}
-                            className='w-12 h-12 absolute'
-                            resizeMode='contain'
+                    {!imageLoaded && (
+                        <ActivityIndicator
+                            size="large" color="#fff" style={{ position: 'absolute', top: '50%', left: '50%', transform: [{ translateX: -20 }, { translateY: -20 }] }}
                         />
                     )}
 
