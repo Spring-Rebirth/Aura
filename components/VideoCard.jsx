@@ -249,12 +249,12 @@ export default function VideoCard({
                     ) : null}
 
                     {/* 信息视图 */}
-                    <View className='flex-row mb-3.5 mt-1.5 mx-2'>
+                    <View className='flex-row mb-3.5 mt-1.5 mx-2 '>
                         <Image
                             source={{ uri: avatar }}
                             className='w-[46px] h-[46px] border border-secondary rounded-lg ml-2'
                         />
-                        <View className='gap-y-1 justify-center flex-1 mx-3'>
+                        <View className='gap-y-1 justify-center flex-1 ml-5'>
                             <Text className='text-white font-psemibold text-sm' numberOfLines={2}>
                                 {title}
                             </Text>
@@ -265,7 +265,7 @@ export default function VideoCard({
                         <TouchableOpacity onPress={() => setShowControlMenu(prev => !prev)}>
                             <Image
                                 source={icons.menu}
-                                className='w-5 h-5 mr-2'
+                                className='w-5 h-5 mr-2 ml-3'
                                 resizeMode='contain'
                             />
                         </TouchableOpacity>
