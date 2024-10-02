@@ -13,7 +13,7 @@ import { updateSavedCount, getVideoDetails } from '../lib/appwrite';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { StatusBar } from 'expo-status-bar';
 import closeY from '../assets/menu/close-yuan.png'
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function VideoCard({
     post,
@@ -31,6 +31,7 @@ export default function VideoCard({
     const { user, setUser } = useGlobalContext();
     const [isSaved, setIsSaved] = useState(user.favorite.includes($id));
     const [imageLoaded, setImageLoaded] = useState(false);
+    const [playCount, setPlayCount] = useState(0);
 
     const videoRef = useRef(null);
     const route = useRoute();
@@ -133,7 +134,24 @@ export default function VideoCard({
         if (accountId === user.accountId) {
             setIsVideoCreator(true);
         }
-    }, [isSaved]);
+
+        // 加载本地存储的播放次数
+        const loadPlayCount = async () => {
+            try {
+                const storedData = await AsyncStorage.getItem('playData');
+                if (storedData) {
+                    const parsedData = JSON.parse(storedData);
+                    if (parsedData[$id]) {
+                        setPlayCount(parsedData[$id].count);
+                    }
+                }
+            } catch (error) {
+                console.error('加载播放数据失败:', error);
+            }
+        };
+
+        loadPlayCount();
+    }, [isSaved, $id]);
 
     return (
         <View className={`relative bg-primary ${isFullscreen ? 'flex-1 w-full h-full' : 'my-4 '}`}>
@@ -151,6 +169,7 @@ export default function VideoCard({
                                 setPlaying(true);
                                 setLoading(true);
                                 setCurrentPlayingPost(post); // 设置当前播放的视频
+                                setNumberOfPlays(prev => prev++);
                             }}
                         >
 
@@ -260,7 +279,7 @@ export default function VideoCard({
                                 {title}
                             </Text>
                             <Text className='text-gray-100 font-pregular text-xs' numberOfLines={1}>
-                                {username}
+                                {username}  ·  {playCount} views
                             </Text>
                         </View>
                         <TouchableOpacity onPress={() => setShowControlMenu(prev => !prev)}>
