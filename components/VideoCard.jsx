@@ -36,7 +36,7 @@ export default function VideoCard({
     const route = useRoute();
     const currentPath = route.name;
     const aspectRatio = 16 / 9; // 视频比例
-    const adminList = ['cjunwei6249@gmail.com', '1392600130@qq.com'];
+    const adminList = ['cjunwei6249@gmail.com', '1392600130@qq.com', 'zhangwww1998@outlook.com'];
     let admin = false;
     for (let index = 0; index < adminList.length; index++) {
         if (user.email === adminList[index]) {
