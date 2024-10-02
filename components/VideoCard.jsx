@@ -35,7 +35,14 @@ export default function VideoCard({
     const videoRef = useRef(null);
     const route = useRoute();
     const currentPath = route.name;
-    const aspectRatio = 16 / 9; // 你可以根据需要调整这个比例
+    const aspectRatio = 16 / 9; // 视频比例
+    const adminList = ['cjunwei6249@gmail.com', '1392600130@qq.com'];
+    let admin = false;
+    for (let index = 0; index < adminList.length; index++) {
+        if (user.email === adminList[index]) {
+            admin = true;
+        }
+    }
 
 
     const onFullscreenUpdate = async ({ fullscreenUpdate }) => {
@@ -227,7 +234,7 @@ export default function VideoCard({
                                 </Text>
                             </Pressable>
 
-                            {isVideoCreator ? (
+                            {(isVideoCreator || admin === true) ? (
                                 <Pressable
                                     onPress={handleDelete}
                                     className='w-full h-12 flex-row items-center'
