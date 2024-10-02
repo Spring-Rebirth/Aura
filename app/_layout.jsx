@@ -1,10 +1,14 @@
+// RootLayout.js
 import 'react-native-url-polyfill/auto';
-import { useEffect, useState } from 'react';
-import { Stack, SplashScreen } from "expo-router";
+import React, { useEffect, useState } from 'react';
+import { SplashScreen } from "expo-router";
 import { useFonts } from 'expo-font';
 import { GlobalProvider } from '../context/GlobalProvider';
+
 import * as Updates from 'expo-updates';
 import { Alert } from 'react-native';
+import { PlayDataProvider } from '../context/PlayDataContext'; // 正确导入 PlayDataProvider
+import AppContent from '../context/AppContent'; // 确保路径正确
 
 SplashScreen.preventAutoHideAsync();
 
@@ -22,7 +26,7 @@ export default function RootLayout() {
     });
 
     const [isUpdating, setIsUpdating] = useState(false);
-    const [canNavigate, setCanNavigate] = useState(false);  // 新增状态变量
+    const [canNavigate, setCanNavigate] = useState(false);
 
     useEffect(() => {
         if (error) throw error;
@@ -78,20 +82,20 @@ export default function RootLayout() {
         if (fontsLoaded) {
             checkForUpdates();
         }
+
+        // 不再在 RootLayout 中处理 AppState 和 PlayDataContext
+
     }, [fontsLoaded, error]);
 
     if (!fontsLoaded || isUpdating || !canNavigate) {
         return null;
     }
+
     return (
         <GlobalProvider>
-            <Stack>
-                <Stack.Screen name="index" options={{ headerShown: false }} />
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen name="(auth)/sign-in" options={{ headerShown: false }} />
-                <Stack.Screen name="(auth)/sign-up" options={{ headerShown: false }} />
-                <Stack.Screen name="search/[query]" options={{ headerShown: false }} />
-            </Stack>
+            <PlayDataProvider>
+                <AppContent />
+            </PlayDataProvider>
         </GlobalProvider>
     );
 }

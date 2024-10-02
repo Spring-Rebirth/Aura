@@ -1,6 +1,6 @@
 // cSpell:ignore Pressable
 import { View, Text, Image, TouchableOpacity, Pressable, Alert, ActivityIndicator } from 'react-native'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, useContext } from 'react'
 import { icons } from '../constants'
 import { ResizeMode, Video } from 'expo-av';
 import star from '../assets/menu/star-solid.png'
@@ -14,6 +14,7 @@ import * as ScreenOrientation from 'expo-screen-orientation';
 import { StatusBar } from 'expo-status-bar';
 import closeY from '../assets/menu/close-yuan.png'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { PlayDataContext } from '../context/PlayDataContext'; // 导入上下文
 
 export default function VideoCard({
     post,
@@ -31,7 +32,11 @@ export default function VideoCard({
     const { user, setUser } = useGlobalContext();
     const [isSaved, setIsSaved] = useState(user.favorite.includes($id));
     const [imageLoaded, setImageLoaded] = useState(false);
-    const [playCount, setPlayCount] = useState(0);
+
+    const { playDataRef, updatePlayData } = useContext(PlayDataContext);
+    const [playCount, setPlayCount] = useState(
+        playDataRef.current[$id]?.count || 0
+    );
 
     const videoRef = useRef(null);
     const route = useRoute();
@@ -153,6 +158,16 @@ export default function VideoCard({
         loadPlayCount();
     }, [isSaved, $id]);
 
+    const handlePlay = async () => {
+        setPlaying(true);
+        setLoading(true);
+        setCurrentPlayingPost(post); // 设置当前播放的视频
+
+        // 正确递增播放次数
+        const newCount = playCount + 1;
+        updatePlayData($id, newCount);
+    };
+
     return (
         <View className={`relative bg-primary ${isFullscreen ? 'flex-1 w-full h-full' : 'my-4 '}`}>
             {/* 在全屏模式下隐藏状态栏 */}
@@ -165,12 +180,13 @@ export default function VideoCard({
                         <TouchableOpacity
                             className='w-full h-56 justify-center items-center relative overflow-hidden' // 添加 overflow-hidden
                             activeOpacity={0.7}
-                            onPress={() => {
-                                setPlaying(true);
-                                setLoading(true);
-                                setCurrentPlayingPost(post); // 设置当前播放的视频
-                                setNumberOfPlays(prev => prev++);
-                            }}
+                            // onPress={() => {
+                            //     setPlaying(true);
+                            //     setLoading(true);
+                            //     setCurrentPlayingPost(post); // 设置当前播放的视频
+                            //     setNumberOfPlays(prev => prev++);
+                            // }}
+                            onPress={handlePlay}
                         >
 
                             <Image
