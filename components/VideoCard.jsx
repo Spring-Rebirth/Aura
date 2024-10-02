@@ -250,7 +250,7 @@ export default function VideoCard({
                     ) : null}
 
                     {/* 信息视图 */}
-                    <View className='flex-row mb-3.5 mt-1.5 mx-2 '>
+                    <View className='flex-row mb-3.5 mt-1.5 mx-2 bg-primary'>
                         <Image
                             source={{ uri: avatar }}
                             className='w-[46px] h-[46px] border border-secondary rounded-lg ml-2'
