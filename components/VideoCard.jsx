@@ -37,6 +37,7 @@ export default function VideoCard({
     const [playCount, setPlayCount] = useState(
         playDataRef.current[$id]?.count || 0
     );
+    const createdTime = playDataRef.current[$id].createdTime;
 
     const videoRef = useRef(null);
     const route = useRoute();
@@ -295,7 +296,7 @@ export default function VideoCard({
                                 {title}
                             </Text>
                             <Text className='text-gray-100 font-pregular text-xs' numberOfLines={1}>
-                                {username}  ·  {playCount} views
+                                {username}  ·  {playCount} views  ·  {createdTime}
                             </Text>
                         </View>
                         <TouchableOpacity onPress={() => setShowControlMenu(prev => !prev)}>

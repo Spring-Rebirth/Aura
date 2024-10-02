@@ -27,6 +27,7 @@ export const PlayDataProvider = ({ children }) => {
                 const formattedData = data.reduce((acc, item) => {
                     acc[item.$id] = {
                         count: item.played_counts, // 如果 played_counts 为 null，默认设置为 0
+                        createdTime: item.$createdAt,
                         synced: false, // 默认 synced 为 false
                     };
                     return acc;
