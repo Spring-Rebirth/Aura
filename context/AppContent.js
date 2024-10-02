@@ -1,10 +1,11 @@
 // AppContent.js
 import React, { useEffect, useRef, useContext } from 'react';
-import { View, Alert, AppState } from 'react-native';
+import { AppState } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { PlayDataContext } from '../context/PlayDataContext'; // 确保路径正确
 import { syncDataToBackend } from '../lib/appwrite';
 import { Stack } from "expo-router";
+
 
 const AppContent = () => {
     const appState = useRef(AppState.currentState);
