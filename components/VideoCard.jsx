@@ -23,7 +23,7 @@ export default function VideoCard({
     setCurrentPlayingPost,
     isFullscreen,
 }) {
-    const { $id, title, thumbnail, video, creator: { accountId, username, avatar } } = post;
+    const { $id, $createdAt, title, thumbnail, video, played_counts, creator: { accountId, username, avatar } } = post;
     const [playing, setPlaying] = useState(false);
     const [loading, setLoading] = useState(true);
     const [showControlMenu, setShowControlMenu] = useState(false);
@@ -35,9 +35,36 @@ export default function VideoCard({
 
     const { playDataRef, updatePlayData } = useContext(PlayDataContext);
     const [playCount, setPlayCount] = useState(
-        playDataRef.current[$id]?.count || 0
+        played_counts
     );
-    const createdTime = playDataRef.current[$id].createdTime;
+    // const createdTime = playDataRef.current[$id].createdTime;
+    // console.log('createdTime:', createdTime);
+    const getRelativeTime = () => {
+        const dateObj = new Date($createdAt);
+        const now = new Date();
+
+        const diffInMs = now - dateObj; // 时间差，单位为毫秒
+        const diffInMinutes = Math.floor(diffInMs / (1000 * 60)); // 转换为分钟
+        const diffInHours = Math.floor(diffInMinutes / 60); // 转换为小时
+        const diffInDays = Math.floor(diffInHours / 24); // 转换为天
+        const diffInWeeks = Math.floor(diffInDays / 7); // 转换为星期
+        const diffInMonths = Math.floor(diffInDays / 30); // 粗略转换为月
+        const diffInYears = Math.floor(diffInDays / 365); // 粗略转换为年
+
+        if (diffInMinutes < 60) {
+            return `${diffInMinutes} min ago`;
+        } else if (diffInHours < 24) {
+            return `${diffInHours} hours ago`;
+        } else if (diffInDays < 7) {
+            return `${diffInDays} days ago`;
+        } else if (diffInWeeks < 4) {
+            return `${diffInWeeks} weeks ago`;
+        } else if (diffInMonths < 12) {
+            return `${diffInMonths} months ago`;
+        } else {
+            return `${diffInYears} years ago`;
+        }
+    };
 
     const videoRef = useRef(null);
     const route = useRoute();
@@ -296,7 +323,7 @@ export default function VideoCard({
                                 {title}
                             </Text>
                             <Text className='text-gray-100 font-pregular text-xs' numberOfLines={1}>
-                                {username}  ·  {playCount} views  ·  {createdTime}
+                                {username}  ·  {playCount} views  ·  {getRelativeTime()}
                             </Text>
                         </View>
                         <TouchableOpacity onPress={() => setShowControlMenu(prev => !prev)}>
