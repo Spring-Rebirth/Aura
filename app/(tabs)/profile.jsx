@@ -117,7 +117,7 @@ export default function profile() {
                             <View className='justify-between items-center mt-10'>
                                 <TouchableOpacity onPress={handleAvatarPress}>
                                     <View
-                                        className='w-[56px] h-[56px] border-2 border-secondary rounded-lg overflow-hidden
+                                        className='w-[56px] h-[56px] border-2 border-secondary rounded-full overflow-hidden
                                                     justify-center'
                                     >
                                         {avatarUploading ? (

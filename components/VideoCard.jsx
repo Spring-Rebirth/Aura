@@ -316,7 +316,7 @@ export default function VideoCard({
                     <View className='flex-row mb-3.5 mt-1.5 mx-2 bg-primary'>
                         <Image
                             source={{ uri: avatar }}
-                            className='w-[46px] h-[46px] border border-secondary rounded-lg ml-2'
+                            className='w-[40px] h-[40px] border border-secondary rounded-full ml-2 mt-0.5'
                         />
                         <View className='gap-y-1 justify-center flex-1 ml-5'>
                             <Text className='text-white font-psemibold text-sm' numberOfLines={2}>
