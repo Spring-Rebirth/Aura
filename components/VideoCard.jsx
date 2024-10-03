@@ -33,7 +33,7 @@ export default function VideoCard({
     const [isSaved, setIsSaved] = useState(user.favorite.includes($id));
     const [imageLoaded, setImageLoaded] = useState(false);
 
-    const { playDataRef, updatePlayData } = useContext(PlayDataContext);
+    const { updatePlayData } = useContext(PlayDataContext);
     const [playCount, setPlayCount] = useState(
         played_counts
     );

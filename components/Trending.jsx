@@ -1,5 +1,5 @@
 // cSpell:ignore Pressable
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import * as Animatable from 'react-native-animatable'
 import { icons } from '../constants';
 import { Video, ResizeMode } from 'expo-av';
@@ -8,6 +8,8 @@ import starThree from '../assets/menu/star3.png'
 import { useGlobalContext } from '../context/GlobalProvider'
 import { updateSavedCount } from '../lib/appwrite';
 import closeY from '../assets/menu/close-yuan.png'
+import { PlayDataContext } from '../context/PlayDataContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {
     FlatList, ImageBackground, Text, TouchableOpacity, View, Image, ActivityIndicator, Pressable,
@@ -21,6 +23,11 @@ function TrendingItem({ activeItem, item }) {
     const { user, setUser } = useGlobalContext();
     const [isSaved, setIsSaved] = useState(user.favorite.includes($id));
     const { $id } = item;
+    const { updatePlayData } = useContext(PlayDataContext);
+    const { played_counts } = item;
+    const [playCount, setPlayCount] = useState(
+        played_counts
+    );
 
     const zoomIn = {
         0: {
@@ -72,9 +79,36 @@ function TrendingItem({ activeItem, item }) {
         }
     }
 
+    const handlePlay = async () => {
+        setPlaying(true);
+        setLoading(true);
+        // setCurrentPlayingPost(post); // 设置当前播放的视频
+
+        // 正确递增播放次数
+        const newCount = playCount + 1;
+        updatePlayData($id, newCount);
+    };
+
     useEffect(() => {
         setIsSaved(user.favorite.includes($id));
-    }, [user, $id]);
+
+        // 加载本地存储的播放次数
+        const loadPlayCount = async () => {
+            try {
+                const storedData = await AsyncStorage.getItem('playData');
+                if (storedData) {
+                    const parsedData = JSON.parse(storedData);
+                    if (parsedData[$id]) {
+                        setPlayCount(parsedData[$id].count);
+                    }
+                }
+            } catch (error) {
+                console.error('加载播放数据失败:', error);
+            }
+        };
+
+        loadPlayCount();
+    }, [user, isSaved, $id]);
 
     return (
         <Animatable.View
@@ -96,7 +130,7 @@ function TrendingItem({ activeItem, item }) {
 
 
             {!playing ? (
-                <TouchableOpacity onPress={() => setPlaying(true)}
+                <TouchableOpacity onPress={handlePlay}
                     className='relative justify-center items-center'
                 >
                     <ImageBackground

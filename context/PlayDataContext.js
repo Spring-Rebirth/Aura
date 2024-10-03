@@ -1,6 +1,5 @@
 // PlayDataContext.js
 import React, { createContext, useRef, useEffect } from 'react';
-import { getAllPosts } from '../lib/appwrite';
 
 export const PlayDataContext = createContext();
 
