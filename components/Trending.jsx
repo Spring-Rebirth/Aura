@@ -131,11 +131,12 @@ function TrendingItem({ activeItem, item }) {
 
             {!playing ? (
                 <TouchableOpacity onPress={handlePlay}
-                    className='relative justify-center items-center'
+                    className='relative justify-center items-center bg-[#494965] w-[208px] h-[332px]
+                                rounded-[24px] overflow-hidden'
                 >
                     <ImageBackground
                         source={{ uri: item.thumbnail }}
-                        className='w-[208px] h-[332px] rounded-[24px] overflow-hidden'
+                        className='w-full h-32 '
                         resizeMode='cover'
                         onLoad={() => setImageLoaded(true)}  // 图片加载成功
                         onError={() => {
@@ -143,6 +144,7 @@ function TrendingItem({ activeItem, item }) {
                             console.log("Failed to load image.");
                         }}
                     />
+
                     {!imageLoaded && (
                         <ActivityIndicator
                             size="large" color="#fff" style={{ position: 'absolute', top: '50%', left: '50%', transform: [{ translateX: -20 }, { translateY: -20 }] }}
