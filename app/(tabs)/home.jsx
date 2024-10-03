@@ -96,7 +96,7 @@ export default function Home() {
 									<SearchInput containerStyle={'mt-6'} />
 
 									<View className='mt-8'>
-										<Text className=' mb-8 font-psemibold text-lg text-sky-300 text-center'>Most Saved Videos</Text>
+										<Text className=' mb-8 font-psemibold text-lg text-sky-300 text-center'>Top  Hits  Videos</Text>
 										{/* 头部视频 */}
 										{popularData.length === 0 ? (
 											<View className='items-center'>
@@ -106,7 +106,7 @@ export default function Home() {
 													resizeMode='contain'
 												/>
 												<Text className='text-sky-300 text-center font-psemibold'>
-													Save the video to help it {'\n'}become a popular one !
+													Play the video to help it {'\n'}become a popular one !
 												</Text>
 											</View>
 										) : (
@@ -120,7 +120,7 @@ export default function Home() {
 											resizeMode='contain'
 											className='w-6 h-6'
 										/>
-										<Text className='text-sky-300  font-psemibold text-lg text-center mx-12'>Latest Videos</Text>
+										<Text className='text-sky-300  font-psemibold text-lg text-center mx-12'>Latest  Videos</Text>
 										<Image
 											source={downIcon}
 											resizeMode='contain'
