@@ -131,7 +131,7 @@ function TrendingItem({ activeItem, item }) {
 
             {!playing ? (
                 <TouchableOpacity onPress={handlePlay}
-                    className='relative justify-center items-center bg-[#494965] w-[208px] h-[332px]
+                    className='relative justify-center items-center bg-[#33466C] w-[208px] h-[332px]
                                 rounded-[24px] overflow-hidden'
                 >
                     <ImageBackground
