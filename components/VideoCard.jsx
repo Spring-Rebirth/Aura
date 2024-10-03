@@ -54,15 +54,15 @@ export default function VideoCard({
         if (diffInMinutes < 60) {
             return `${diffInMinutes} min ago`;
         } else if (diffInHours < 24) {
-            return `${diffInHours} hours ago`;
+            return `${diffInHours} h ago`;
         } else if (diffInDays < 7) {
-            return `${diffInDays} days ago`;
+            return `${diffInDays} d ago`;
         } else if (diffInWeeks < 4) {
-            return `${diffInWeeks} weeks ago`;
+            return `${diffInWeeks} wk ago`;
         } else if (diffInMonths < 12) {
-            return `${diffInMonths} months ago`;
+            return `${diffInMonths} mo ago`;
         } else {
-            return `${diffInYears} years ago`;
+            return `${diffInYears} y ago`;
         }
     };
 
