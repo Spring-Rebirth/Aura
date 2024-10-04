@@ -41,15 +41,15 @@ const AppContent = () => {
             appState.current.match(/active/) &&
             (nextAppState === 'background' || nextAppState === 'inactive')
         ) {
-            // 保存数据到本地
+            // 并行执行保存和同步操作
             try {
-                await AsyncStorage.setItem('playData', JSON.stringify(playDataRef.current));
+                await Promise.all([
+                    AsyncStorage.setItem('playData', JSON.stringify(playDataRef.current)),
+                    syncDataToBackend(playDataRef)
+                ]);
             } catch (error) {
                 console.error('保存播放数据失败:', error);
             }
-
-            // 同步数据到后端
-            await syncDataToBackend(playDataRef);
         }
 
         appState.current = nextAppState;
