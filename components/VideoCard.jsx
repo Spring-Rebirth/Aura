@@ -33,12 +33,9 @@ export default function VideoCard({
     const [isSaved, setIsSaved] = useState(user.favorite.includes($id));
     const [imageLoaded, setImageLoaded] = useState(false);
 
-    const { updatePlayData } = useContext(PlayDataContext);
-    const [playCount, setPlayCount] = useState(
-        played_counts
-    );
-    // const createdTime = playDataRef.current[$id].createdTime;
-    // console.log('createdTime:', createdTime);
+    const { updatePlayData, playDataRef } = useContext(PlayDataContext);
+    const [playCount, setPlayCount] = useState(played_counts || 0);
+
     const getRelativeTime = () => {
         const dateObj = new Date($createdAt);
         const now = new Date();
@@ -71,7 +68,7 @@ export default function VideoCard({
     const currentPath = route.name;
     const aspectRatio = 16 / 9; // 视频比例
     const adminList = ['cjunwei6249@gmail.com', '1392600130@qq.com', 'zhangwww1998@outlook.com'];
-    let admin = false;
+    let admin = adminList.includes(user.email);
     for (let index = 0; index < adminList.length; index++) {
         if (user.email === adminList[index]) {
             admin = true;
@@ -162,39 +159,35 @@ export default function VideoCard({
         }
     }
 
-
     useEffect(() => {
         if (accountId === user.accountId) {
             setIsVideoCreator(true);
         }
 
-        // 加载本地存储的播放次数
-        const loadPlayCount = async () => {
-            try {
-                const storedData = await AsyncStorage.getItem('playData');
-                if (storedData) {
-                    const parsedData = JSON.parse(storedData);
-                    if (parsedData[$id]) {
-                        setPlayCount(parsedData[$id].count);
-                    }
-                }
-            } catch (error) {
-                console.error('加载播放数据失败:', error);
-            }
-        };
-
-        loadPlayCount();
-    }, [isSaved, $id]);
+        // 从 PlayDataContext 中获取播放次数
+        const currentPlayData = playDataRef.current;
+        if (currentPlayData[$id] && currentPlayData[$id].count) {
+            setPlayCount(currentPlayData[$id].count);
+        } else {
+            setPlayCount(played_counts || 0); // 如果本地没有播放次数，使用后端的播放次数
+        }
+    }, [$id, playDataRef]);
 
     const handlePlay = async () => {
         setPlaying(true);
         setLoading(true);
-        setCurrentPlayingPost(post); // 设置当前播放的视频
+        setCurrentPlayingPost(post);
 
         // 正确递增播放次数
         const newCount = playCount + 1;
+        setPlayCount(newCount);
+
+        // 更新播放数据并同步到后端
         updatePlayData($id, newCount);
     };
+
+
+
 
     return (
         <View className={`relative bg-primary ${isFullscreen ? 'flex-1 w-full h-full' : 'my-4 '}`}>
@@ -208,12 +201,6 @@ export default function VideoCard({
                         <TouchableOpacity
                             className='w-full h-56 justify-center items-center relative overflow-hidden' // 添加 overflow-hidden
                             activeOpacity={0.7}
-                            // onPress={() => {
-                            //     setPlaying(true);
-                            //     setLoading(true);
-                            //     setCurrentPlayingPost(post); // 设置当前播放的视频
-                            //     setNumberOfPlays(prev => prev++);
-                            // }}
                             onPress={handlePlay}
                         >
 
