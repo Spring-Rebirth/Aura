@@ -1,11 +1,9 @@
-// AppContent.js
 import React, { useEffect, useRef, useContext } from 'react';
 import { AppState } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { PlayDataContext } from '../context/PlayDataContext'; // 确保路径正确
+import { PlayDataContext } from '../context/PlayDataContext';
 import { syncDataToBackend } from '../lib/appwrite';
 import { Stack } from "expo-router";
-
 
 const AppContent = () => {
     const appState = useRef(AppState.currentState);
@@ -29,10 +27,19 @@ const AppContent = () => {
         loadPlayData();
 
         // 在应用启动时同步数据
-        syncDataToBackend(playDataRef);
+        syncDataToBackend(playDataRef)
+            .catch(error => console.error('初始同步失败:', error));
+
+        // 定期同步数据
+        const interval = setInterval(() => {
+            syncDataToBackend(playDataRef)
+                .then(() => console.log('定期同步成功'))
+                .catch(error => console.error('定期同步失败:', error));
+        }, 5 * 60 * 1000); // 5 分钟
 
         return () => {
             subscription.remove();
+            clearInterval(interval);
         };
     }, []);
 
@@ -41,15 +48,19 @@ const AppContent = () => {
             appState.current.match(/active/) &&
             (nextAppState === 'background' || nextAppState === 'inactive')
         ) {
-            // 并行执行保存和同步操作
+            // 优先同步数据到后端
             try {
-                await Promise.all([
-                    AsyncStorage.setItem('playData', JSON.stringify(playDataRef.current)),
-                    syncDataToBackend(playDataRef)
-                ]);
+                await syncDataToBackend(playDataRef);
+                console.log('应用退出前同步成功');
             } catch (error) {
-                console.error('保存播放数据失败:', error);
+                console.error('同步到后端失败:', error);
             }
+
+            // 异步保存数据到本地
+            AsyncStorage.setItem('playData', JSON.stringify(playDataRef.current))
+                .catch(error => {
+                    console.error('保存播放数据失败:', error);
+                });
         }
 
         appState.current = nextAppState;
@@ -67,3 +78,4 @@ const AppContent = () => {
 };
 
 export default AppContent;
+import { parse } from 'expo-linking';
