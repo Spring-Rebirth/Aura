@@ -8,8 +8,11 @@ export const PlayDataProvider = ({ children }) => {
     const playDataRef = useRef({});
 
     const updatePlayData = async (videoId, count) => {
-        playDataRef.current[videoId] = { count, synced: false };
-
+        playDataRef.current[videoId] = {
+            count,
+            lastPlayTime: Date.now(),
+            synced: false,
+        };
         // 立即同步数据到后端
         try {
             await syncDataToBackend(playDataRef);

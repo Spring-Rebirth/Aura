@@ -13,8 +13,8 @@ import { updateSavedCount, getVideoDetails } from '../lib/appwrite';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { StatusBar } from 'expo-status-bar';
 import closeY from '../assets/menu/close-yuan.png'
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { PlayDataContext } from '../context/PlayDataContext'; // 导入上下文
+import { PlayDataContext } from '../context/PlayDataContext';
+import { formatNumberWithUnits } from '../utils/numberFormatter';
 
 export default function VideoCard({
     post,
@@ -164,26 +164,37 @@ export default function VideoCard({
             setIsVideoCreator(true);
         }
 
-        // 从 PlayDataContext 中获取播放次数
+        // 加载播放次数
         const currentPlayData = playDataRef.current;
-        if (currentPlayData[$id] && currentPlayData[$id].count) {
-            setPlayCount(currentPlayData[$id].count);
+        if (currentPlayData[$id]) {
+            const { count } = currentPlayData[$id];
+            setPlayCount(count);
         } else {
-            setPlayCount(played_counts || 0); // 如果本地没有播放次数，使用后端的播放次数
+            setPlayCount(played_counts || 0);
         }
     }, [$id, playDataRef]);
-
+    // cSpell:words cooldown
     const handlePlay = async () => {
+        const currentTime = Date.now();
+        const cooldownPeriod = 5 * 60 * 1000; // 5分钟
+
+        const lastPlayTime = playDataRef.current[$id]?.lastPlayTime || 0;
+
+        if (currentTime - lastPlayTime > cooldownPeriod) {
+            // 冷却时间已过，递增播放次数
+            const newCount = playCount + 1;
+            setPlayCount(newCount);
+
+            // 更新播放数据并同步到后端
+            updatePlayData($id, newCount);
+        } else {
+            console.log('冷却时间未过，播放次数不增加');
+        }
+
+        // 继续播放视频
         setPlaying(true);
         setLoading(true);
         setCurrentPlayingPost(post);
-
-        // 正确递增播放次数
-        const newCount = playCount + 1;
-        setPlayCount(newCount);
-
-        // 更新播放数据并同步到后端
-        updatePlayData($id, newCount);
     };
 
 
@@ -310,7 +321,7 @@ export default function VideoCard({
                                 {title}
                             </Text>
                             <Text className='text-gray-100 font-pregular text-xs' numberOfLines={1}>
-                                {username}  ·  {playCount} views  ·  {getRelativeTime()}
+                                {username}  ·  {formatNumberWithUnits(playCount)} views  ·  {getRelativeTime()}
                             </Text>
                         </View>
                         <TouchableOpacity onPress={() => setShowControlMenu(prev => !prev)}>
