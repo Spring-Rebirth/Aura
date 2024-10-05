@@ -304,7 +304,7 @@ export default function Create() {
                             <>
                                 <ActivityIndicator size="large" color="#ffffff" />
                                 <Text className='mt-[10] text-white text-xl'>
-                                    Image Uploading...
+                                    Image Uploading
                                 </Text>
                             </>
                         ) : (
