@@ -8,8 +8,8 @@ export const useUploadFile = async (file, retries = 3) => {
             throw new Error('File does not exist');
         }
 
-        const { mimeType, name, size, uri } = file.assets[0];
-        const fileModel = { name, type: mimeType, size, uri };
+        const { type, name, size, uri } = file;
+        const fileModel = { name, type, size, uri };
 
         // 尝试上传，允许重试
         let response, fileId;

@@ -152,7 +152,6 @@ export default function Create() {
 
             const formData = {
                 title: form.title,
-                prompt: form.prompt,
                 thumbnail: StorageImageUrl,
                 video: StorageVideoUrl,
                 creator: user.$id,
@@ -166,7 +165,7 @@ export default function Create() {
             console.log('Upload Success  videoResult:', JSON.stringify(videoResult, null, 2));
 
 
-            setForm({ title: '', prompt: '' })
+            setForm({ title: '' })
             setFiles({
                 image: { uri: '', name: '', mimeType: '' },
                 video: { uri: '', name: '', mimeType: '' }

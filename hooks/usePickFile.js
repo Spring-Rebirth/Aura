@@ -56,7 +56,8 @@ export function usePickFile() {
             return {
                 uri: asset.uri,
                 name: asset.fileName || asset.uri.split('/').pop(),
-                type: asset.type || asset.mimeType || 'video/mp4',
+                type: asset.mimeType || 'video/mp4',
+                size: asset.fileSize,
             };
         } else {
             console.log('User cancelled video picker');
