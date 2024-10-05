@@ -13,6 +13,7 @@ import { fetchFileUrl, uploadData } from '../../lib/appwrite'
 import { StatusBar } from 'expo-status-bar'
 import { images } from '../../constants'
 import closeY from '../../assets/menu/close-yuan.png'
+import * as VideoThumbnails from 'expo-video-thumbnails';
 
 
 export default function Create() {
@@ -37,41 +38,102 @@ export default function Create() {
     // 处理图片选择
     const handlePickImage = async () => {
         try {
-            result = await pickImage();
-            console.log('handlePickImage', result);
+            const result = await pickImage();
+
+            if (!result) {
+                // 用户可能取消了选择
+                return;
+            }
+
+            console.log('handlePickImage result:', result);
+
             setImageFile(result);
+
+            setFiles(prevFiles => ({
+                ...prevFiles,
+                image: result,
+            }));
         } catch (err) {
             console.log('Image selection failed:', err);
             Alert.alert('Error', 'There was an error selecting the image');
         }
     };
 
+
+
+
     // 处理视频选择
     const handlePickVideo = async () => {
         try {
-            result = await pickVideo();
-            console.log('handlePickVideo:', result);
+            const result = await pickVideo();
+
+            if (!result) {
+                // 用户可能取消了选择
+                return;
+            }
+
+            console.log('handlePickVideo result:', result);
+
             setVideoFile(result);
+
+            setFiles(prevFiles => ({
+                ...prevFiles,
+                video: result,
+            }));
         } catch (err) {
             console.log('Video selection failed:', err);
             Alert.alert('Error', 'There was an error selecting the video');
         }
     };
 
+
+    // 生成视频缩略图
+    const generateThumbnailFromVideo = async () => {
+        if (!videoFile || !videoFile.uri) {
+            Alert.alert('Please select a video first');
+            return;
+        }
+
+        console.log('videoFile:', videoFile);
+        console.log('videoFile.uri:', videoFile.uri);
+
+        try {
+            const { uri: thumbnailUri } = await VideoThumbnails.getThumbnailAsync(
+                videoFile.uri,
+                {
+                    time: 0, // 获取视频的第一帧
+                }
+            );
+
+            setFiles(prevFiles => ({
+                ...prevFiles,
+                image: { uri: thumbnailUri, name: 'thumbnail.jpg', mimeType: 'image/jpeg' },
+            }));
+
+            setImageFile({ uri: thumbnailUri, name: 'thumbnail.jpg', type: 'image/jpeg' });
+
+        } catch (err) {
+            console.log('Failed to generate thumbnail:', err);
+            Alert.alert('Error', 'There was an error generating the thumbnail');
+        }
+    };
+
+
     const handleUpload = async () => {
         setUploading(true);
         console.log('imageFile:', imageFile, '\n', 'videoFile', videoFile);
         try {
             if (form.title === '' || !isImageSelected || !isVideoSelected) {
-                Alert.alert('Something content is not fill');
+                Alert.alert('Please fill in all required fields');
+                setUploading(false);
                 return;
             }
-            // 上传文件
 
+            // 上传文件
             const [imageUpload, videoUpload] = await Promise.all([
                 useUploadFile(imageFile),
                 useUploadFile(videoFile)
-            ])
+            ]);
 
             if (!imageUpload || !videoUpload) {
                 throw new Error('One or more files failed to upload');
@@ -125,8 +187,11 @@ export default function Create() {
         } else if (type === 'video') {
             setFiles(prev => ({ ...prev, video: { uri: '', name: '', mimeType: '' } }));
             setVideoFile(null);
+            // 同时清除缩略图
+            setFiles(prev => ({ ...prev, image: { uri: '', name: '', mimeType: '' } }));
+            setImageFile(null);
         }
-    }
+    };
 
     return (
         <SafeAreaView className='bg-primary h-full px-4 '>
@@ -188,15 +253,19 @@ export default function Create() {
                 <Text className='text-gray-100 mt-5 text-lg'>Thumbnail</Text>
                 {/* TODO：图片存在则显示图片 */}
                 {!isImageSelected ? (
-                    <TouchableOpacity onPress={handlePickImage}>
-                        <View className='w-full h-16 bg-[#1e1e2d] rounded-2xl mt-2 flex-row justify-center items-center'>
-                            <Image
-                                source={icons.upload}
-                                className='w-6 h-6'
-                            />
-                            <Text className='text-white ml-2'>Choose a file</Text>
-                        </View>
-                    </TouchableOpacity>
+                    <View className='flex-row w-full space-x-2 '>
+                        <TouchableOpacity onPress={handlePickImage}>
+                            <View className='w-40 h-16 bg-[#1e1e2d] rounded-2xl mt-2 flex-row justify-center items-center'>
+                                <Text className='text-white ml-2'>Choose a file</Text>
+                            </View>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={generateThumbnailFromVideo}>
+                            <View className='w-40 h-16 bg-[#1e1e2d] rounded-2xl mt-2 flex-row justify-center items-center px-4'>
+                                <Text className='text-white'>Auto generate</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
                 ) : (
                     <View className='w-full h-56 bg-[#1e1e2d] rounded-2xl mt-2 flex-row justify-center items-center overflow-hidden relative'>
                         <Image
