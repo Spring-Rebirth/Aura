@@ -1,14 +1,15 @@
-// RootLayout.js
 import 'react-native-url-polyfill/auto';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { SplashScreen } from "expo-router";
 import { useFonts } from 'expo-font';
 import { GlobalProvider } from '../context/GlobalProvider';
 
 import * as Updates from 'expo-updates';
-import { Alert } from 'react-native';
-import { PlayDataProvider } from '../context/PlayDataContext'; // 正确导入 PlayDataProvider
-import AppContent from '../context/AppContent'; // 确保路径正确
+import { Alert, AppState } from 'react-native';
+import { PlayDataProvider, PlayDataContext } from '../context/PlayDataContext';
+import { Stack } from "expo-router";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { parse } from 'expo-linking';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -27,23 +28,18 @@ export default function RootLayout() {
 
     const [isUpdating, setIsUpdating] = useState(false);
     const [canNavigate, setCanNavigate] = useState(false);
+    const [playDataLoaded, setPlayDataLoaded] = useState(false);
 
     useEffect(() => {
         if (error) throw error;
 
         async function checkForUpdates() {
             try {
-                console.log('Checking for updates...');
                 const update = await Updates.checkForUpdateAsync();
-                console.log('Update available:', update.isAvailable);
-
                 if (update.isAvailable) {
-                    console.log('Fetching update...');
-                    setIsUpdating(true);  // 设置更新状态为 true
+                    setIsUpdating(true);
                     await Updates.fetchUpdateAsync();
-                    console.log('Update fetched.');
 
-                    // 在更新下载完成后，提示用户
                     Alert.alert(
                         '有可用的更新',
                         '已经下载了新的更新，是否立即重启应用？',
@@ -59,7 +55,6 @@ export default function RootLayout() {
                             {
                                 text: '立即重启',
                                 onPress: async () => {
-                                    console.log('Reloading app...');
                                     await Updates.reloadAsync();
                                 },
                             },
@@ -67,14 +62,11 @@ export default function RootLayout() {
                         { cancelable: false }
                     );
                 } else {
-                    console.log('No updates available.');
                     setCanNavigate(true);
                 }
             } catch (e) {
-                console.log('Error checking for updates:', e);
                 setCanNavigate(true);
             } finally {
-                // 无论如何都要在更新检查完成后隐藏启动屏幕
                 SplashScreen.hideAsync();
             }
         }
@@ -82,20 +74,47 @@ export default function RootLayout() {
         if (fontsLoaded) {
             checkForUpdates();
         }
-
-        // 不再在 RootLayout 中处理 AppState 和 PlayDataContext
-
     }, [fontsLoaded, error]);
 
-    if (!fontsLoaded || isUpdating || !canNavigate) {
+    const { playDataRef } = useContext(PlayDataContext);
+
+    useEffect(() => {
+        const loadPlayData = async () => {
+            try {
+                const storedData = await AsyncStorage.getItem('playData');
+                if (storedData) {
+                    playDataRef.current = JSON.parse(storedData);
+                }
+            } catch (error) {
+                console.error('加载播放数据失败:', error);
+            } finally {
+                setPlayDataLoaded(true);
+            }
+        };
+
+        loadPlayData();
+    }, []);
+
+    if (!fontsLoaded || isUpdating || !canNavigate || !playDataLoaded) {
         return null;
     }
 
     return (
         <GlobalProvider>
             <PlayDataProvider>
-                <AppContent />
+                <Navigation />
             </PlayDataProvider>
         </GlobalProvider>
+    );
+}
+const Navigation = () => {
+    return (
+        <Stack>
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="(auth)/sign-in" options={{ headerShown: false }} />
+            <Stack.Screen name="(auth)/sign-up" options={{ headerShown: false }} />
+            <Stack.Screen name="search/[query]" options={{ headerShown: false }} />
+        </Stack>
     );
 }
