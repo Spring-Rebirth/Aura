@@ -266,7 +266,7 @@ export default function Create() {
                 {!isImageSelected ? (
                     <View className='flex-row w-full justify-around'>
                         <TouchableOpacity onPress={handlePickImage}>
-                            <View className='w-36 h-16 bg-[#5454eb] rounded-3xl mt-5 flex-row justify-center items-center'>
+                            <View className='w-36 h-16 bg-[#5454eb] rounded-3xl mt-5 flex-row justify-center items-center px-4'>
                                 <Text className='text-white ml-2'>Choose file</Text>
                             </View>
                         </TouchableOpacity>
