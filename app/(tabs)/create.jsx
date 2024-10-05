@@ -253,15 +253,15 @@ export default function Create() {
                 <Text className='text-gray-100 mt-5 text-lg'>Thumbnail</Text>
                 {/* TODO：图片存在则显示图片 */}
                 {!isImageSelected ? (
-                    <View className='flex-row w-full space-x-2 '>
+                    <View className='flex-row w-full justify-around'>
                         <TouchableOpacity onPress={handlePickImage}>
-                            <View className='w-40 h-16 bg-[#1e1e2d] rounded-2xl mt-2 flex-row justify-center items-center'>
+                            <View className='w-36 h-16 bg-[#5454eb] rounded-3xl mt-5 flex-row justify-center items-center'>
                                 <Text className='text-white ml-2'>Choose a file</Text>
                             </View>
                         </TouchableOpacity>
 
                         <TouchableOpacity onPress={generateThumbnailFromVideo}>
-                            <View className='w-40 h-16 bg-[#1e1e2d] rounded-2xl mt-2 flex-row justify-center items-center px-4'>
+                            <View className='w-36 h-16 bg-[#517ae1] rounded-3xl mt-5 flex-row justify-center items-center px-4'>
                                 <Text className='text-white'>Auto generate</Text>
                             </View>
                         </TouchableOpacity>
