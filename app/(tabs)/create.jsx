@@ -103,7 +103,7 @@ export default function Create() {
                 videoFile.uri,
                 {
                     time: 0, // 获取视频的第一帧
-                    quality: 0.1
+                    quality: 1
                 }
             );
 
