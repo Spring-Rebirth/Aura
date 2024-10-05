@@ -5,7 +5,7 @@ import { images } from "../constants";
 import CustomButton from '../components/CustomButton';
 import { Redirect, router } from 'expo-router';
 import { useGlobalContext } from '../context/GlobalProvider';
-import home from '../assets/images/home.jpg';
+import home from '../assets/images/home.png';
 // cSpell:word pregular appwrite
 //cSpell:ignore Aora pregular
 export default function Welcome() {
@@ -24,7 +24,7 @@ export default function Welcome() {
             <StatusBar style="light" backgroundColor='#161622' />
             <ScrollView contentContainerStyle={{ height: '100%' }}>
                 <View className='justify-center items-center min-h-[85vh] px-4'>
-                    <View className='flex-row items-center space-x-2'>
+                    <View className='flex-row items-center space-x-2 mb-1'>
                         <Image
                             source={images.logoSmall}
                             resizeMode='contain'
@@ -32,14 +32,14 @@ export default function Welcome() {
                         />
                         <Text className='text-white text-4xl font-semibold'>Aura</Text>
                     </View>
-                    <View className='w-80 h-44 rounded-xl overflow-hidden my-8'>
+                    <View className='w-80 h-48 rounded-2xl overflow-hidden my-8'>
                         <Image
                             source={home}
                             resizeMode='cover'
-                            className='w-full h-full'
+                            className='w-full h-full rounded-2xl'
                         />
                     </View>
-                    <View className='relative mt-5'>
+                    <View className='relative mt-1'>
                         <Text className='text-white text-3xl font-bold text-center'>
                             Discover Endless{'\n'}
                             Possibilities with{' '}
