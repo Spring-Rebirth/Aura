@@ -14,6 +14,7 @@ import { StatusBar } from 'expo-status-bar'
 import { images } from '../../constants'
 import closeY from '../../assets/menu/close-yuan.png'
 import * as VideoThumbnails from 'expo-video-thumbnails';
+import * as FileSystem from 'expo-file-system';
 
 
 export default function Create() {
@@ -102,15 +103,21 @@ export default function Create() {
                 videoFile.uri,
                 {
                     time: 0, // 获取视频的第一帧
+                    quality: 0.1
                 }
             );
 
+            const fileInfo = await FileSystem.getInfoAsync(thumbnailUri);
+            const fileSize = fileInfo.size;
+            console.log('Thumbnail URI:', thumbnailUri);
+            console.log('Thumbnail Size:', fileSize, 'bytes');
+
             setFiles(prevFiles => ({
                 ...prevFiles,
-                image: { uri: thumbnailUri, name: 'thumbnail.jpg', mimeType: 'image/jpeg' },
+                image: { uri: thumbnailUri, name: 'thumbnail.jpg', mimeType: 'image/jpeg', size: fileSize },
             }));
 
-            setImageFile({ uri: thumbnailUri, name: 'thumbnail.jpg', type: 'image/jpeg' });
+            setImageFile({ uri: thumbnailUri, name: 'thumbnail.jpg', type: 'image/jpeg', size: fileSize });
 
         } catch (err) {
             console.log('Failed to generate thumbnail:', err);
