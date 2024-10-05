@@ -246,7 +246,7 @@ export default function Create() {
                             source={{ uri: files.video.uri }}
                             className='w-full h-full rounded-xl'
                             resizeMode={ResizeMode.COVER}
-
+                            useNativeControls={true}
                         />
                         <TouchableOpacity
                             onPress={() => handleCancelSelected('video')}
