@@ -15,6 +15,7 @@ import { images } from '../../constants'
 import closeY from '../../assets/menu/close-yuan.png'
 import * as VideoThumbnails from 'expo-video-thumbnails';
 import * as FileSystem from 'expo-file-system';
+import * as Progress from 'react-native-progress';
 
 
 export default function Create() {
@@ -34,7 +35,10 @@ export default function Create() {
     const [uploading, setUploading] = useState(false);
     const [imageFile, setImageFile] = useState(null);
     const [videoFile, setVideoFile] = useState(null);
-
+    const [progress, setProgress] = useState({
+        type: '',
+        percent: 0
+    });
 
     // 处理图片选择
     const handlePickImage = async () => {
@@ -138,8 +142,8 @@ export default function Create() {
 
             // 上传文件
             const [imageUpload, videoUpload] = await Promise.all([
-                useUploadFile(imageFile),
-                useUploadFile(videoFile)
+                useUploadFile(imageFile, setProgress, 'Image'),
+                useUploadFile(videoFile, setProgress, 'Video'),
             ]);
 
             if (!imageUpload || !videoUpload) {
@@ -182,6 +186,7 @@ export default function Create() {
             Alert.alert('File upload failed', 'Please try again.');
         } finally {
             setUploading(false);
+            setProgress({ type: '', percent: 0 });
         }
 
     };
@@ -293,9 +298,27 @@ export default function Create() {
 
 
                 {uploading ? (
-                    <View className="w-full h-20 justify-center items-center bg-primary">
-                        <ActivityIndicator size="large" color="#ffffff" />
-                        <Text className='mt-[10] text-white text-xl'>Uploading, please wait...</Text>
+                    <View className="w-full h-20 justify-center items-center bg-primary mt-8">
+
+                        {progress.type !== 'Video' ? (
+                            <>
+                                <ActivityIndicator size="large" color="#ffffff" />
+                                <Text className='mt-[10] text-white text-xl'>
+                                    Image Uploading...
+                                </Text>
+                            </>
+                        ) : (
+                            <>
+                                <Progress.Bar
+                                    color="#02C2CC" unfilledColor='#fff'
+                                    progress={progress.percent / 100} width={230} borderWidth={3}
+                                />
+                                <Text className='mt-[10] text-white text-xl text-center'>
+                                    {progress.percent} %
+                                </Text>
+                            </>
+                        )}
+
                     </View>
                 ) : false}
 

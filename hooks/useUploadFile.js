@@ -1,7 +1,7 @@
 import { createFile } from '../lib/appwrite';
 
 // 处理文件上传
-export const useUploadFile = async (file, retries = 3) => {
+export const useUploadFile = async (file, setProgress, _type, retries = 3) => {
     try {
         // 检查 file 是否有效
         if (!file) {
@@ -15,7 +15,7 @@ export const useUploadFile = async (file, retries = 3) => {
         let response, fileId;
         for (let attempt = 0; attempt < retries; attempt++) {
             try {
-                const result = await createFile(fileModel);
+                const result = await createFile(fileModel, setProgress, _type);
                 response = result.response;
                 fileId = result.fileId;
                 console.log('File uploaded successfully on attempt:', attempt + 1);
