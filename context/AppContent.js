@@ -1,12 +1,9 @@
-import React, { useEffect, useRef, useContext } from 'react';
-import { AppState } from 'react-native';
+import React, { useEffect, useContext } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { PlayDataContext } from '../context/PlayDataContext';
-import { syncDataToBackend } from '../lib/appwrite';
 import { Stack } from "expo-router";
 
 const AppContent = () => {
-    const appState = useRef(AppState.currentState);
     const { playDataRef } = useContext(PlayDataContext);
 
     useEffect(() => {
@@ -36,4 +33,4 @@ const AppContent = () => {
 };
 
 export default AppContent;
-import { parse } from 'expo-linking';
+

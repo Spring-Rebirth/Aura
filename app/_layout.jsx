@@ -1,14 +1,12 @@
-// RootLayout.js
 import 'react-native-url-polyfill/auto';
 import React, { useEffect, useState } from 'react';
 import { SplashScreen } from "expo-router";
 import { useFonts } from 'expo-font';
 import { GlobalProvider } from '../context/GlobalProvider';
-
 import * as Updates from 'expo-updates';
 import { Alert } from 'react-native';
-import { PlayDataProvider } from '../context/PlayDataContext'; // 正确导入 PlayDataProvider
-import AppContent from '../context/AppContent'; // 确保路径正确
+import { PlayDataProvider } from '../context/PlayDataContext';
+import AppContent from '../context/AppContent';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -39,11 +37,10 @@ export default function RootLayout() {
 
                 if (update.isAvailable) {
                     console.log('Fetching update...');
-                    setIsUpdating(true);  // 设置更新状态为 true
+                    setIsUpdating(true);
                     await Updates.fetchUpdateAsync();
                     console.log('Update fetched.');
 
-                    // 在更新下载完成后，提示用户
                     Alert.alert(
                         '有可用的更新',
                         '已经下载了新的更新，是否立即重启应用？',
@@ -74,7 +71,6 @@ export default function RootLayout() {
                 console.log('Error checking for updates:', e);
                 setCanNavigate(true);
             } finally {
-                // 无论如何都要在更新检查完成后隐藏启动屏幕
                 SplashScreen.hideAsync();
             }
         }
@@ -82,8 +78,6 @@ export default function RootLayout() {
         if (fontsLoaded) {
             checkForUpdates();
         }
-
-        // 不再在 RootLayout 中处理 AppState 和 PlayDataContext
 
     }, [fontsLoaded, error]);
 
