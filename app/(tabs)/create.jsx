@@ -264,21 +264,21 @@ export default function Create() {
                 <Text className='text-gray-100 mt-5 text-lg'>Thumbnail</Text>
                 {/* TODO：图片存在则显示图片 */}
                 {!isImageSelected ? (
-                    <View className='flex-row w-full justify-around'>
+                    <View className='flex-row w-full justify-around mt-6 mb-8'>
                         <TouchableOpacity onPress={handlePickImage}>
-                            <View className='w-36 h-16 bg-[#5454eb] rounded-3xl mt-5 flex-row justify-center items-center px-4'>
+                            <View className='w-36 h-16 bg-[#5454eb] rounded-3xl  flex-row justify-center items-center px-4'>
                                 <Text className='text-white'>Choose File</Text>
                             </View>
                         </TouchableOpacity>
 
                         <TouchableOpacity onPress={generateThumbnailFromVideo}>
-                            <View className='w-36 h-16 bg-[#517ae1] rounded-3xl mt-5 flex-row justify-center items-center px-4'>
+                            <View className='w-36 h-16 bg-[#517ae1] rounded-3xl  flex-row justify-center items-center px-4'>
                                 <Text className='text-white'>Auto Generate</Text>
                             </View>
                         </TouchableOpacity>
                     </View>
                 ) : (
-                    <View className='w-full h-56 bg-[#1e1e2d] rounded-2xl mt-2 flex-row justify-center items-center overflow-hidden relative'>
+                    <View className='w-full h-56 bg-[#1e1e2d] rounded-2xl mt-2 mb-8 flex-row justify-center items-center overflow-hidden relative'>
                         <Image
                             source={{ uri: files.image.uri }}
                             className='w-full h-full'
@@ -298,12 +298,12 @@ export default function Create() {
 
 
                 {uploading ? (
-                    <View className="w-full h-20 justify-center items-center bg-primary mt-8">
+                    <View className="w-full h-20 justify-center items-center bg-primary mb-4">
 
                         {progress.type !== 'Video' ? (
                             <>
-                                <ActivityIndicator size="large" color="#ffffff" />
-                                <Text className='mt-[10] text-white text-xl'>
+                                <ActivityIndicator size="small" color="#ffffff" />
+                                <Text className='text-white text-xl text-center mt-2'>
                                     Image Uploading
                                 </Text>
                             </>
@@ -311,9 +311,9 @@ export default function Create() {
                             <>
                                 <Progress.Bar
                                     color="#02C2CC" unfilledColor='#fff'
-                                    progress={progress.percent / 100} width={230} borderWidth={3}
+                                    progress={progress.percent / 100} width={230} borderWidth={1}
                                 />
-                                <Text className='mt-[10] text-white text-xl text-center'>
+                                <Text className=' text-white text-xl text-center mt-2'>
                                     {progress.percent} %
                                 </Text>
                             </>
@@ -326,7 +326,7 @@ export default function Create() {
                 <CustomButton
                     onPress={() => { handleUpload() }}
                     title={'Submit & Publish'}
-                    style={'h-16 my-8'}
+                    style={'h-16 mb-8'}
                     textStyle={'text-black-100'}
                     isLoading={uploading}
                 />
