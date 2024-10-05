@@ -3,7 +3,7 @@
     "name": "Aura",
     "slug": "aura",
     "scheme": "aura",
-    "version": "2.8.6",
+    "version": "2.8.7",
     "orientation": "default",
     "icon": "./assets/app_icon3.png",
     "userInterfaceStyle": "light",
