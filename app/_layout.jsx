@@ -93,4 +93,3 @@ export default function RootLayout() {
         </GlobalProvider>
     );
 }
-import { checkForUpdateAsync, fetchUpdateAsync, reloadAsync } from 'expo-updates';
