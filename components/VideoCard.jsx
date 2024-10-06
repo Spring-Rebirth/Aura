@@ -172,7 +172,7 @@ export default function VideoCard({
         } else {
             setPlayCount(played_counts || 0);
         }
-    }, [$id, playDataRef]);
+    }, [user, $id, playDataRef]);
     // cSpell:words cooldown
     const handlePlay = async () => {
         const currentTime = Date.now();

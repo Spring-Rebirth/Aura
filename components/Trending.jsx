@@ -9,9 +9,8 @@ import { useGlobalContext } from '../context/GlobalProvider'
 import { updateSavedCount } from '../lib/appwrite';
 import closeY from '../assets/menu/close-yuan.png'
 import { PlayDataContext } from '../context/PlayDataContext';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
-    FlatList, ImageBackground, Text, TouchableOpacity, View, Image, ActivityIndicator, Pressable,
+    FlatList, ImageBackground, Text, TouchableOpacity, View, Image, ActivityIndicator,
     Alert
 } from 'react-native'
 
@@ -99,25 +98,15 @@ function TrendingItem({ activeItem, item }) {
     };
 
     useEffect(() => {
-        setIsSaved(user?.favorite.includes($id));
-
-        // 加载本地存储的播放次数
-        const loadPlayCount = async () => {
-            try {
-                const storedData = await AsyncStorage.getItem('playData');
-                if (storedData) {
-                    const parsedData = JSON.parse(storedData);
-                    if (parsedData[$id]) {
-                        setPlayCount(parsedData[$id].count);
-                    }
-                }
-            } catch (error) {
-                console.error('加载播放数据失败:', error);
-            }
-        };
-
-        loadPlayCount();
-    }, [user, isSaved, $id]);
+        // 加载播放次数
+        const currentPlayData = playDataRef.current;
+        if (currentPlayData[$id]) {
+            const { count } = currentPlayData[$id];
+            setPlayCount(count);
+        } else {
+            setPlayCount(played_counts || 0);
+        }
+    }, [user, $id, playDataRef]);
 
     return (
         <Animatable.View
