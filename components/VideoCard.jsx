@@ -23,7 +23,7 @@ export default function VideoCard({
     setCurrentPlayingPost,
     isFullscreen,
 }) {
-    const { $id, $createdAt, title, thumbnail, video, played_counts, creator: { accountId, username, avatar } } = post;
+    const { $id, $createdAt, title, thumbnail, video, creator: { accountId, username, avatar } } = post;
     const [playing, setPlaying] = useState(false);
     const [loading, setLoading] = useState(true);
     const [showControlMenu, setShowControlMenu] = useState(false);
@@ -163,8 +163,7 @@ export default function VideoCard({
         if (accountId === user.accountId) {
             setIsVideoCreator(true);
         }
-
-    }, [user, $id, playDataRef, post.played_counts]);
+    }, [user.accountId, $id]);
     // cSpell:words cooldown
     const handlePlay = async () => {
         const currentTime = Date.now();
