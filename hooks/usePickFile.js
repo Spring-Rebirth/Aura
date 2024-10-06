@@ -67,4 +67,3 @@ export function usePickFile() {
 
     return { pickImage, pickVideo };
 }
-import { requestMediaLibraryPermissionsAsync, launchImageLibraryAsync, MediaTypeOptions } from 'expo-image-picker';

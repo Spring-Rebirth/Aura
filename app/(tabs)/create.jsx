@@ -16,7 +16,7 @@ import closeY from '../../assets/menu/close-yuan.png'
 import * as VideoThumbnails from 'expo-video-thumbnails';
 import * as FileSystem from 'expo-file-system';
 import * as Progress from 'react-native-progress';
-
+import mime from 'mime';
 
 export default function Create() {
     const { user } = useGlobalContext();
@@ -51,20 +51,28 @@ export default function Create() {
             }
 
             console.log('handlePickImage result:', result);
+            const { uri, name } = result;
+            const fileInfo = await FileSystem.getInfoAsync(uri);
+            const fileSize = fileInfo.size;
+            let mimeType;
+            if (fileInfo.exists) {
+                mimeType = mime.getType(uri);
+                console.log(`File MIME type: ${mimeType}`);
 
-            setImageFile(result);
+            }
+            const fileModel = { uri, name, type: mimeType, size: fileSize }
+
+            setImageFile(fileModel); // 修正
 
             setFiles(prevFiles => ({
                 ...prevFiles,
-                image: result,
+                image: fileModel,
             }));
         } catch (err) {
             console.log('Image selection failed:', err);
             Alert.alert('Error', 'There was an error selecting the image');
         }
     };
-
-
 
 
     // 处理视频选择
