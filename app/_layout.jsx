@@ -70,8 +70,6 @@ export default function RootLayout() {
             } catch (e) {
                 console.log('Error checking for updates:', e);
                 setCanNavigate(true);
-            } finally {
-                SplashScreen.hideAsync();
             }
         }
 
@@ -80,6 +78,13 @@ export default function RootLayout() {
         }
 
     }, [fontsLoaded, error]);
+
+    useEffect(() => {
+        if (fontsLoaded && canNavigate && !isUpdating) {
+            SplashScreen.hideAsync();
+        }
+    }, [fontsLoaded, canNavigate, isUpdating]);
+
 
     if (!fontsLoaded || isUpdating || !canNavigate) {
         return null;
