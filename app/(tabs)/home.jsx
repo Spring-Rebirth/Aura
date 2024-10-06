@@ -37,7 +37,6 @@ export default function Home() {
 
 	const [isFullscreen, setIsFullscreen] = useState(false);
 
-
 	useEffect(() => {
 		const fetchDataAndUpdateVideo = async () => {
 			if (!user) return; // 如果 user 不存在，直接返回

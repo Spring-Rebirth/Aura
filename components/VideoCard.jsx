@@ -198,8 +198,6 @@ export default function VideoCard({
     };
 
 
-
-
     return (
         <View className={`relative bg-primary ${isFullscreen ? 'flex-1 w-full h-full' : 'my-4 '}`}>
             {/* 在全屏模式下隐藏状态栏 */}
