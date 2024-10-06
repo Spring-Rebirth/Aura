@@ -154,8 +154,9 @@ export default function Create() {
             Alert.alert('Upload Success !')
             console.log('Upload Success  videoResult:', JSON.stringify(videoResult, null, 2));
 
-            setForm({ title: '' })
-
+            setForm({ title: '' });
+            setImageFile(null);
+            setVideoFile(null);
         } catch (e) {
             console.error("Upload Failed", e);
             Alert.alert('File upload failed', 'Please try again.');
