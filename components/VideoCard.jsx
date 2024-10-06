@@ -34,7 +34,7 @@ export default function VideoCard({
     const [imageLoaded, setImageLoaded] = useState(false);
 
     const { updatePlayData, playDataRef } = useContext(PlayDataContext);
-    const [playCount, setPlayCount] = useState(played_counts || 0);
+    const [playCount, setPlayCount] = useState(post.played_counts || 0);
 
     const getRelativeTime = () => {
         const dateObj = new Date($createdAt);
@@ -164,15 +164,7 @@ export default function VideoCard({
             setIsVideoCreator(true);
         }
 
-        // 加载播放次数
-        const currentPlayData = playDataRef.current;
-        if (currentPlayData[$id]) {
-            const { count } = currentPlayData[$id];
-            setPlayCount(count);
-        } else {
-            setPlayCount(played_counts || 0);
-        }
-    }, [user, $id, playDataRef]);
+    }, [user, $id, playDataRef, post.played_counts]);
     // cSpell:words cooldown
     const handlePlay = async () => {
         const currentTime = Date.now();

@@ -97,16 +97,6 @@ function TrendingItem({ activeItem, item }) {
         setLoading(true);
     };
 
-    useEffect(() => {
-        // 加载播放次数
-        const currentPlayData = playDataRef.current;
-        if (currentPlayData[$id]) {
-            const { count } = currentPlayData[$id];
-            setPlayCount(count);
-        } else {
-            setPlayCount(played_counts || 0);
-        }
-    }, [user, $id, playDataRef]);
 
     return (
         <Animatable.View
