@@ -1,4 +1,4 @@
-import { View, Image, Text, ScrollView, Alert } from 'react-native'
+import { View, Image, Text, ScrollView, Alert, ActivityIndicator } from 'react-native'
 import { useState, useEffect } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import images from '../../constants/images'
@@ -16,13 +16,10 @@ import { ID } from 'react-native-appwrite';
 
 export default function SignUp() {
     const [form, setForm] = useState({ username: '', email: '', password: '', confirmPassword: '' });
-
-    const navigation = useNavigation();
     const { setUser, setIsLoggedIn } = useGlobalContext();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     async function submit() {
-
         if (form.username === '' || form.email === '' || form.password === '' || form.confirmPassword === '') {
             Alert.alert('Error', 'Please fill in all the fields!');
             return;
@@ -35,8 +32,10 @@ export default function SignUp() {
         setIsSubmitting(true);
 
         try {
+            // 注册用户
             const { newAccount, avatarURL } = await registerUser(form.email, form.password, form.username);
 
+            // 创建用户文档
             const userDocument = await databases.createDocument(
                 config.databaseId,
                 config.usersCollectionId,
@@ -49,16 +48,28 @@ export default function SignUp() {
                 }
             );
 
+            // 更新全局用户状态
             setUser(userDocument);
             setIsLoggedIn(true);
-            router.replace('/home');
+
+            // 确保所有状态更新完成后再进行页面跳转
+            setTimeout(() => {
+                router.replace('/home');
+            }, 100); // 延迟 100 毫秒以确保状态同步完成
 
         } catch (error) {
             Alert.alert('Error', error.message);
         } finally {
             setIsSubmitting(false);
         }
+    }
 
+    if (isSubmitting) {
+        return (
+            <View className="flex-1 justify-center items-center bg-primary">
+                <ActivityIndicator size="large" color="#ffffff" />
+            </View>
+        );
     }
 
     return (

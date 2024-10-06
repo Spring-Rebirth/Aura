@@ -1,5 +1,5 @@
 // cSpell:word appwrite
-import { View, Image, Text, ScrollView, Alert } from 'react-native'
+import { View, Image, Text, ScrollView, Alert, ActivityIndicator } from 'react-native'
 import { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
@@ -21,7 +21,6 @@ export default function SignIn() {
     const { user, setUser, setIsLoggedIn } = useGlobalContext();
 
     async function submit() {
-
         if (form.email === '' || form.password === '') {
             Alert.alert('Error', 'Please fill in all the fields!');
             return;
@@ -32,19 +31,31 @@ export default function SignIn() {
         try {
             await signIn(form.email, form.password);
 
+            // 获取当前用户信息并更新状态
             const result = await getCurrentUser();
             if (result && user !== result) {
                 setUser(result);
             }
             setIsLoggedIn(true);
 
-            router.replace('/home');
+            // 确保所有状态都已更新后再跳转页面
+            setTimeout(() => {
+                router.replace('/home');
+            }, 100); // 延迟 100 毫秒以确保状态同步完成
+
         } catch (error) {
             Alert.alert('Error in submit', error.message);
         } finally {
             setIsSubmitting(false);
         }
+    }
 
+    if (isSubmitting) {
+        return (
+            <View className="flex-1 justify-center items-center bg-primary">
+                <ActivityIndicator size="large" color="#ffffff" />
+            </View>
+        );
     }
 
     return (
