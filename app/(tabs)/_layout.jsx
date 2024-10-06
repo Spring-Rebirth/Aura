@@ -20,7 +20,7 @@ function TabIcon({ name, icon, color, focused }) {
                     style={{ color: color }}
                     className={`text-xs ${focused ? 'font-psemibold' : 'font-pregular'}`}
                     numberOfLines={1}
-                    ellipsizeMode='tail'
+                    ellipsizeMode={'clip'}
                 >
                     {name}
                 </Text>
