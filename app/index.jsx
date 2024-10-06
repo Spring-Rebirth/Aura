@@ -6,15 +6,18 @@ import CustomButton from '../components/CustomButton';
 import { Redirect, router } from 'expo-router';
 import { useGlobalContext } from '../context/GlobalProvider';
 import home from '../assets/images/home.png';
+import { useEffect } from 'react';
 // cSpell:word pregular appwrite
 //cSpell:ignore Aora pregular
 export default function Welcome() {
 
     const { isLoading, isLoggedIn } = useGlobalContext();
 
-    if (isLoggedIn) {
-        return <Redirect href='/home' />;
-    }
+    useEffect(() => {
+        if (isLoggedIn) {
+            router.replace('/home');
+        }
+    }, [isLoggedIn])
 
 
     return (
@@ -69,8 +72,6 @@ export default function Welcome() {
                             textStyle={'text-lg text-[#161622]'}
                         />
                     )}
-
-
 
                 </View>
             </ScrollView>
