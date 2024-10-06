@@ -6,19 +6,32 @@ import CustomButton from '../components/CustomButton';
 import { Redirect, router } from 'expo-router';
 import { useGlobalContext } from '../context/GlobalProvider';
 import home from '../assets/images/home.png';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 // cSpell:word pregular appwrite
 //cSpell:ignore Aora pregular
 export default function Welcome() {
 
     const { isLoading, isLoggedIn } = useGlobalContext();
+    const [readyToNavigate, setReadyToNavigate] = useState(false);
 
     useEffect(() => {
         if (isLoggedIn) {
-            router.replace('/home');
+            // 延迟一定时间以确保 UI 更新
+            setTimeout(() => {
+                router.replace('/home');
+            }, 100); // 延迟 100 毫秒以避免短暂的闪屏
+        } else {
+            setReadyToNavigate(true);
         }
-    }, [isLoggedIn])
+    }, [isLoggedIn]);
 
+    if (isLoading || !readyToNavigate) {
+        return (
+            <View className="flex-1 justify-center items-center bg-primary">
+                <ActivityIndicator size="large" color="#ffffff" />
+            </View>
+        );
+    }
 
     return (
 
