@@ -15,18 +15,16 @@ import {
     Alert
 } from 'react-native'
 
-function TrendingItem({ activeItem, item }) {
+function TrendingItem({ activeItem, item, setCurrentPlayingPost }) {
     const [playing, setPlaying] = useState(false);
     const [loading, setLoading] = useState(true);
     const [imageLoaded, setImageLoaded] = useState(false);
     const { user, setUser } = useGlobalContext();
     const [isSaved, setIsSaved] = useState(user?.favorite.includes($id));
     const { $id } = item;
-    const { updatePlayData } = useContext(PlayDataContext);
     const { played_counts } = item;
-    const [playCount, setPlayCount] = useState(
-        played_counts
-    );
+    const [playCount, setPlayCount] = useState(played_counts || 0);
+    const { updatePlayData, playDataRef } = useContext(PlayDataContext);
 
     const zoomIn = {
         0: {
@@ -79,13 +77,26 @@ function TrendingItem({ activeItem, item }) {
     }
 
     const handlePlay = async () => {
+        const currentTime = Date.now();
+        const cooldownPeriod = 5 * 60 * 1000; // 5分钟
+
+        const lastPlayTime = playDataRef.current[$id]?.lastPlayTime || 0;
+
+        if (currentTime - lastPlayTime > cooldownPeriod) {
+            // 冷却时间已过，递增播放次数
+            const newCount = playCount + 1;
+            setPlayCount(newCount);
+
+            // 更新播放数据并同步到后端
+            updatePlayData($id, newCount);
+        } else {
+            console.log('冷却时间未过，播放次数不增加');
+        }
+
+        // 继续播放视频
         setPlaying(true);
         setLoading(true);
-        // setCurrentPlayingPost(post); // 设置当前播放的视频
-
-        // 正确递增播放次数
-        const newCount = playCount + 1;
-        updatePlayData($id, newCount);
+        setCurrentPlayingPost(item);
     };
 
     useEffect(() => {
@@ -195,7 +206,7 @@ function TrendingItem({ activeItem, item }) {
 
 }
 
-export default function Trending({ video, loading }) {
+export default function Trending({ video, loading, setCurrentPlayingPost }) {
     // cSpell: words viewability
     const viewabilityConfig = { itemVisiblePercentThreshold: 70 }; // 配置可见性百分比
 
@@ -219,7 +230,7 @@ export default function Trending({ video, loading }) {
             data={loading || video.length === 0 ? [] : video}
             keyExtractor={(item) => item.$id}
             renderItem={({ item }) => (
-                <TrendingItem item={item} activeItem={activeItem} />
+                <TrendingItem item={item} activeItem={activeItem} setCurrentPlayingPost={setCurrentPlayingPost} />
             )}
             onViewableItemsChanged={handleViewableItemsChanged}
             viewabilityConfig={viewabilityConfig}
