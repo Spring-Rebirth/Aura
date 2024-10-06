@@ -111,7 +111,7 @@ export default function Home() {
 												</Text>
 											</View>
 										) : (
-											<Trending video={popularData} loading={loading} setCurrentPlayingPost={setCurrentPlayingPost} />
+											<Trending video={popularData} loading={loading} />
 										)}
 
 									</View>

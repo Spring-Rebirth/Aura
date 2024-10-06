@@ -15,7 +15,7 @@ import {
     Alert
 } from 'react-native'
 
-function TrendingItem({ activeItem, item, setCurrentPlayingPost }) {
+function TrendingItem({ activeItem, item }) {
     const [playing, setPlaying] = useState(false);
     const [loading, setLoading] = useState(true);
     const [imageLoaded, setImageLoaded] = useState(false);
@@ -96,7 +96,6 @@ function TrendingItem({ activeItem, item, setCurrentPlayingPost }) {
         // 继续播放视频
         setPlaying(true);
         setLoading(true);
-        setCurrentPlayingPost(item);
     };
 
     useEffect(() => {
@@ -206,7 +205,7 @@ function TrendingItem({ activeItem, item, setCurrentPlayingPost }) {
 
 }
 
-export default function Trending({ video, loading, setCurrentPlayingPost }) {
+export default function Trending({ video, loading }) {
     // cSpell: words viewability
     const viewabilityConfig = { itemVisiblePercentThreshold: 70 }; // 配置可见性百分比
 
@@ -230,7 +229,7 @@ export default function Trending({ video, loading, setCurrentPlayingPost }) {
             data={loading || video.length === 0 ? [] : video}
             keyExtractor={(item) => item.$id}
             renderItem={({ item }) => (
-                <TrendingItem item={item} activeItem={activeItem} setCurrentPlayingPost={setCurrentPlayingPost} />
+                <TrendingItem item={item} activeItem={activeItem} />
             )}
             onViewableItemsChanged={handleViewableItemsChanged}
             viewabilityConfig={viewabilityConfig}
