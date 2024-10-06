@@ -12,20 +12,17 @@ import { useEffect, useState } from 'react';
 export default function Welcome() {
 
     const { isLoading, isLoggedIn } = useGlobalContext();
-    const [readyToNavigate, setReadyToNavigate] = useState(false);
+    const [isNavigating, setIsNavigating] = useState(false);
 
     useEffect(() => {
         if (isLoggedIn) {
-            // 延迟一定时间以确保 UI 更新
-            setTimeout(() => {
-                router.replace('/home');
-            }, 100); // 延迟 100 毫秒以避免短暂的闪屏
-        } else {
-            setReadyToNavigate(true);
+            setIsNavigating(true); // 防止 Welcome 页面继续渲染
+            router.push('/home');
         }
     }, [isLoggedIn]);
 
-    if (isLoading || !readyToNavigate) {
+    // 如果正在跳转或者正在加载登录状态，避免渲染 Welcome 页面内容
+    if (isNavigating || isLoading) {
         return (
             <View className="flex-1 justify-center items-center bg-primary">
                 <ActivityIndicator size="large" color="#ffffff" />
