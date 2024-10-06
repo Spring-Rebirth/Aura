@@ -22,6 +22,7 @@ export default function profile() {
     const [refreshing, setRefreshing] = useState(false);
     const [avatarUploading, setAvatarUploading] = useState(false);
     const [currentPlayingPost, setCurrentPlayingPost] = useState(null);
+    const [isTransitioning, setIsTransitioning] = useState(false);
 
 
     useEffect(() => {
@@ -32,6 +33,8 @@ export default function profile() {
 
     const handleSignOut = async () => {
         try {
+            setIsTransitioning(true); // 设置跳转状态，防止渲染未准备好的页面
+
             // 异步调用 signOut 并等待完成
             await signOut();
 
@@ -44,8 +47,10 @@ export default function profile() {
         } catch (error) {
             console.error('Sign out failed:', error);
             Alert.alert('Error', 'Failed to sign out. Please try again.');
+            setIsTransitioning(false); // 如果出错，重置跳转状态
         }
-    }
+    };
+
 
     const handleRefresh = async () => {
         setRefreshing(true);
@@ -104,6 +109,14 @@ export default function profile() {
             }
         }
     };
+
+    if (isTransitioning) {
+        return (
+            <View className="flex-1 justify-center items-center bg-primary">
+                <ActivityIndicator size="large" color="#ffffff" />
+            </View>
+        );
+    }
 
     return (
         <SafeAreaView className='bg-primary h-full'>

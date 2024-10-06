@@ -1,23 +1,22 @@
-import { View, Image, Text, ScrollView, Alert, ActivityIndicator } from 'react-native'
-import { useState, useEffect } from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import images from '../../constants/images'
-import CustomForm from '../../components/CustomForm'
-import CustomButton from '../../components/CustomButton'
-import { StatusBar } from 'expo-status-bar'
-import { Link, router } from 'expo-router'
-// cSpell:word appwrite username psemibold
-import { registerUser } from '../../lib/appwrite'
-import { useGlobalContext } from '../../context/GlobalProvider'
-import { databases } from '../../lib/appwrite'
-import { useNavigation } from '@react-navigation/native';
-import { config } from '../../lib/appwrite'
+import { View, Image, Text, ScrollView, Alert, ActivityIndicator } from 'react-native';
+import { useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import images from '../../constants/images';
+import CustomForm from '../../components/CustomForm';
+import CustomButton from '../../components/CustomButton';
+import { StatusBar } from 'expo-status-bar';
+import { Link, router } from 'expo-router';
+import { registerUser } from '../../lib/appwrite';
+import { useGlobalContext } from '../../context/GlobalProvider';
+import { databases } from '../../lib/appwrite';
+import { config } from '../../lib/appwrite';
 import { ID } from 'react-native-appwrite';
 
 export default function SignUp() {
     const [form, setForm] = useState({ username: '', email: '', password: '', confirmPassword: '' });
     const { setUser, setIsLoggedIn } = useGlobalContext();
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isTransitioning, setIsTransitioning] = useState(false); // 新增状态控制页面跳转
 
     async function submit() {
         if (form.username === '' || form.email === '' || form.password === '' || form.confirmPassword === '') {
@@ -53,18 +52,20 @@ export default function SignUp() {
             setIsLoggedIn(true);
 
             // 确保所有状态更新完成后再进行页面跳转
+            setIsSubmitting(false);
+            setIsTransitioning(true); // 标记进入跳转状态
+
             setTimeout(() => {
                 router.replace('/home');
             }, 100); // 延迟 100 毫秒以确保状态同步完成
 
         } catch (error) {
             Alert.alert('Error', error.message);
-        } finally {
             setIsSubmitting(false);
         }
     }
 
-    if (isSubmitting) {
+    if (isSubmitting || isTransitioning) {
         return (
             <View className="flex-1 justify-center items-center bg-primary">
                 <ActivityIndicator size="large" color="#ffffff" />
@@ -125,5 +126,5 @@ export default function SignUp() {
                 <StatusBar style='light' />
             </SafeAreaView>
         </>
-    )
+    );
 }
