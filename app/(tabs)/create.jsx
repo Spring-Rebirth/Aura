@@ -20,25 +20,14 @@ import mime from 'mime';
 
 export default function Create() {
     const { user } = useGlobalContext();
-    const [form, setForm] = useState({
-        title: '',
-    });
-
-    const [files, setFiles] = useState({
-        image: { uri: '', name: '', mimeType: '' },
-        video: { uri: '', name: '', mimeType: '' }
-    });
-
-    const isImageSelected = files.image.uri !== '';
-    const isVideoSelected = files.video.uri !== '';
-    const { pickImage, pickVideo } = usePickFile(setFiles);
+    const [form, setForm] = useState({ title: '' });
+    const isImageSelected = imageFile?.uri !== '';
+    const isVideoSelected = videoFile?.uri !== '';
+    const { pickImage, pickVideo } = usePickFile();
     const [uploading, setUploading] = useState(false);
     const [imageFile, setImageFile] = useState(null);
     const [videoFile, setVideoFile] = useState(null);
-    const [progress, setProgress] = useState({
-        type: '',
-        percent: 0
-    });
+    const [progress, setProgress] = useState({ type: '', percent: 0 });
 
     // 处理图片选择
     const handlePickImage = async () => {
@@ -62,20 +51,14 @@ export default function Create() {
             }
             const fileModel = { uri, name, type: mimeType, size: fileSize }
 
-            setImageFile(fileModel); // 修正
+            setImageFile(fileModel);
 
-            setFiles(prevFiles => ({
-                ...prevFiles,
-                image: fileModel,
-            }));
         } catch (err) {
             console.log('Image selection failed:', err);
             Alert.alert('Error', 'There was an error selecting the image');
         }
     };
 
-
-    // 处理视频选择
     const handlePickVideo = async () => {
         try {
             const result = await pickVideo();
@@ -86,19 +69,13 @@ export default function Create() {
             }
 
             console.log('handlePickVideo result:', result);
-
             setVideoFile(result);
 
-            setFiles(prevFiles => ({
-                ...prevFiles,
-                video: result,
-            }));
         } catch (err) {
             console.log('Video selection failed:', err);
             Alert.alert('Error', 'There was an error selecting the video');
         }
     };
-
 
     // 生成视频缩略图
     const generateThumbnailFromVideo = async () => {
@@ -124,11 +101,6 @@ export default function Create() {
             console.log('Thumbnail URI:', thumbnailUri);
             console.log('Thumbnail Size:', fileSize, 'bytes');
 
-            setFiles(prevFiles => ({
-                ...prevFiles,
-                image: { uri: thumbnailUri, name: 'thumbnail.jpg', mimeType: 'image/jpeg', size: fileSize },
-            }));
-
             setImageFile({ uri: thumbnailUri, name: 'thumbnail.jpg', type: 'image/jpeg', size: fileSize });
 
         } catch (err) {
@@ -136,7 +108,6 @@ export default function Create() {
             Alert.alert('Error', 'There was an error generating the thumbnail');
         }
     };
-
 
     const handleUpload = async () => {
         setUploading(true);
@@ -183,12 +154,8 @@ export default function Create() {
             Alert.alert('Upload Success !')
             console.log('Upload Success  videoResult:', JSON.stringify(videoResult, null, 2));
 
-
             setForm({ title: '' })
-            setFiles({
-                image: { uri: '', name: '', mimeType: '' },
-                video: { uri: '', name: '', mimeType: '' }
-            })
+
         } catch (e) {
             console.error("Upload Failed", e);
             Alert.alert('File upload failed', 'Please try again.');
@@ -196,18 +163,14 @@ export default function Create() {
             setUploading(false);
             setProgress({ type: '', percent: 0 });
         }
-
     };
 
     const handleCancelSelected = (type) => {
         if (type === 'image') {
-            setFiles(prev => ({ ...prev, image: { uri: '', name: '', mimeType: '' } }));
             setImageFile(null);
         } else if (type === 'video') {
-            setFiles(prev => ({ ...prev, video: { uri: '', name: '', mimeType: '' } }));
             setVideoFile(null);
             // 同时清除缩略图
-            setFiles(prev => ({ ...prev, image: { uri: '', name: '', mimeType: '' } }));
             setImageFile(null);
         }
     };
@@ -251,7 +214,7 @@ export default function Create() {
                 ) : (
                     <View className='w-full h-56 bg-[#1e1e2d] rounded-2xl mt-2 justify-center items-center relative'>
                         <Video
-                            source={{ uri: files.video.uri }}
+                            source={{ uri: videoFile.uri }}
                             className='w-full h-full rounded-xl'
                             resizeMode={ResizeMode.COVER}
                             useNativeControls={true}
@@ -288,7 +251,7 @@ export default function Create() {
                 ) : (
                     <View className='w-full h-56 bg-[#1e1e2d] rounded-2xl mt-2 mb-8 flex-row justify-center items-center overflow-hidden relative'>
                         <Image
-                            source={{ uri: files.image.uri }}
+                            source={{ uri: imageFile.uri }}
                             className='w-full h-full'
                             resizeMode='cover'
                         />
