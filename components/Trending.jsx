@@ -20,7 +20,7 @@ function TrendingItem({ activeItem, item }) {
     const [loading, setLoading] = useState(true);
     const [imageLoaded, setImageLoaded] = useState(false);
     const { user, setUser } = useGlobalContext();
-    const [isSaved, setIsSaved] = useState(user.favorite.includes($id));
+    const [isSaved, setIsSaved] = useState(user?.favorite.includes($id));
     const { $id } = item;
     const { updatePlayData } = useContext(PlayDataContext);
     const { played_counts } = item;
@@ -49,7 +49,7 @@ function TrendingItem({ activeItem, item }) {
         try {
             let isIncrement;
 
-            if (!user.favorite.includes($id)) {
+            if (!user?.favorite.includes($id)) {
                 // 深拷贝对象
                 const newUser = JSON.parse(JSON.stringify(user));
                 newUser.favorite.push($id);
@@ -62,7 +62,7 @@ function TrendingItem({ activeItem, item }) {
                 Alert.alert('Save successful');
             } else {
                 // 剔除已保存项的新数组
-                const updatedItems = user.favorite.filter(item => item !== $id);
+                const updatedItems = user?.favorite.filter(item => item !== $id);
                 setUser(prev => ({
                     ...prev,
                     favorite: updatedItems
@@ -89,7 +89,7 @@ function TrendingItem({ activeItem, item }) {
     };
 
     useEffect(() => {
-        setIsSaved(user.favorite.includes($id));
+        setIsSaved(user?.favorite.includes($id));
 
         // 加载本地存储的播放次数
         const loadPlayCount = async () => {

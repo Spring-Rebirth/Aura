@@ -30,7 +30,7 @@ export default function VideoCard({
 
     const [isVideoCreator, setIsVideoCreator] = useState(false);
     const { user, setUser } = useGlobalContext();
-    const [isSaved, setIsSaved] = useState(user.favorite.includes($id));
+    const [isSaved, setIsSaved] = useState(user?.favorite.includes($id));
     const [imageLoaded, setImageLoaded] = useState(false);
 
     const { updatePlayData, playDataRef } = useContext(PlayDataContext);
@@ -68,9 +68,9 @@ export default function VideoCard({
     const currentPath = route.name;
     const aspectRatio = 16 / 9; // 视频比例
     const adminList = ['cjunwei6249@gmail.com', '1392600130@qq.com', 'zhangwww1998@outlook.com'];
-    let admin = adminList.includes(user.email);
+    let admin = adminList.includes(user?.email);
     for (let index = 0; index < adminList.length; index++) {
-        if (user.email === adminList[index]) {
+        if (user?.email === adminList[index]) {
             admin = true;
         }
     }
@@ -92,7 +92,7 @@ export default function VideoCard({
         try {
             let isIncrement;
 
-            if (!user.favorite.includes($id)) {
+            if (!user?.favorite.includes($id)) {
                 // 深拷贝对象
                 const newUser = JSON.parse(JSON.stringify(user));
                 newUser.favorite.push($id);
@@ -108,7 +108,7 @@ export default function VideoCard({
                 Alert.alert('Save successful');
             } else {
                 // 剔除已保存项的新数组
-                const updatedItems = user.favorite.filter(item => item !== $id);
+                const updatedItems = user?.favorite.filter(item => item !== $id);
                 setUser(prev => ({
                     ...prev,
                     favorite: updatedItems

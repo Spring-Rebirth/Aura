@@ -19,12 +19,12 @@ export default function Saved() {
 
     const handleRefresh = async () => {
         setRefreshing(true);
-        await fetchSavedPosts(user.favorite);
+        await fetchSavedPosts(user?.favorite);
         setRefreshing(false);
     }
 
     useEffect(() => {
-        fetchSavedPosts(user.favorite);
+        fetchSavedPosts(user?.favorite);
     }, [user])
 
     return (

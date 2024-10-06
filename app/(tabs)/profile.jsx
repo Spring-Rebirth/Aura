@@ -30,11 +30,21 @@ export default function profile() {
         setLoading(false);
     }, [user.$id, user.avatar])
 
-    const handleSignOut = () => {
-        signOut();
-        setUser(null);
-        setIsLoggedIn(false);
-        router.replace('/sign-in');
+    const handleSignOut = async () => {
+        try {
+            // 异步调用 signOut 并等待完成
+            await signOut();
+
+            // 页面跳转到登录页面
+            router.replace('/sign-in');
+
+            // 更新状态
+            setUser(null);
+            setIsLoggedIn(false);
+        } catch (error) {
+            console.error('Sign out failed:', error);
+            Alert.alert('Error', 'Failed to sign out. Please try again.');
+        }
     }
 
     const handleRefresh = async () => {

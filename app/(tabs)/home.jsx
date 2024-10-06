@@ -32,7 +32,7 @@ export default function Home() {
 		fetchPosts();
 		fetchPopularPosts();
 		setRefreshing(false);
-		console.log('user.favorite:', user.favorite);
+		console.log('user.favorite:', user?.favorite);
 	}
 
 	const [isFullscreen, setIsFullscreen] = useState(false);
@@ -40,11 +40,13 @@ export default function Home() {
 
 	useEffect(() => {
 		const fetchDataAndUpdateVideo = async () => {
+			if (!user) return; // 如果 user 不存在，直接返回
+
 			setLoading(true); // 开始加载
 
 			try {
 				// 获取用户信息，更新收藏视频
-				const { favorite } = user;
+				const favorite = user.favorite || []; // 确保 favorite 至少是一个空数组
 				await updateSavedVideo(user.$id, { favorite });
 
 				// 并行请求 fetchPosts 和 fetchPopularPosts
@@ -57,7 +59,7 @@ export default function Home() {
 			}
 		};
 
-		fetchDataAndUpdateVideo();  // 调用异步函数		
+		fetchDataAndUpdateVideo();  // 调用异步函数 	
 	}, [user]);
 
 
