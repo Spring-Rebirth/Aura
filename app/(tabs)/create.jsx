@@ -21,12 +21,12 @@ import mime from 'mime';
 export default function Create() {
     const { user } = useGlobalContext();
     const [form, setForm] = useState({ title: '' });
-    const isImageSelected = imageFile?.uri !== '';
-    const isVideoSelected = videoFile?.uri !== '';
     const { pickImage, pickVideo } = usePickFile();
     const [uploading, setUploading] = useState(false);
     const [imageFile, setImageFile] = useState(null);
     const [videoFile, setVideoFile] = useState(null);
+    const isImageSelected = imageFile?.uri != null;
+    const isVideoSelected = videoFile?.uri != null;
     const [progress, setProgress] = useState({ type: '', percent: 0 });
 
     // 处理图片选择
@@ -79,13 +79,13 @@ export default function Create() {
 
     // 生成视频缩略图
     const generateThumbnailFromVideo = async () => {
-        if (!videoFile || !videoFile.uri) {
+        if (!videoFile || !videoFile?.uri) {
             Alert.alert('Please select a video first');
             return;
         }
 
         console.log('videoFile:', videoFile);
-        console.log('videoFile.uri:', videoFile.uri);
+        console.log('videoFile.uri:', videoFile?.uri);
 
         try {
             const { uri: thumbnailUri } = await VideoThumbnails.getThumbnailAsync(
@@ -214,7 +214,7 @@ export default function Create() {
                 ) : (
                     <View className='w-full h-56 bg-[#1e1e2d] rounded-2xl mt-2 justify-center items-center relative'>
                         <Video
-                            source={{ uri: videoFile.uri }}
+                            source={{ uri: videoFile?.uri }}
                             className='w-full h-full rounded-xl'
                             resizeMode={ResizeMode.COVER}
                             useNativeControls={true}
@@ -251,7 +251,7 @@ export default function Create() {
                 ) : (
                     <View className='w-full h-56 bg-[#1e1e2d] rounded-2xl mt-2 mb-8 flex-row justify-center items-center overflow-hidden relative'>
                         <Image
-                            source={{ uri: imageFile.uri }}
+                            source={{ uri: imageFile?.uri }}
                             className='w-full h-full'
                             resizeMode='cover'
                         />
