@@ -20,7 +20,6 @@ export default function Home() {
 	const [popularData, setPopularData] = useState([]);
 	const { user } = useGlobalContext();
 	const { fetchPosts, fetchPopularPosts } = useGetData({ setLoading, setData, setPopularData });
-	const [currentPlayingPost, setCurrentPlayingPost] = useState(null);
 
 	const toggleFullscreen = (fullscreen) => {
 		setIsFullscreen(fullscreen);
@@ -60,111 +59,99 @@ export default function Home() {
 		fetchDataAndUpdateVideo();  // 调用异步函数 	
 	}, [user]);
 
-
 	return (
 		<View className={`flex-1 bg-primary ${isFullscreen ? 'w-full h-full' : 'h-full'}`}>
-			{/* 在全屏模式下，不渲染其他内容，只渲染全屏视频 */}
-			{isFullscreen ? (
 
-				<VideoCard
-					post={currentPlayingPost}
-					handleRefresh={handleRefresh}
-					isFullscreen={isFullscreen}
-					toggleFullscreen={toggleFullscreen}
-				/>
-			) : (
-				<>
-					<FlatList
-						data={loading ? [] : data}
-						keyExtractor={(item) => item.$id}
-						ListHeaderComponent={() => {
-							return (
-								<View className='my-6 px-4'>
+			<FlatList
+				data={loading ? [] : data}
+				keyExtractor={(item) => item.$id}
+				ListHeaderComponent={() => {
+					return (
+						<View className='my-6 px-4'>
 
-									<View className='flex-row justify-between items-center mt-4 h-[60px]'>
-										<View >
-											<Text className='text-gray-100 text-lg'>Welcome Back</Text>
-											<Text className='text-white text-2xl font-psemibold '>{user?.username}</Text>
-										</View>
-										<Image
-											source={images.logoSmall}
-											className='w-9 h-10'
-											resizeMode='contain'
-										/>
-									</View>
-
-									<SearchInput containerStyle={'mt-6'} />
-
-									<View className='mt-8'>
-										<Text className=' mb-8 font-psemibold text-lg text-sky-300 text-center'>Top  Hits</Text>
-										{/* 头部视频 */}
-										{popularData.length === 0 ? (
-											<View className='items-center'>
-												<Image
-													source={images.empty}
-													className='w-[75px] h-[60px]'
-													resizeMode='contain'
-												/>
-												<Text className='text-sky-300 text-center font-psemibold'>
-													Play the video to help it {'\n'}become a popular one !
-												</Text>
-											</View>
-										) : (
-											<Trending video={popularData} loading={loading} />
-										)}
-
-									</View>
-									<View className='flex-row items-center justify-center mt-10'>
-										<Image
-											source={downIcon}
-											resizeMode='contain'
-											className='w-6 h-6'
-										/>
-										<Text className='text-sky-300  font-psemibold text-lg text-center mx-12'>Latest</Text>
-										<Image
-											source={downIcon}
-											resizeMode='contain'
-											className='w-6 h-6'
-										/>
-									</View>
+							<View className='flex-row justify-between items-center mt-4 h-[60px]'>
+								<View >
+									<Text className='text-gray-100 text-lg'>Welcome Back</Text>
+									<Text className='text-white text-2xl font-psemibold '>{user?.username}</Text>
 								</View>
-
-							);
-						}}
-
-						renderItem={({ item }) => {
-							return (
-								<VideoCard post={item} handleRefresh={handleRefresh} isFullscreen={isFullscreen}
-									toggleFullscreen={toggleFullscreen}
+								<Image
+									source={images.logoSmall}
+									className='w-9 h-10'
+									resizeMode='contain'
 								/>
-							)
-						}}
-						ListEmptyComponent={() => {
-							return loading ? (
-								<View className="flex-1 justify-center items-center bg-primary mt-64">
-									<ActivityIndicator size="large" color="#ffffff" />
-									<Text className='mt-[10] text-white text-xl'>Loading, please wait...</Text>
-								</View>
-							) : (
-								<View>
-									<EmptyState />
-									<CustomButton
-										title={'Create Video'}
-										textStyle={'text-black'}
-										style={'h-16 my-5 mx-4'}
-										onPress={() => router.push('/create')}
-									/>
-								</View>
-							);
-						}}
-						refreshControl={
-							<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
-						}
-					/>
+							</View>
 
-					<StatusBar style='light' hidden={true} />
-				</>
-			)}
+							<SearchInput containerStyle={'mt-6'} />
+
+							<View className='mt-8'>
+								<Text className=' mb-8 font-psemibold text-lg text-sky-300 text-center'>Top  Hits</Text>
+								{/* 头部视频 */}
+								{popularData.length === 0 ? (
+									<View className='items-center'>
+										<Image
+											source={images.empty}
+											className='w-[75px] h-[60px]'
+											resizeMode='contain'
+										/>
+										<Text className='text-sky-300 text-center font-psemibold'>
+											Play the video to help it {'\n'}become a popular one !
+										</Text>
+									</View>
+								) : (
+									<Trending video={popularData} loading={loading} />
+								)}
+
+							</View>
+							<View className='flex-row items-center justify-center mt-10'>
+								<Image
+									source={downIcon}
+									resizeMode='contain'
+									className='w-6 h-6'
+								/>
+								<Text className='text-sky-300  font-psemibold text-lg text-center mx-12'>Latest</Text>
+								<Image
+									source={downIcon}
+									resizeMode='contain'
+									className='w-6 h-6'
+								/>
+							</View>
+						</View>
+
+					);
+				}}
+
+				renderItem={({ item }) => {
+					return (
+						<VideoCard post={item} handleRefresh={handleRefresh} isFullscreen={isFullscreen}
+							toggleFullscreen={toggleFullscreen}
+						/>
+					)
+				}}
+				ListEmptyComponent={() => {
+					return loading ? (
+						<View className="flex-1 justify-center items-center bg-primary mt-64">
+							<ActivityIndicator size="large" color="#ffffff" />
+							<Text className='mt-[10] text-white text-xl'>Loading, please wait...</Text>
+						</View>
+					) : (
+						<View>
+							<EmptyState />
+							<CustomButton
+								title={'Create Video'}
+								textStyle={'text-black'}
+								style={'h-16 my-5 mx-4'}
+								onPress={() => router.push('/create')}
+							/>
+						</View>
+					);
+				}}
+				refreshControl={
+					<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+				}
+			/>
+
+			<StatusBar style='light' hidden={true} />
+
 		</View>
 	)
 }
