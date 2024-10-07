@@ -4,7 +4,7 @@ import React from 'react'
 export default function PlayScreen() {
     return (
         <View>
-            <Text>PlayScreen</Text>
+            <Text className="mt-10 text-3xl">PlayScreen</Text>
         </View>
     )
 }

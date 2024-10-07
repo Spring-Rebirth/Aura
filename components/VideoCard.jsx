@@ -15,12 +15,12 @@ import { StatusBar } from 'expo-status-bar';
 import closeY from '../assets/menu/close-yuan.png'
 import { PlayDataContext } from '../context/PlayDataContext';
 import { formatNumberWithUnits, getRelativeTime } from '../utils/numberFormatter';
+import { router } from 'expo-router';
 
 export default function VideoCard({
     post,
     handleRefresh,
     toggleFullscreen,
-    setCurrentPlayingPost,
     isFullscreen,
 }) {
     const { $id, $createdAt, title, thumbnail, video, creator: { accountId, username, avatar } } = post;
@@ -159,7 +159,6 @@ export default function VideoCard({
         // 继续播放视频
         setPlaying(true);
         setLoading(true);
-        setCurrentPlayingPost(post);
     };
 
 
@@ -279,14 +278,24 @@ export default function VideoCard({
                             source={{ uri: avatar }}
                             className='w-[40px] h-[40px] border border-secondary rounded-full ml-2 mt-0.5'
                         />
-                        <View className='gap-y-1 justify-center flex-1 ml-5'>
+
+                        <TouchableOpacity
+                            onPress={() => router.push({
+                                pathname: 'player/play-screen',
+                                params: {
+                                    post
+                                }
+                            })}
+                            className='gap-y-1 justify-center flex-1 ml-5'
+                        >
                             <Text className='text-white font-psemibold text-sm' numberOfLines={2}>
                                 {title}
                             </Text>
                             <Text className='text-gray-100 font-pregular text-xs' numberOfLines={1}>
                                 {username}  ·  {formatNumberWithUnits(playCount)} views  ·  {getRelativeTime($createdAt)}
                             </Text>
-                        </View>
+                        </TouchableOpacity>
+
                         <TouchableOpacity onPress={() => setShowControlMenu(prev => !prev)}>
                             <Image
                                 source={icons.menu}

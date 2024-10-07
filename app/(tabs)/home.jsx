@@ -16,7 +16,7 @@ import downIcon from '../../assets/icons/down.png'
 export default function Home() {
 	const [refreshing, setRefreshing] = useState(false);
 	const [loading, setLoading] = useState(false);
-	const [data, setData] = useState([]); // 这里面好像有播放数和时间
+	const [data, setData] = useState([]);
 	const [popularData, setPopularData] = useState([]);
 	const { user } = useGlobalContext();
 	const { fetchPosts, fetchPopularPosts } = useGetData({ setLoading, setData, setPopularData });
@@ -135,7 +135,7 @@ export default function Home() {
 						renderItem={({ item }) => {
 							return (
 								<VideoCard post={item} handleRefresh={handleRefresh} isFullscreen={isFullscreen}
-									toggleFullscreen={toggleFullscreen} setCurrentPlayingPost={setCurrentPlayingPost}
+									toggleFullscreen={toggleFullscreen}
 								/>
 							)
 						}}
