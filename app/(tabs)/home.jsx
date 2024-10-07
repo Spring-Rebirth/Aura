@@ -13,7 +13,6 @@ import { StatusBar } from 'expo-status-bar'
 import { updateSavedVideo } from '../../lib/appwrite'
 import downIcon from '../../assets/icons/down.png'
 
-
 export default function Home() {
 	const [refreshing, setRefreshing] = useState(false);
 	const [loading, setLoading] = useState(false);
