@@ -19,9 +19,8 @@ function TrendingItem({ activeItem, item }) {
     const [loading, setLoading] = useState(true);
     const [imageLoaded, setImageLoaded] = useState(false);
     const { user, setUser } = useGlobalContext();
+    const { played_counts, $id } = item;
     const [isSaved, setIsSaved] = useState(user?.favorite.includes($id));
-    const { $id } = item;
-    const { played_counts } = item;
     const [playCount, setPlayCount] = useState(played_counts || 0);
     const { updatePlayData, playDataRef } = useContext(PlayDataContext);
 
