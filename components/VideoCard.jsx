@@ -283,7 +283,7 @@ export default function VideoCard({
                             onPress={() => router.push({
                                 pathname: 'player/play-screen',
                                 params: {
-                                    post
+                                    post: JSON.stringify(post)
                                 }
                             })}
                             className='gap-y-1 justify-center flex-1 ml-5'
