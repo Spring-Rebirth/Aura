@@ -14,7 +14,7 @@ import * as ScreenOrientation from 'expo-screen-orientation';
 import { StatusBar } from 'expo-status-bar';
 import closeY from '../assets/menu/close-yuan.png'
 import { PlayDataContext } from '../context/PlayDataContext';
-import { formatNumberWithUnits } from '../utils/numberFormatter';
+import { formatNumberWithUnits, getRelativeTime } from '../utils/numberFormatter';
 
 export default function VideoCard({
     post,
@@ -36,32 +36,6 @@ export default function VideoCard({
     const { updatePlayData, playDataRef } = useContext(PlayDataContext);
     const [playCount, setPlayCount] = useState(post.played_counts || 0);
 
-    const getRelativeTime = () => {
-        const dateObj = new Date($createdAt);
-        const now = new Date();
-
-        const diffInMs = now - dateObj; // 时间差，单位为毫秒
-        const diffInMinutes = Math.floor(diffInMs / (1000 * 60)); // 转换为分钟
-        const diffInHours = Math.floor(diffInMinutes / 60); // 转换为小时
-        const diffInDays = Math.floor(diffInHours / 24); // 转换为天
-        const diffInWeeks = Math.floor(diffInDays / 7); // 转换为星期
-        const diffInMonths = Math.floor(diffInDays / 30); // 粗略转换为月
-        const diffInYears = Math.floor(diffInDays / 365); // 粗略转换为年
-
-        if (diffInMinutes < 60) {
-            return `${diffInMinutes} min ago`;
-        } else if (diffInHours < 24) {
-            return `${diffInHours} h ago`;
-        } else if (diffInDays < 7) {
-            return `${diffInDays} d ago`;
-        } else if (diffInWeeks < 4) {
-            return `${diffInWeeks} wk ago`;
-        } else if (diffInMonths < 12) {
-            return `${diffInMonths} mo ago`;
-        } else {
-            return `${diffInYears} y ago`;
-        }
-    };
 
     const videoRef = useRef(null);
     const route = useRoute();
@@ -310,7 +284,7 @@ export default function VideoCard({
                                 {title}
                             </Text>
                             <Text className='text-gray-100 font-pregular text-xs' numberOfLines={1}>
-                                {username}  ·  {formatNumberWithUnits(playCount)} views  ·  {getRelativeTime()}
+                                {username}  ·  {formatNumberWithUnits(playCount)} views  ·  {getRelativeTime($createdAt)}
                             </Text>
                         </View>
                         <TouchableOpacity onPress={() => setShowControlMenu(prev => !prev)}>
