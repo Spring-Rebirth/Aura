@@ -17,7 +17,7 @@ export default function Welcome() {
     useEffect(() => {
         if (isLoggedIn) {
             setIsNavigating(true); // 防止 Welcome 页面继续渲染
-            router.push('/home');
+            router.replace('/home');
         }
     }, [isLoggedIn]);
 
