@@ -9,7 +9,7 @@ import trash from '../assets/menu/trash-solid.png'
 import { useGlobalContext } from '../context/GlobalProvider'
 import { deleteVideoDoc, deleteVideoFiles } from '../lib/appwrite'
 import { useRoute } from '@react-navigation/native';
-import { updateSavedCount, getVideoDetails } from '../lib/appwrite';
+import { updatesaved_counts, getVideoDetails } from '../lib/appwrite';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { StatusBar } from 'expo-status-bar';
 import closeY from '../assets/menu/close-yuan.png'
@@ -94,7 +94,7 @@ export default function VideoCard({
                 isIncrement = false;
                 Alert.alert('Cancel save successfully');
             }
-            await updateSavedCount($id, isIncrement);
+            await updatesaved_counts($id, isIncrement);
         } catch (error) {
             console.error("Error handling favorite:", error);
             Alert.alert('An error occurred while updating favorite count');
@@ -113,13 +113,13 @@ export default function VideoCard({
 
         try {
             const videoDetails = await getVideoDetails($id); // 假设 getVideoDetails 从数据库获取视频详细信息
-            const { imageId, videoId } = videoDetails;
+            const { image_ID, video_ID } = videoDetails;
 
-            if (imageId && videoId) {
+            if (image_ID && video_ID) {
                 await Promise.all([
                     deleteVideoDoc($id), // 删除视频文档
-                    deleteVideoFiles(imageId), // 删除图片文件
-                    deleteVideoFiles(videoId)  // 删除视频文件
+                    deleteVideoFiles(image_ID), // 删除图片文件
+                    deleteVideoFiles(video_ID)  // 删除视频文件
                 ]);
                 console.log("删除成功");
                 handleRefresh();

@@ -7,8 +7,8 @@ export const PlayDataContext = createContext();
 export const PlayDataProvider = ({ children }) => {
     const playDataRef = useRef({});
 
-    const updatePlayData = async (videoId, count) => {
-        playDataRef.current[videoId] = {
+    const updatePlayData = async (video_ID, count) => {
+        playDataRef.current[video_ID] = {
             count,
             lastPlayTime: Date.now(),
             synced: false,

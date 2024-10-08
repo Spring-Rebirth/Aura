@@ -130,13 +130,13 @@ export default function Create() {
             }
 
             // 有时候可能因为网络的问题没有上传成功
-            const { fileId: imageId } = imageUpload;
-            const { fileId: videoId } = videoUpload;
-            console.log(`imageId: ${imageId} \n videoId: ${videoId}`);
+            const { fileId: image_ID } = imageUpload;
+            const { fileId: video_ID } = videoUpload;
+            console.log(`image_ID: ${image_ID} \n video_ID: ${video_ID}`);
 
             // 获取数据库的图片和视频URI
-            const StorageImageUrl = await fetchFileUrl(imageId);
-            const StorageVideoUrl = await fetchFileUrl(videoId);
+            const StorageImageUrl = await fetchFileUrl(image_ID);
+            const StorageVideoUrl = await fetchFileUrl(video_ID);
             console.log(`StorageImageUrl: ${StorageImageUrl} \n 'StorageVideoUrl:' ${StorageVideoUrl}`);
 
 
@@ -145,8 +145,8 @@ export default function Create() {
                 thumbnail: StorageImageUrl,
                 video: StorageVideoUrl,
                 creator: user.$id,
-                imageId,                     // 存储 imageId
-                videoId,                     // 存储 videoId
+                image_ID,                     // 存储 image_ID
+                video_ID,                     // 存储 video_ID
             }
             // 修改这里URI为从数据库获取
             const videoResult = await uploadData(formData);

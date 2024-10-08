@@ -6,7 +6,7 @@ import { Video, ResizeMode } from 'expo-av';
 import star from '../assets/menu/star-solid.png'
 import starThree from '../assets/menu/star3.png'
 import { useGlobalContext } from '../context/GlobalProvider'
-import { updateSavedCount } from '../lib/appwrite';
+import { updatesaved_counts } from '../lib/appwrite';
 import closeY from '../assets/menu/close-yuan.png'
 import { PlayDataContext } from '../context/PlayDataContext';
 import {
@@ -68,7 +68,7 @@ function TrendingItem({ activeItem, item }) {
                 isIncrement = false;
                 Alert.alert('Cancel save successfully');
             }
-            await updateSavedCount($id, isIncrement);
+            await updatesaved_counts($id, isIncrement);
         } catch (error) {
             console.error("Error handling favorite:", error);
             Alert.alert('An error occurred while updating favorite count');
