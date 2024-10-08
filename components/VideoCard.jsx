@@ -242,12 +242,7 @@ export default function VideoCard({
                         />
 
                         <TouchableOpacity
-                            onPress={() => router.push({
-                                pathname: 'player/play-screen',
-                                params: {
-                                    post: JSON.stringify(post)
-                                }
-                            })}
+                            onPress={handlePlay}
                             className='gap-y-1 justify-center flex-1 ml-5'
                         >
                             <Text className='text-white font-psemibold text-sm' numberOfLines={2}>
