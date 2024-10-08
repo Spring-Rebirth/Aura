@@ -157,8 +157,14 @@ export default function VideoCard({
         }
 
         // 继续播放视频
-        setPlaying(true);
-        setLoading(true);
+        // setPlaying(true);
+        // setLoading(true);
+        router.push({
+            pathname: 'player/play-screen',
+            params: {
+                post: JSON.stringify(post)
+            }
+        });
     };
 
 
@@ -168,74 +174,30 @@ export default function VideoCard({
             {isFullscreen && <StatusBar hidden />}
 
             {/* 视频视图 */}
-            {
-                !playing
-                    ? (
-                        <TouchableOpacity
-                            className='w-full h-56 justify-center items-center relative overflow-hidden' // 添加 overflow-hidden
-                            activeOpacity={0.7}
-                            onPress={handlePlay}
-                        >
 
-                            <Image
-                                source={{ uri: thumbnail }}
-                                className='w-full h-full mb-4'
-                                resizeMode='cover'
-                                onLoad={() => setImageLoaded(true)}
-                                onError={() => {
-                                    setImageLoaded(false);
-                                    console.log("Failed to load image.");
-                                }}
-                            />
-                            {!imageLoaded && (
-                                <ActivityIndicator size="large" color="#fff" style={{
-                                    position: 'absolute', top: '50%', left: '50%', transform: [{ translateX: -20 }, { translateY: -20 }]
-                                }} />
-                            )}
+            <TouchableOpacity
+                className='w-full h-56 justify-center items-center relative overflow-hidden' // 添加 overflow-hidden
+                activeOpacity={0.7}
+                onPress={handlePlay}
+            >
 
-                        </TouchableOpacity>
+                <Image
+                    source={{ uri: thumbnail }}
+                    className='w-full h-full mb-4'
+                    resizeMode='cover'
+                    onLoad={() => setImageLoaded(true)}
+                    onError={() => {
+                        setImageLoaded(false);
+                        console.log("Failed to load image.");
+                    }}
+                />
+                {!imageLoaded && (
+                    <ActivityIndicator size="large" color="#fff" style={{
+                        position: 'absolute', top: '50%', left: '50%', transform: [{ translateX: -20 }, { translateY: -20 }]
+                    }} />
+                )}
 
-                    ) : (
-
-                        <>
-                            {loading && (
-                                <ActivityIndicator size="large" color="#fff" style={{
-                                    position: 'absolute', top: '30%', left: '50%', transform: [{ translateX: -20 }, { translateY: -20 }]
-                                }} />
-                            )}
-                            <TouchableOpacity
-                                onPress={() => {
-                                    setPlaying(false);
-                                    setLoading(true);
-                                }}
-                                className='absolute -top-3.5 right-2.5 z-10 w-16 h-16 justify-center items-center'
-                            >
-                                <Image
-                                    source={closeY}
-                                    className='w-8 h-8'
-                                />
-                            </TouchableOpacity>
-                            <Video
-                                ref={videoRef}
-                                source={{ uri: video }}
-                                className={`relative ${isFullscreen ? 'flex-1 w-full h-full' : 'w-full h-56 mb-4'} `}
-                                resizeMode={ResizeMode.CONTAIN}
-                                useNativeControls
-                                shouldPlay
-                                onPlaybackStatusUpdate={async (status) => {
-                                    if (status.isLoaded) {
-                                        setLoading(false);
-                                    }
-                                    if (status.didJustFinish) {
-                                        setPlaying(false);
-                                        setLoading(true);
-                                    }
-                                }}
-                                onFullscreenUpdate={onFullscreenUpdate}
-                            />
-                        </>
-                    )
-            }
+            </TouchableOpacity>
 
             {!isFullscreen && (
                 <>
