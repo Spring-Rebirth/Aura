@@ -26,7 +26,7 @@ export default function PlayScreen() {
                 )}
                 <Video
                     source={{ uri: parsedPost.video }}
-                    className={`relative w-full h-[252]`}
+                    style={{ width: '100%', height: screenHight }}
                     resizeMode={ResizeMode.CONTAIN}
                     useNativeControls
                     shouldPlay
