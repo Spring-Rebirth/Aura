@@ -13,6 +13,7 @@ import {
     FlatList, ImageBackground, Text, TouchableOpacity, View, Image, ActivityIndicator,
     Alert
 } from 'react-native'
+import { router } from 'expo-router';
 
 function TrendingItem({ activeItem, item }) {
     const [playing, setPlaying] = useState(false);
@@ -92,8 +93,14 @@ function TrendingItem({ activeItem, item }) {
         }
 
         // 继续播放视频
-        setPlaying(true);
-        setLoading(true);
+        // setPlaying(true);
+        // setLoading(true);
+        router.push({
+            pathname: 'player/play-screen',
+            params: {
+                post: JSON.stringify(item)
+            }
+        });
     };
 
 
@@ -104,10 +111,7 @@ function TrendingItem({ activeItem, item }) {
             style={{ borderRadius: 16, overflow: 'hidden' }} // 使用样式直接设置圆角
             className='mr-2 relative'
         >
-            <TouchableOpacity
-                onPress={handleAddSaved}
-                className='absolute z-10 top-3 right-3'
-            >
+            <TouchableOpacity onPress={handleAddSaved} className='absolute z-10 top-3 right-3'>
                 <Image
                     source={isSaved ? star : starThree}
                     className='w-7 h-7'
@@ -115,72 +119,29 @@ function TrendingItem({ activeItem, item }) {
                 />
             </TouchableOpacity>
 
-
-            {!playing ? (
-                <TouchableOpacity onPress={handlePlay}
-                    className='relative justify-center items-center bg-[#33466C] w-[208px] h-[332px]
+            <TouchableOpacity onPress={handlePlay}
+                className='relative justify-center items-center bg-[#33466C] w-[208px] h-[332px]
                                 rounded-[24px] overflow-hidden'
-                >
-                    <ImageBackground
-                        source={{ uri: item.thumbnail }}
-                        className='w-full h-32 '
-                        resizeMode='cover'
-                        onLoad={() => setImageLoaded(true)}  // 图片加载成功
-                        onError={() => {
-                            setImageLoaded(false);
-                            console.log("Failed to load image.");
-                        }}
+            >
+                <ImageBackground
+                    source={{ uri: item.thumbnail }}
+                    className='w-full h-32 '
+                    resizeMode='cover'
+                    onLoad={() => setImageLoaded(true)}  // 图片加载成功
+                    onError={() => {
+                        setImageLoaded(false);
+                        console.log("Failed to load image.");
+                    }}
+                />
+
+                {!imageLoaded && (
+                    <ActivityIndicator
+                        size="large" color="#fff" style={{ position: 'absolute', top: '50%', left: '50%', transform: [{ translateX: -20 }, { translateY: -20 }] }}
                     />
-
-                    {!imageLoaded && (
-                        <ActivityIndicator
-                            size="large" color="#fff" style={{ position: 'absolute', top: '50%', left: '50%', transform: [{ translateX: -20 }, { translateY: -20 }] }}
-                        />
-                    )}
-
-                </TouchableOpacity>
-            ) : (
-                <>
-                    {loading && (
-                        <ActivityIndicator size="large" color="#fff" style={{
-                            position: 'absolute', top: '50%', left: '50%', transform: [{ translateX: -20 }, { translateY: -20 }]
-                        }} />
-
-                    )}
-                    <TouchableOpacity
-                        onPress={() => {
-                            setPlaying(false);
-                            setLoading(true);
-                        }}
-                        className='absolute top-3 left-3 z-10'
-                    >
-                        <Image
-                            source={closeY}
-                            className='w-7 h-7'
-                        />
-                    </TouchableOpacity>
-                    <Video
-                        source={{ uri: item.video }}
-                        className='w-[208px] h-[332px] rounded-[24px]'
-                        resizeMode={ResizeMode.CONTAIN}
-                        useNativeControls
-                        shouldPlay
-                        onPlaybackStatusUpdate={(status) => {
-                            if (status.isLoaded) {
-                                setLoading(false);
-                            }
-                            if (status.didJustFinish) {
-                                setPlaying(false);
-                                setLoading(true);
-                            }
-                        }}
-                    />
-                </>
-            )}
-
+                )}
+            </TouchableOpacity>
         </Animatable.View>
     )
-
 }
 
 export default function Trending({ video, loading }) {
