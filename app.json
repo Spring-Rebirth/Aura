@@ -31,7 +31,8 @@
       "favicon": "./assets/icon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "expo-video"
     ],
     "owner": "myst-seed",
     "extra": {

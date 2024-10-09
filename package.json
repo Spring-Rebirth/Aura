@@ -22,6 +22,7 @@
     "expo-screen-orientation": "^7.0.5",
     "expo-status-bar": "~1.12.1",
     "expo-updates": "^0.25.25",
+    "expo-video": "^1.2.7",
     "expo-video-thumbnails": "~8.0.0",
     "mime": "^4.0.4",
     "nativewind": "^2.0.11",

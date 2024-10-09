@@ -1,46 +1,72 @@
-import { View, Text, Dimensions, ActivityIndicator } from 'react-native'
-import React, { useState } from 'react'
+import { StyleSheet, View, Button } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react'
 import { useLocalSearchParams } from "expo-router";
-import { Video, ResizeMode } from 'expo-av';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useVideoPlayer, VideoView } from 'expo-video';
+
 
 export default function PlayScreen() {
     const { post } = useLocalSearchParams();
     const parsedPost = post ? JSON.parse(post) : null;
 
-    console.log('PlayScreen - post:', JSON.stringify(parsedPost, null, 4));
+    const ref = useRef(null);
+    const [isPlaying, setIsPlaying] = useState(true);
+    const player = useVideoPlayer(parsedPost.video, player => {
+        player.loop = true;
+        player.play();
+    });
 
-    const screenHight = Dimensions.get('window').width * 9 / 16;
-    console.log('screenHight:', screenHight);
+    useEffect(() => {
+        const subscription = player.addListener('playingChange', isPlaying => {
+            setIsPlaying(isPlaying);
+        });
 
-    const [playing, setPlaying] = useState(false);
-    const [loading, setLoading] = useState(true);
+        return () => {
+            subscription.remove();
+        };
+    }, [player]);
 
     return (
-        <SafeAreaView className="bg-primary h-screen">
-            <View className='w-screen h-screen bg-primary'>
-                {loading && (
-                    <ActivityIndicator size="large" color="#fff" style={{
-                        position: 'absolute', top: '10%', left: '50%', transform: [{ translateX: -20 }, { translateY: -20 }]
-                    }} />
-                )}
-                <Video
-                    source={{ uri: parsedPost.video }}
-                    style={{ width: '100%', height: screenHight }}
-                    resizeMode={ResizeMode.CONTAIN}
-                    useNativeControls
-                    shouldPlay
-                    onPlaybackStatusUpdate={async (status) => {
-                        if (status.isLoaded) {
-                            setLoading(false);
+        <View
+            style={styles.contentContainer}
+            className='bg-primary'
+        >
+            <VideoView
+                ref={ref}
+                style={styles.video}
+                player={player}
+                allowsFullscreen
+                allowsPictureInPicture
+            />
+            <View style={styles.controlsContainer}>
+                <Button
+                    title={isPlaying ? 'Pause' : 'Play'}
+                    onPress={() => {
+                        if (isPlaying) {
+                            player.pause();
+                        } else {
+                            player.play();
                         }
-                        if (status.didJustFinish) {
-                            setPlaying(false);
-                            setLoading(true);
-                        }
+                        setIsPlaying(!isPlaying);
                     }}
                 />
             </View>
-        </SafeAreaView>
-    )
+        </View>
+    );
 }
+
+const styles = StyleSheet.create({
+    contentContainer: {
+        flex: 1,
+        padding: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: 50,
+    },
+    video: {
+        width: 350,
+        height: 275,
+    },
+    controlsContainer: {
+        padding: 10,
+    },
+});
