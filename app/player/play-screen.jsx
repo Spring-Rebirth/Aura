@@ -10,6 +10,7 @@ export default function PlayScreen() {
 
     const ref = useRef(null);
     const [isPlaying, setIsPlaying] = useState(true);
+    const [status, setStatus] = useState(null); // 用于保存视频状态
     const player = useVideoPlayer(parsedPost.video, player => {
         player.loop = true;
         player.play();
@@ -20,8 +21,21 @@ export default function PlayScreen() {
             setIsPlaying(isPlaying);
         });
 
+        // 监听 statusChange 事件，更新状态
+        const statusSubscription = player.addListener('statusChange', (newStatus) => {
+            setStatus(newStatus);
+            if (newStatus === 'readyToPlay') {
+                console.log('Video is ready to play.');
+            } else if (newStatus === 'loading') {
+                console.log('Video is loading...');
+            } else if (newStatus === 'error') {
+                console.error('Error loading video');
+            }
+        });
+
         return () => {
             subscription.remove();
+            statusSubscription.remove();
         };
     }, [player]);
 
